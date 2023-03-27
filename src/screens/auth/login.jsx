@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Image,
   Text,
@@ -9,9 +10,14 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
+import { loginSubmit } from "../../redux/actions/loginAction";
+import { ContextApplication } from "../../../App";
+import Loading from "../loading";
 
-export default function LoginPage({ navigate }) {
+export default function LoginPage({ navigation }) {
   const [keyboardShow, setKeyboardShow] = useState(false);
+  const _context = useContext(ContextApplication);
+
   useEffect(() => {
     Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardShow(true);
@@ -20,21 +26,29 @@ export default function LoginPage({ navigate }) {
       setKeyboardShow(false);
     });
   });
+
   return (
     <SafeAreaView style={{ margin: 10 }}>
       <HeaderLogin keyboardShow={keyboardShow} />
-      <BodyLogin keyboardShow={keyboardShow} />
+      <BodyLogin
+        keyboardShow={keyboardShow}
+        navigation={navigation}
+        _context={_context}
+      />
       {!keyboardShow && <FooterLogin />}
     </SafeAreaView>
   );
 }
 
-function BodyLogin({ keyboardShow }) {
+function BodyLogin({ keyboardShow, navigation, _context }) {
   const [account, setAccount] = useState({
-    user: null,
+    username: null,
     password: null,
   });
   const [remember, setRemember] = useState(false);
+
+  const info = useSelector((state) => state.login);
+  const dispatch = useDispatch();
 
   const onChangeText = (value, prop) => {
     if (value !== undefined && value !== null) {
@@ -43,6 +57,11 @@ function BodyLogin({ keyboardShow }) {
         [prop]: value,
       });
     }
+  };
+
+  const handleLogin = () => {
+    dispatch(loginSubmit(account));
+    navigation.navigate("Home");
   };
 
   return (
@@ -57,8 +76,8 @@ function BodyLogin({ keyboardShow }) {
         <Text style={styles.label}>Tên tài khoản</Text>
         <TextInput
           style={styles.input}
-          onChangeText={(e) => onChangeText(e, "user")}
-          value={account.user}
+          onChangeText={(e) => onChangeText(e, "username")}
+          value={account.username}
           placeholder="Nhập tài khoản hoặc email của bạn"
         />
       </View>
@@ -102,6 +121,9 @@ function BodyLogin({ keyboardShow }) {
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 5,
+          }}
+          onPress={() => {
+            handleLogin();
           }}
         >
           <Text

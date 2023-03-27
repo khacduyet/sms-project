@@ -8,7 +8,7 @@ const axiosClient = axios.create({
         Authorization:
             BEARER + _token,
     },
-    baseURL: `http://103.130.212.45:2888/`,
+    baseURL: `http://103.130.212.45:1889/`,
     withCredentials: true,
 });
 axiosClient.interceptors.response.use(
