@@ -25,6 +25,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "e8f0f0a2-350b-40e5-9e8a-bc36bf748602"
+      }
+    },
+    "owner": "khacduyet"
   }
 }
