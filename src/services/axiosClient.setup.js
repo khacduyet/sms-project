@@ -1,22 +1,25 @@
 import axios from 'axios';
-
-const BEARER = "BEARER ";
+import { ToastAndroid } from 'react-native';
+import { returnMessage, StatusCode } from '../common/common';
+import { BASE_URL } from '../common/constant';
 
 
 const axiosClient = axios.create({
     headers: {
-        Authorization:
-            BEARER + _token,
+        ContentType: "application/json;charset=UTF-8",
+        Accept: "application/json, text/plain, */*"
     },
-    baseURL: `http://103.130.212.45:1889/`,
+    baseURL: BASE_URL,
     withCredentials: true,
+    timeout: 30000,
 });
 axiosClient.interceptors.response.use(
     (res) => {
         return res.data
     },
     (er) => {
-        // toast.error('Có lỗi xảy ra trong quá trình xử lý vui lòng liên hệ kỹ thuật!')
+        let _msg = returnMessage(StatusCode.CONTACT_DEV)
+        ToastAndroid.show(_msg, ToastAndroid.SHORT);
     }
 );
 export default axiosClient;

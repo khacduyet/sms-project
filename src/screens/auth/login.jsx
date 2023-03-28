@@ -7,16 +7,14 @@ import {
   TouchableOpacity,
   View,
   Keyboard,
+  ToastAndroid,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
 import { loginSubmit } from "../../redux/actions/loginAction";
-import { ContextApplication } from "../../../App";
-import Loading from "../loading";
 
 export default function LoginPage({ navigation }) {
   const [keyboardShow, setKeyboardShow] = useState(false);
-  const _context = useContext(ContextApplication);
 
   useEffect(() => {
     Keyboard.addListener("keyboardDidShow", () => {
@@ -25,29 +23,24 @@ export default function LoginPage({ navigation }) {
     Keyboard.addListener("keyboardDidHide", () => {
       setKeyboardShow(false);
     });
-  });
+  }, []);
 
   return (
     <SafeAreaView style={{ margin: 10 }}>
       <HeaderLogin keyboardShow={keyboardShow} />
-      <BodyLogin
-        keyboardShow={keyboardShow}
-        navigation={navigation}
-        _context={_context}
-      />
+      <BodyLogin keyboardShow={keyboardShow} navigation={navigation} />
       {!keyboardShow && <FooterLogin />}
     </SafeAreaView>
   );
 }
 
-function BodyLogin({ keyboardShow, navigation, _context }) {
+function BodyLogin({ keyboardShow, navigation }) {
   const [account, setAccount] = useState({
-    username: null,
-    password: null,
+    username: "nypt",
+    password: "123456",
   });
   const [remember, setRemember] = useState(false);
-
-  const info = useSelector((state) => state.login);
+  const tokenReducer = useSelector((state) => state.tokenReducer);
   const dispatch = useDispatch();
 
   const onChangeText = (value, prop) => {
@@ -61,8 +54,13 @@ function BodyLogin({ keyboardShow, navigation, _context }) {
 
   const handleLogin = () => {
     dispatch(loginSubmit(account));
-    navigation.navigate("Home");
   };
+
+  useEffect(() => {
+    if (tokenReducer.access_token) {
+      navigation.navigate("Home");
+    }
+  }, [tokenReducer]);
 
   return (
     <View
@@ -123,6 +121,7 @@ function BodyLogin({ keyboardShow, navigation, _context }) {
             borderRadius: 5,
           }}
           onPress={() => {
+            // showToast();
             handleLogin();
           }}
         >

@@ -1,8 +1,10 @@
 import { combineReducers } from "redux"
-import loginForReducer from "./loginReducer"
+import loginForReducer, { tokenReducer, userCurrenReducer } from "./loginReducer"
 
 const reducers = combineReducers({
-    login: loginForReducer
+    login: loginForReducer,
+    tokenReducer: tokenReducer,
+    currentUser: userCurrenReducer
 })
 
 export default (state, action) => reducers(state, action)
