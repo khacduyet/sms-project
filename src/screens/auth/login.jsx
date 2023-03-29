@@ -12,10 +12,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
 import { loginSubmit } from "../../redux/actions/loginAction";
+import Loading from "../loading";
+import { setLoading } from "../../redux/actions/loadingAction";
 
 export default function LoginPage({ navigation }) {
   const [keyboardShow, setKeyboardShow] = useState(false);
-
+  const loading = useSelector((state) => state.loading);
+  const dispatch = useDispatch();
   useEffect(() => {
     Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardShow(true);
@@ -26,22 +29,27 @@ export default function LoginPage({ navigation }) {
   }, []);
 
   return (
-    <SafeAreaView style={{ margin: 10 }}>
-      <HeaderLogin keyboardShow={keyboardShow} />
-      <BodyLogin keyboardShow={keyboardShow} navigation={navigation} />
-      {!keyboardShow && <FooterLogin />}
-    </SafeAreaView>
+    <View style={{ position: "relative" }}>
+      {loading.loading && <Loading />}
+      <SafeAreaView style={{ margin: 10 }}>
+        <HeaderLogin keyboardShow={keyboardShow} />
+        <BodyLogin keyboardShow={keyboardShow} navigation={navigation} />
+        {!keyboardShow && <FooterLogin />}
+      </SafeAreaView>
+    </View>
   );
 }
 
-function BodyLogin({ keyboardShow, navigation }) {
+function BodyLogin({ keyboardShow, navigation, _loading }) {
   const [account, setAccount] = useState({
     username: "nypt",
     password: "123456",
   });
   const [remember, setRemember] = useState(false);
+  const loading = useSelector((state) => state.loading);
   const tokenReducer = useSelector((state) => state.tokenReducer);
   const dispatch = useDispatch();
+  // console.log("loading", loading);
 
   const onChangeText = (value, prop) => {
     if (value !== undefined && value !== null) {
@@ -53,12 +61,15 @@ function BodyLogin({ keyboardShow, navigation }) {
   };
 
   const handleLogin = () => {
+    // dispatch(setLoading(true));
     dispatch(loginSubmit(account));
   };
 
   useEffect(() => {
     if (tokenReducer.access_token) {
-      navigation.navigate("Home");
+      setTimeout(() => {
+        navigation.navigate("Home");
+      }, 2000);
     }
   }, [tokenReducer]);
 

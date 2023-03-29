@@ -15,6 +15,7 @@ export const loginSubmit = (data) => async dispatch => {
                 type: SET_TOKEN,
                 payload: res
             })
+            dispatch(setLoading(false));
         }
     } catch (error) {
         console.log("error: function");

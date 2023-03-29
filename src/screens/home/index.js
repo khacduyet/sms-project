@@ -3,11 +3,12 @@ import { Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCurrentUser } from "../../redux/actions/loginAction";
+import { setLoading } from "../../redux/actions/loadingAction";
 
 
 export default function HomePage({ navigation }) {
     const currentUser = useSelector((state) => state.currentUser);
-    console.log("currentUser", currentUser);
+    // console.log("currentUser", currentUser);
     const dispatch = useDispatch();
 
     function showToast() {
