@@ -15,10 +15,10 @@ export const loginSubmit = (data) => async dispatch => {
                 type: SET_TOKEN,
                 payload: res
             })
-            dispatch(setLoading(false));
+            // dispatch(setLoading(false));
         }
     } catch (error) {
-        console.log("error: function");
+        console.log("error: ", error);
     }
 }
 

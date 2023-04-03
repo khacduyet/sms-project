@@ -8,6 +8,9 @@ import {
   View,
   Keyboard,
   ToastAndroid,
+  KeyboardAvoidingView,
+  Modal,
+  Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
@@ -17,8 +20,9 @@ import { setLoading } from "../../redux/actions/loadingAction";
 
 export default function LoginPage({ navigation }) {
   const [keyboardShow, setKeyboardShow] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const loading = useSelector((state) => state.loading);
-  const dispatch = useDispatch();
+
   useEffect(() => {
     Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardShow(true);
@@ -28,14 +32,94 @@ export default function LoginPage({ navigation }) {
     });
   }, []);
 
+  const _isShowPrint = {
+    backgroundColor: "#a3a3a3",
+  };
+
   return (
     <View style={{ position: "relative" }}>
       {loading.loading && <Loading />}
-      <SafeAreaView style={{ margin: 10 }}>
-        <HeaderLogin keyboardShow={keyboardShow} />
-        <BodyLogin keyboardShow={keyboardShow} navigation={navigation} />
-        {!keyboardShow && <FooterLogin />}
-      </SafeAreaView>
+      <KeyboardAvoidingView>
+        <View
+          style={[
+            modalVisible ? _isShowPrint : {},
+            { width: "100%", height: "100%" },
+          ]}
+        >
+          <SafeAreaView style={[{ margin: 10 }]}>
+            <HeaderLogin keyboardShow={keyboardShow} />
+            <BodyLogin keyboardShow={keyboardShow} navigation={navigation} />
+            {!keyboardShow && <FooterLogin setModalVisible={setModalVisible} />}
+          </SafeAreaView>
+        </View>
+      </KeyboardAvoidingView>
+      {modalVisible && (
+        <ModalFingerPrint
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+      )}
+    </View>
+  );
+}
+
+function ModalFingerPrint({ modalVisible, setModalVisible }) {
+  return (
+    <View style={modals.bottomView}>
+      <Modal
+        transparent
+        animationType="slide"
+        visible={modalVisible}
+        onRequestClose={() => {
+          console.log("Pressed outside the box!");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={modals.bottomView}>
+          <Text style={{ flex: 1, fontSize: 22 }}>Smart EOS</Text>
+          <Text style={{ flex: 1, fontSize: 14 }}>
+            Xác thực bằng vân tay, vui lòng chạm vào cảm biến
+          </Text>
+          <View
+            style={{
+              flex: 2,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Image
+              style={{ width: 40, height: 40 }}
+              resizeMode="stretch"
+              source={require("../../resources/fingerprint.png")}
+            />
+            <Text style={{ fontSize: 12, marginTop: 10 }}>
+              Chạm vào cảm biến vân tay
+            </Text>
+          </View>
+          <Text style={{ flex: 1 }}>
+            <TouchableOpacity
+              style={{
+                width: 100,
+                height: 40,
+              }}
+              onPress={() => {
+                setModalVisible(false);
+              }}
+            >
+              <Text
+                style={{
+                  color: "brown",
+                  fontWeight: 600,
+                  fontSize: 14,
+                  alignItems: "flex-end",
+                }}
+              >
+                CANCEL
+              </Text>
+            </TouchableOpacity>
+          </Text>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -45,7 +129,6 @@ function BodyLogin({ keyboardShow, navigation, _loading }) {
     username: "nypt",
     password: "123456",
   });
-  const [remember, setRemember] = useState(false);
   const loading = useSelector((state) => state.loading);
   const tokenReducer = useSelector((state) => state.tokenReducer);
   const dispatch = useDispatch();
@@ -102,19 +185,26 @@ function BodyLogin({ keyboardShow, navigation, _loading }) {
       </View>
       <View style={{ height: 50 }}>
         <View style={{ flexDirection: "row", marginTop: 10 }}>
-          <View style={{ flexDirection: "row", flex: 2 }}>
-            <Checkbox
+          <View style={{ flexDirection: "row", flex: 1 }}>
+            {/* <Checkbox
               value={remember}
               onValueChange={setRemember}
               style={styles.checkbox}
             />
             <Text style={{ width: "90%", fontSize: 17 }}>
               Ghi nhớ đăng nhập
-            </Text>
+            </Text> */}
           </View>
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 2 }}>
             <TouchableOpacity style={{ width: "100%", height: "100%" }}>
-              <Text style={{ width: "100%", fontSize: 17, color: "#223ffa" }}>
+              <Text
+                style={{
+                  width: "100%",
+                  fontSize: 17,
+                  color: "#223ffa",
+                  textAlign: "right",
+                }}
+              >
                 Quên mật khẩu?
               </Text>
             </TouchableOpacity>
@@ -182,22 +272,44 @@ function HeaderLogin({ keyboardShow }) {
   );
 }
 
-function FooterLogin() {
+function FooterLogin({ setModalVisible }) {
   return (
     <View
       style={{
         width: "100%",
         height: "40%",
-        justifyContent: "center",
         alignItems: "center",
+        position: "relative",
       }}
     >
-      <Image
-        style={{ width: "95%", height: "85%" }}
-        resizeMode="stretch"
-        source={require("../../resources/footerBackfround.png")}
-      />
-      <Text style={{ fontSize: 14, marginTop: 10 }}>
+      <TouchableOpacity
+        style={{
+          width: "100%",
+          height: 100,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onPress={() => {
+          setModalVisible(true);
+        }}
+      >
+        <Text
+          style={{
+            color: "#000",
+            fontSize: 20,
+            flex: 2,
+          }}
+        >
+          <Image
+            style={{ width: 40, height: 40 }}
+            resizeMode="stretch"
+            source={require("../../resources/fingerprint.png")}
+          />
+          Đăng nhập bằng vân tay
+        </Text>
+      </TouchableOpacity>
+
+      {/* <Text style={{ fontSize: 14, marginTop: 10 }}>
         Phần mềm được phát triển bởi
       </Text>
       <Text
@@ -207,10 +319,11 @@ function FooterLogin() {
         }}
       >
         Công ty TNHH Giải pháp doanh nghiệp Hài Hòa
-      </Text>
+      </Text> */}
     </View>
   );
 }
+
 //#endregion
 
 const styles = {
@@ -232,5 +345,25 @@ const styles = {
   button: {
     width: "100%",
     height: 40,
+  },
+};
+
+const modals = {
+  bottomView: {
+    width: "95%",
+    height: 250,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    position: "absolute",
+    left: 0,
+    bottom: 0,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    flexDirection: "column",
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
 };
