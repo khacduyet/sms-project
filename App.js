@@ -7,15 +7,15 @@ import { Provider } from 'react-redux';
 import { store } from './src/redux/store';
 import HomePage from './src/screens/home';
 import { useEffect, useState } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { TabNavigatior } from './src/utils/navigators';
 import Notification from './src/utils/notifications';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import HomeSetting from './src/screens/home/setting';
+
 
 const Stack = createNativeStackNavigator();
-const Tab = createBottomTabNavigator();
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -32,6 +32,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Login" component={LoginPage} />
+          <Stack.Screen name="Setting" component={HomeSetting} />
           <Stack.Screen name="Home" component={TabNavigatior} />
         </Stack.Navigator>
       </NavigationContainer>

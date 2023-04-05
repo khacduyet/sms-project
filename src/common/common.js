@@ -6,6 +6,7 @@ export const StatusCode = {
     NOT_LOGIN: 3,
     OTHER_ERROR: 4,
     CONTACT_DEV: 5,
+    ERROR_USER: 6,
 }
 
 export const returnMessage = (statusCode) => {
@@ -20,6 +21,8 @@ export const returnMessage = (statusCode) => {
             return "Lỗi khác";
         case StatusCode.CONTACT_DEV:
             return "Có lỗi xảy ra trong quá trình xử lý vui lòng liên hệ kỹ thuật!";
+        case StatusCode.ERROR_USER:
+            return "Sai tên tài khoản hoặc mật khẩu!";
         default:
             return "";
     }

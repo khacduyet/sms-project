@@ -21,6 +21,20 @@ export const loginSubmit = (data) => async dispatch => {
         console.log("error: ", error);
     }
 }
+export const logoutSubmit = () => async dispatch => {
+    try {
+        await AsyncStorage.removeItem(
+            'token'
+        );
+        dispatch({
+            type: SET_TOKEN,
+            payload: null
+        })
+        // dispatch(setLoading(false));
+    } catch (error) {
+        console.log("error: ", error);
+    }
+}
 
 export const getCurrentUser = () => async dispatch => {
     try {

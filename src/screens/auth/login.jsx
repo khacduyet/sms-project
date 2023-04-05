@@ -11,19 +11,33 @@ import {
   KeyboardAvoidingView,
   Modal,
   Pressable,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
 import { loginSubmit } from "../../redux/actions/loginAction";
 import Loading from "../loading";
+import * as LocalAuthentication from "expo-local-authentication";
 import { setLoading } from "../../redux/actions/loadingAction";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginPage({ navigation }) {
   const [keyboardShow, setKeyboardShow] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
   const loading = useSelector((state) => state.loading);
 
+  const [fingerPrint, setFingerPrint] = useState(false);
+  const getFinger = async () => {
+    let func = await AsyncStorage.getItem("fingerPrint");
+    if (func) {
+      let bool = func === "true";
+      setFingerPrint(bool);
+    }
+  };
+
   useEffect(() => {
+    getFinger();
+
     Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardShow(true);
     });
@@ -32,94 +46,84 @@ export default function LoginPage({ navigation }) {
     });
   }, []);
 
-  const _isShowPrint = {
-    backgroundColor: "#a3a3a3",
+  useEffect(() => {
+    async () => {
+      const compatible = await LocalAuthentication.hasHardwareAsync();
+      setIsBiometricSupported(compatible);
+    };
+  });
+
+  const fallBackToDefaultAuth = () => {
+    console.log("fall back to password authentication");
+  };
+
+  const alertComponent = (title, mess, btnTxt, btnFunc) => {
+    return Alert.alert(title, mess, [
+      {
+        text: btnTxt,
+        onPress: btnFunc,
+      },
+    ]);
+  };
+
+  const handleBiometricAuth = async () => {
+    const isBiometricAvail = await LocalAuthentication.hasHardwareAsync();
+
+    if (!isBiometricAvail)
+      return alertComponent(
+        "Please enter your password",
+        "Biometric auth not supported",
+        "Ok",
+        () => fallBackToDefaultAuth
+      );
+
+    let supportedBiometrics;
+    if (isBiometricAvail)
+      supportedBiometrics =
+        await LocalAuthentication.supportedAuthenticationTypesAsync();
+
+    const savedBiometrics = await LocalAuthentication.isEnrolledAsync();
+    if (!savedBiometrics)
+      return alertComponent(
+        "Biometric record not found",
+        "Please ...",
+        "Ok",
+        () => fallBackToDefaultAuth()
+      );
+
+    const biometricAuth = await LocalAuthentication.authenticateAsync({
+      promptMessage: "HarmonyES",
+      cancelLabel: "cancel",
+      disableDeviceFallback: true,
+    });
+
+    if (biometricAuth) {
+      navigation.navigate("Home");
+      // TwoButtonAlert();
+    }
+
+    // console.log({ isBiometricAvail });
+    // console.log({ supportedBiometrics });
+    // console.log({ savedBiometrics });
+    // console.log({ biometricAuth });
   };
 
   return (
     <View style={{ position: "relative" }}>
       {loading.loading && <Loading />}
-      <KeyboardAvoidingView>
-        <View
-          style={[
-            modalVisible ? _isShowPrint : {},
-            { width: "100%", height: "100%" },
-          ]}
-        >
-          <SafeAreaView style={[{ margin: 10 }]}>
+      <SafeAreaView style={[{ margin: 10 }]}>
+        <KeyboardAvoidingView>
+          <View style={[styles.container, {}]}>
             <HeaderLogin keyboardShow={keyboardShow} />
             <BodyLogin keyboardShow={keyboardShow} navigation={navigation} />
-            {!keyboardShow && <FooterLogin setModalVisible={setModalVisible} />}
-          </SafeAreaView>
-        </View>
-      </KeyboardAvoidingView>
-      {modalVisible && (
-        <ModalFingerPrint
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-        />
-      )}
-    </View>
-  );
-}
-
-function ModalFingerPrint({ modalVisible, setModalVisible }) {
-  return (
-    <View style={modals.bottomView}>
-      <Modal
-        transparent
-        animationType="slide"
-        visible={modalVisible}
-        onRequestClose={() => {
-          console.log("Pressed outside the box!");
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={modals.bottomView}>
-          <Text style={{ flex: 1, fontSize: 22 }}>Smart EOS</Text>
-          <Text style={{ flex: 1, fontSize: 14 }}>
-            Xác thực bằng vân tay, vui lòng chạm vào cảm biến
-          </Text>
-          <View
-            style={{
-              flex: 2,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image
-              style={{ width: 40, height: 40 }}
-              resizeMode="stretch"
-              source={require("../../resources/fingerprint.png")}
+            <FooterLogin
+              handleBiometricAuth={handleBiometricAuth}
+              fingerPrint={fingerPrint}
             />
-            <Text style={{ fontSize: 12, marginTop: 10 }}>
-              Chạm vào cảm biến vân tay
-            </Text>
+            {/* {!keyboardShow && <FooterLogin />} */}
           </View>
-          <Text style={{ flex: 1 }}>
-            <TouchableOpacity
-              style={{
-                width: 100,
-                height: 40,
-              }}
-              onPress={() => {
-                setModalVisible(false);
-              }}
-            >
-              <Text
-                style={{
-                  color: "brown",
-                  fontWeight: 600,
-                  fontSize: 14,
-                  alignItems: "flex-end",
-                }}
-              >
-                CANCEL
-              </Text>
-            </TouchableOpacity>
-          </Text>
-        </View>
-      </Modal>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
     </View>
   );
 }
@@ -152,17 +156,20 @@ function BodyLogin({ keyboardShow, navigation, _loading }) {
     if (tokenReducer.access_token) {
       setTimeout(() => {
         navigation.navigate("Home");
-      }, 2000);
+      }, 1000);
     }
   }, [tokenReducer]);
 
   return (
     <View
-      style={{
-        height: keyboardShow ? "60%" : "35%",
-        width: "100%",
-        flexDirection: "column",
-      }}
+      style={[
+        {
+          height: keyboardShow ? "60%" : "35%",
+          width: "100%",
+          flexDirection: "column",
+        },
+        styles.body,
+      ]}
     >
       <View style={{ width: "100%" }}>
         <Text style={styles.label}>Tên tài khoản</Text>
@@ -184,17 +191,8 @@ function BodyLogin({ keyboardShow, navigation, _loading }) {
         />
       </View>
       <View style={{ height: 50 }}>
-        <View style={{ flexDirection: "row", marginTop: 10 }}>
-          <View style={{ flexDirection: "row", flex: 1 }}>
-            {/* <Checkbox
-              value={remember}
-              onValueChange={setRemember}
-              style={styles.checkbox}
-            />
-            <Text style={{ width: "90%", fontSize: 17 }}>
-              Ghi nhớ đăng nhập
-            </Text> */}
-          </View>
+        <View style={{ flexDirection: "row", marginTop: 20 }}>
+          <View style={{ flexDirection: "row", flex: 1 }}></View>
           <View style={{ flex: 2 }}>
             <TouchableOpacity style={{ width: "100%", height: "100%" }}>
               <Text
@@ -219,10 +217,9 @@ function BodyLogin({ keyboardShow, navigation, _loading }) {
             backgroundColor: "#037bff",
             justifyContent: "center",
             alignItems: "center",
-            borderRadius: 5,
+            borderRadius: 10,
           }}
           onPress={() => {
-            // showToast();
             handleLogin();
           }}
         >
@@ -246,12 +243,15 @@ function BodyLogin({ keyboardShow, navigation, _loading }) {
 function HeaderLogin({ keyboardShow }) {
   return (
     <View
-      style={{
-        width: "100%",
-        height: keyboardShow ? "40%" : "25%",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+      style={[
+        {
+          width: "100%",
+          height: keyboardShow ? "40%" : "25%",
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        styles.header,
+      ]}
     >
       <Text
         style={{
@@ -272,42 +272,50 @@ function HeaderLogin({ keyboardShow }) {
   );
 }
 
-function FooterLogin({ setModalVisible }) {
+function FooterLogin({ handleBiometricAuth, fingerPrint }) {
+  console.log("fingerPrint", fingerPrint);
   return (
     <View
-      style={{
-        width: "100%",
-        height: "40%",
-        alignItems: "center",
-        position: "relative",
-      }}
-    >
-      <TouchableOpacity
-        style={{
+      style={[
+        {
           width: "100%",
-          height: 100,
-          justifyContent: "center",
+          height: "40%",
           alignItems: "center",
-        }}
-        onPress={() => {
-          setModalVisible(true);
-        }}
-      >
-        <Text
+          position: "relative",
+        },
+        styles.footer,
+      ]}
+    >
+      {fingerPrint && (
+        <TouchableOpacity
           style={{
-            color: "#000",
-            fontSize: 20,
-            flex: 2,
+            width: "80%",
+            height: 100,
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
           }}
+          onPress={handleBiometricAuth}
         >
-          <Image
-            style={{ width: 40, height: 40 }}
-            resizeMode="stretch"
-            source={require("../../resources/fingerprint.png")}
-          />
-          Đăng nhập bằng vân tay
-        </Text>
-      </TouchableOpacity>
+          <View style={{ flex: 1, alignItems: "flex-end" }}>
+            <Image
+              style={{ width: 30, height: 30 }}
+              resizeMode="stretch"
+              source={require("../../resources/fingerprint.png")}
+            />
+          </View>
+          <Text
+            style={{
+              marginLeft: 10,
+              color: "#000",
+              fontSize: 16,
+              flex: 3,
+            }}
+          >
+            Đăng nhập bằng vân tay
+          </Text>
+        </TouchableOpacity>
+      )}
 
       {/* <Text style={{ fontSize: 14, marginTop: 10 }}>
         Phần mềm được phát triển bởi
@@ -327,13 +335,28 @@ function FooterLogin({ setModalVisible }) {
 //#endregion
 
 const styles = {
+  container: {
+    flexDirection: "column",
+    width: "100%",
+    height: "100%",
+  },
+  header: {
+    flex: 1,
+  },
+  body: {
+    flex: 2,
+  },
+  footer: {
+    flex: 1,
+  },
   label: {
     fontSize: 18,
   },
   input: {
     width: "100%",
-    height: 40,
+    height: 50,
     borderWidth: 1,
+    fontSize: 18,
     padding: 10,
     borderRadius: 5,
   },
@@ -344,26 +367,6 @@ const styles = {
   },
   button: {
     width: "100%",
-    height: 40,
-  },
-};
-
-const modals = {
-  bottomView: {
-    width: "95%",
-    height: 250,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    position: "absolute",
-    left: 0,
-    bottom: 0,
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-    flexDirection: "column",
-    paddingLeft: 20,
-    paddingRight: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
+    height: 50,
   },
 };

@@ -18,6 +18,11 @@ axiosClient.interceptors.response.use(
         return res.data
     },
     (er) => {
+        if (er.response.status === 400) {
+            let _msg = returnMessage(StatusCode.ERROR_USER)
+            ToastAndroid.show(_msg, ToastAndroid.SHORT);
+            return;
+        }
         let _msg = returnMessage(StatusCode.CONTACT_DEV)
         ToastAndroid.show(_msg, ToastAndroid.SHORT);
     }

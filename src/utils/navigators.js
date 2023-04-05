@@ -5,8 +5,11 @@ import AttendancePage from '../screens/attendances';
 import SchedulePage from '../screens/schedules';
 import { BlurView } from 'expo-blur';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomePage from "../screens/home";
+import HomeSetting from "../screens/home/setting";
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export function TabNavigatior() {
     return <Tab.Navigator initialRouteName="HomeIndex" screenOptions={{
