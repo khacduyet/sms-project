@@ -17,8 +17,9 @@ const getHeaders = async () => {
 }
 
 export const AuthServices = {
-    loginUser: (data) => {
-        let _payload = `username=${data.username}&password=${data.password}&grant_type=password&tokenfirebase=a`
+    loginUser: async (data) => {
+        const tokenfirebase = await AsyncStorage.getItem('deviceToken');
+        let _payload = `username=${data.username}&password=${data.password}&grant_type=password&tokenfirebase=${tokenfirebase}`
         return post(smarteos + `oauth2/token`, _payload)
     },
     currentUser: async () => {

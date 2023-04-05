@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCurrentUser } from "../../redux/actions/loginAction";
 import { setLoading } from "../../redux/actions/loadingAction";
+import HomeNavBar from "./navbar";
 
 
 export default function HomePage({ navigation }) {
@@ -24,13 +25,7 @@ export default function HomePage({ navigation }) {
 
 
     return <SafeAreaView>
-        <TouchableOpacity style={{ width: 100, height: 40, borderWidth: 1, backgroundColor: "blue", justifyContent: "center", alignItems: "center", marginTop: 10 }}
-            onPress={() => {
-                navigation.navigate("Login")
-            }}
-        >
-            <Text style={{ color: "#fff" }}>Quay lại</Text>
-        </TouchableOpacity>
+        <HomeNavBar currentUser={currentUser} />
         <View style={{ width: "100%", height: "80%", alignItems: "center", justifyContent: "center" }}>
             <Text style={{ fontSize: 20, }}>Xin chào {currentUser.TenNhanVien}!</Text>
         </View>
