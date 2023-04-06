@@ -15,11 +15,12 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
-import { loginSubmit } from "../../redux/actions/loginAction";
+import { getCurrentUser, loginSubmit } from "../../redux/actions/loginAction";
 import Loading from "../loading";
 import * as LocalAuthentication from "expo-local-authentication";
 import { setLoading } from "../../redux/actions/loadingAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Screens } from "../../common/constant";
 
 export default function LoginPage({ navigation }) {
   const [keyboardShow, setKeyboardShow] = useState(false);
@@ -27,23 +28,52 @@ export default function LoginPage({ navigation }) {
   const loading = useSelector((state) => state.loading);
 
   const [fingerPrint, setFingerPrint] = useState(false);
+
+  const currentUser = useSelector((state) => state.currentUser);
+
+  const [avatar, setAvatar] = useState({
+    isExternal: false,
+    url: "../../resources/avatar-student.png",
+  });
+
+  const getAvatar = async () => {
+    if (currentUser.LinkAnhDaiDien) {
+      let url = BASE_URL + currentUser.LinkAnhDaiDien;
+      let obj = {
+        isExternal: true,
+        url: url,
+      };
+      setAvatar(obj);
+      await AsyncStorage.setItem("avatarCurrent", url);
+    }
+  };
+
   const getFinger = async () => {
     let func = await AsyncStorage.getItem("fingerPrint");
     if (func) {
       let bool = func === "true";
+      if (bool) {
+        await handleBiometricAuth();
+      }
       setFingerPrint(bool);
     }
   };
 
   useEffect(() => {
-    getFinger();
+    getAvatar();
+  }, [currentUser.LinkAnhDaiDien]);
 
+  useEffect(() => {
     Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardShow(true);
     });
     Keyboard.addListener("keyboardDidHide", () => {
       setKeyboardShow(false);
     });
+  }, []);
+
+  useEffect(() => {
+    getFinger();
   }, []);
 
   useEffect(() => {
@@ -98,14 +128,8 @@ export default function LoginPage({ navigation }) {
     });
 
     if (biometricAuth) {
-      navigation.navigate("Home");
-      // TwoButtonAlert();
+      navigation.navigate(Screens.Home);
     }
-
-    // console.log({ isBiometricAvail });
-    // console.log({ supportedBiometrics });
-    // console.log({ savedBiometrics });
-    // console.log({ biometricAuth });
   };
 
   return (
@@ -135,6 +159,7 @@ function BodyLogin({ keyboardShow, navigation, _loading }) {
   });
   const loading = useSelector((state) => state.loading);
   const tokenReducer = useSelector((state) => state.tokenReducer);
+  const currentUser = useSelector((state) => state.currentUser);
   const dispatch = useDispatch();
   // console.log("loading", loading);
 
@@ -153,9 +178,10 @@ function BodyLogin({ keyboardShow, navigation, _loading }) {
   };
 
   useEffect(() => {
-    if (tokenReducer.access_token) {
+    dispatch(getCurrentUser());
+    if (currentUser && currentUser.TenNhanVien) {
       setTimeout(() => {
-        navigation.navigate("Home");
+        navigation.navigate(Screens.Home);
       }, 1000);
     }
   }, [tokenReducer]);
@@ -273,7 +299,6 @@ function HeaderLogin({ keyboardShow }) {
 }
 
 function FooterLogin({ handleBiometricAuth, fingerPrint }) {
-  console.log("fingerPrint", fingerPrint);
   return (
     <View
       style={[
@@ -358,12 +383,12 @@ const styles = {
     borderWidth: 1,
     fontSize: 18,
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   checkbox: {
     width: 23,
     height: 23,
-    marginRight: 5,
+    marginRight: 10,
   },
   button: {
     width: "100%",

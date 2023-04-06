@@ -15,3 +15,19 @@ export const FONT_SEMIBOLD = '500';
 export const BUTTON_HEIGHT = 56;
 
 export const BASE_URL = 'http://103.130.212.45:1889/';
+
+
+export const Screens = {
+    Login: 'Login',
+    Home: 'Trang Chủ',
+    Notification: 'Thông báo',
+    Profile: 'Tài khoản',
+    AddServer: 'AddServer',
+    AddTask: 'AddTask',
+    ChangePassword: 'Đổi mật khẩu',
+    Chat: 'Chat',
+    NotificationGeneral: 'Thông báo chung',
+    Setting: 'Cài đặt',
+    Personal: 'Cá nhân',
+
+};

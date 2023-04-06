@@ -1,4 +1,4 @@
-import { Image, StyleSheet } from "react-native"
+import { Image, StyleSheet, Text, View } from "react-native"
 import PersonalPage from '../screens/settings';
 import AcademicPage from '../screens/accademics';
 import AttendancePage from '../screens/attendances';
@@ -8,14 +8,21 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomePage from "../screens/home";
 import HomeSetting from "../screens/home/setting";
+import { Screens } from "../common/constant";
+import HomeNavBar from "../screens/home/navbar";
+import { useSelector } from "react-redux";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export function TabNavigatior() {
+    const currentUser = useSelector((state) => state.currentUser);
     return <Tab.Navigator initialRouteName="HomeIndex" screenOptions={{
-        headerShown: false,
+        // headerShown: false,
+        header: ({ navigation }) => {
+            return <HomeNavBar currentUser={currentUser} />
+        },
         tabBarBackground: () => (
-            <BlurView tint="light" intensity={100} style={StyleSheet.absoluteFill} />
+            <BlurView tint="light" intensity={100} style={{ backgroundColor: "#cfe2ff" }} />
         ),
         tabBarActiveTintColor: '#e91e63',
         tabBarActiveBackgroundColor: '#C7D3E6'
@@ -56,9 +63,9 @@ export function TabNavigatior() {
                 }
             }}
         />
-        <Tab.Screen name="Personal" component={PersonalPage}
+        <Tab.Screen name={Screens.Personal} component={PersonalPage}
             options={{
-                tabBarLabel: "Cá nhân",
+                tabBarLabel: Screens.Personal,
                 tabBarIcon: () => {
                     return <Image source={require("../resources/icons/personal.png")} style={{ width: 30, height: 30 }} resizeMode="stretch" />
                 }

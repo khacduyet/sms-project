@@ -25,7 +25,7 @@ export default function HomePage({ navigation }) {
 
 
     return <SafeAreaView>
-        <HomeNavBar currentUser={currentUser} />
+        {/* <HomeNavBar currentUser={currentUser} /> */}
         <View style={{ width: "100%", height: "80%", alignItems: "center", justifyContent: "center" }}>
             <Text style={{ fontSize: 20, }}>Xin chào {currentUser.TenNhanVien}!</Text>
         </View>
