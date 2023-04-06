@@ -1,4 +1,4 @@
-import { Image, SafeAreaView, Text, View, TouchableOpacity, Switch } from "react-native";
+import { Image, SafeAreaView, Text, View, TouchableOpacity, Switch, ImageBackground } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
@@ -8,26 +8,55 @@ import { AntDesign } from '@expo/vector-icons';
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logoutSubmit } from "../../redux/actions/loginAction";
+import { BASE_URL, Screens } from "../../common/constant";
 
 export default function HomeSetting() {
     const currentUser = useSelector((state) => state.currentUser);
+
+    const [avatar, setAvatar] = useState({
+        isExternal: false,
+        url: "../../resources/avatar-student.png"
+    })
+
+    const getAvatar = async () => {
+        if (currentUser.LinkAnhDaiDien) {
+            let url = BASE_URL + currentUser.LinkAnhDaiDien
+            let obj = {
+                isExternal: true,
+                url: url
+            }
+            setAvatar(obj)
+            await AsyncStorage.setItem(
+                'avatarCurrent',
+                url,
+            );
+        }
+    }
+
+    useEffect(() => {
+        getAvatar()
+    }, [currentUser.LinkAnhDaiDien])
+
     return <SafeAreaView style={[styles.container]}>
         <View style={[styles.wrapper]}>
             <View style={[styles.navTop]}>
-                <View style={[styles.navLeft]}>
-                    <TouchableOpacity>
-                        <View style={[styles.navLeftContent]}>
-                            <Image style={[styles.avatar]} source={require('../../resources/loadingtrans.gif')} resizeMode='stretch' />
-                        </View>
-                    </TouchableOpacity>
+                <ImageBackground source={require("../../resources/bg-setting-header.png")} resizeMode="stretch" style={{ height: '100%', width: '100%', flexDirection: 'row' }}>
+                    <View style={[styles.navLeft]}>
+                        <TouchableOpacity>
+                            <View style={[styles.navLeftContent]}>
+                                <Image style={[styles.avatar]} source={avatar.isExternal ? { uri: avatar.url } : require(`../../resources/avatar-student.png`)} resizeMode='stretch' />
+                            </View>
+                        </TouchableOpacity>
 
-                </View>
-                <View style={[styles.navRight]}>
-                    <Text style={[styles.navText, styles.navTextName]}>{currentUser && currentUser.TenNhanVien}</Text>
-                    <Text style={[styles.navText]}>MSV: {currentUser && currentUser.MaNhanVien}</Text>
-                    <Text style={[styles.navText]}>Lớp: </Text>
-                    <Text style={[styles.navText]}>Khóa: </Text>
-                </View>
+                    </View>
+                    <View style={[styles.navRight]}>
+                        <Text style={[styles.navText, styles.navTextName]}>{currentUser && currentUser.TenNhanVien}</Text>
+                        <Text style={[styles.navText]}>MSV: {currentUser && currentUser.MaNhanVien}</Text>
+                        <Text style={[styles.navText]}>Lớp: </Text>
+                        <Text style={[styles.navText]}>Khóa: </Text>
+                    </View>
+
+                </ImageBackground>
             </View>
             <View style={[styles.menuBody]}>
                 <BodySetting />
@@ -67,13 +96,13 @@ function BodySetting() {
         <View style={[bodys.wrapper]}>
             <TouchableOpacity style={[bodys.buttonComponent]}>
                 <View style={[bodys.wrapperLeft]}>
-                    <FontAwesome5 name="user-circle" size={35} color="black" />
+                    <FontAwesome5 name="user-circle" size={35} color="#1e20e7" />
                 </View>
                 <View style={[bodys.wrapperMiddle]}>
                     <Text style={[bodys.wrapperText]}>Thông tin cá nhân</Text>
                 </View>
                 <View style={[bodys.wrapperRight]}>
-                    <MaterialIcons name="keyboard-arrow-right" size={35} color="black" />
+                    <MaterialIcons name="keyboard-arrow-right" size={35} color="#494949" />
                 </View>
             </TouchableOpacity>
         </View>
@@ -81,18 +110,18 @@ function BodySetting() {
         <View style={[bodys.wrapper]}>
             <TouchableOpacity style={[bodys.buttonComponent]}>
                 <View style={[bodys.wrapperLeft]}>
-                    <Feather name="settings" size={35} color="black" />
+                    <Feather name="settings" size={35} color="#1e20e7" />
                 </View>
                 <View style={[bodys.wrapperMiddle]}>
                     <Text style={[bodys.wrapperText]}>Cài đặt</Text>
                 </View>
                 <View style={[bodys.wrapperRight]}>
-                    <MaterialIcons name="keyboard-arrow-right" size={35} color="black" />
+                    <MaterialIcons name="keyboard-arrow-right" size={35} color="#494949" />
                 </View>
             </TouchableOpacity>
         </View>
 
-        <View style={[bodys.wrapper]}>
+        {/* <View style={[bodys.wrapper]}>
             <TouchableOpacity style={[bodys.buttonComponent]}>
                 <View style={[bodys.wrapperLeft]}>
                     <MaterialIcons name="fingerprint" size={35} color="black" />
@@ -108,9 +137,9 @@ function BodySetting() {
                     />
                 </View>
             </TouchableOpacity>
-        </View>
+        </View> */}
 
-        <View style={[bodys.wrapper]}>
+        {/* <View style={[bodys.wrapper]}>
             <TouchableOpacity style={[bodys.buttonComponent]}>
                 <View style={[bodys.wrapperLeft]}>
                     <AntDesign name="lock" size={35} color="black" />
@@ -122,12 +151,11 @@ function BodySetting() {
                     <MaterialIcons name="keyboard-arrow-right" size={35} color="black" />
                 </View>
             </TouchableOpacity>
-        </View>
+        </View> */}
 
         <View style={[bodys.wrapper]} >
             <TouchableOpacity style={[bodys.buttonComponent]} onPress={() => {
                 dispatch(logoutSubmit());
-                nav.navigate("Login")
             }}>
                 <View style={[bodys.wrapperLeft]}>
                     <Feather name="log-out" size={35} color="black" />
@@ -144,7 +172,7 @@ function BodySetting() {
         <View style={[bodys.buttonWrap]}>
             <TouchableOpacity style={[bodys.button]}
                 onPress={() => {
-                    nav.navigate("Home")
+                    nav.navigate(Screens.Home)
                 }}
             >
                 <Text style={[bodys.buttonText, { color: "#fff" }]}>Quay lại</Text>
@@ -170,7 +198,7 @@ const styles = {
         paddingTop: 30
     },
     navLeft: {
-        flex: 1,
+        flex: 2,
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -184,17 +212,17 @@ const styles = {
     },
     avatar: {
         width: 150,
-        height: 100
+        height: 150
     },
     navRight: {
-        flex: 2,
-        marginLeft: 10
+        flex: 3,
     },
     navText: {
         color: "#fff",
         fontSize: 20,
         fontWeight: 600,
-        paddingTop: 5
+        paddingTop: 5,
+        paddingLeft: 10
     },
     navTextName: {
         fontSize: 30
@@ -209,20 +237,24 @@ const bodys = {
         width: "100%",
         height: "100%",
         flexDirection: 'column',
-        marginTop: 40
+        paddingTop: 30,
+        backgroundColor: "#f3f3f3"
     },
     wrapper: {
-        with: "100%",
+        width: "100%",
         height: 50,
-        borderBottomWidth: 1,
-        marginTop: 5
+        marginTop: 10,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     buttonComponent: {
-        with: "100%",
+        width: "90%",
         height: "100%",
         flexDirection: 'row',
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "#fff",
+        borderRadius: 10
     },
     wrapperLeft: {
         flex: 1,
@@ -232,7 +264,7 @@ const bodys = {
         flex: 4
     },
     wrapperText: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 500,
         paddingLeft: 20
     },
@@ -240,6 +272,7 @@ const bodys = {
         flex: 1,
         alignItems: "flex-end",
         justifyContent: "center",
+        paddingRight: 10
     },
     buttonWrap: {
         width: "100%",
@@ -250,7 +283,7 @@ const bodys = {
     },
     button: {
         width: "90%",
-        borderRadius: 5,
+        borderRadius: 10,
         height: "100%",
         backgroundColor: "blue",
         justifyContent: "center",

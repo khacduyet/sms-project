@@ -1,6 +1,8 @@
 import { AuthServices } from "../../services/auth.service";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SET_CURRENT_USER, SET_TOKEN } from "../reducers/loginReducer";
+import * as Updates from 'expo-updates';
+
 
 
 export const loginSubmit = (data) => async dispatch => {
@@ -26,10 +28,10 @@ export const logoutSubmit = () => async dispatch => {
         await AsyncStorage.removeItem(
             'token'
         );
-        dispatch({
-            type: SET_TOKEN,
-            payload: null
-        })
+        await AsyncStorage.removeItem(
+            'fingerPrint'
+        );
+        Updates.reloadAsync()
         // dispatch(setLoading(false));
     } catch (error) {
         console.log("error: ", error);
