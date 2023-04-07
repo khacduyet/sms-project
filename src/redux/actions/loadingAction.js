@@ -1,4 +1,4 @@
-import { SET_LOADING } from "../reducers/loadingReducer"
+import { GET_LOADING, SET_LOADING } from "../reducers/loadingReducer"
 
 
 export const getLoading = () => dispatch => {

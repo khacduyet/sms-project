@@ -29,8 +29,8 @@ const styles = {
         zIndex: 1
     },
     image: {
-        width: 300,
-        height: 150
+        width: 150,
+        height: 75
     },
     text: {
 

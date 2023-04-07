@@ -27,7 +27,11 @@ export const Screens = {
     ChangePassword: 'Đổi mật khẩu',
     Chat: 'Chat',
     NotificationGeneral: 'Thông báo chung',
+    Personal: 'Thông tin cá nhân',
     Setting: 'Cài đặt',
-    Personal: 'Cá nhân',
+    Schedula: 'TKB',
+    Attendance: 'Điểm danh',
+    Academic: 'KQHT',
+    More: 'Thêm',
 
 };

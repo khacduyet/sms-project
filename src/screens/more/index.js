@@ -1,16 +1,18 @@
-import { Image, SafeAreaView, Text, View, TouchableOpacity, Switch, ImageBackground } from "react-native";
+import { Image, SafeAreaView, Text, View, TouchableOpacity, Switch, ImageBackground, Alert } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logoutSubmit } from "../../redux/actions/loginAction";
 import { BASE_URL, Screens } from "../../common/constant";
 
-export default function HomeSetting() {
+export default function HomeMore() {
     const currentUser = useSelector((state) => state.currentUser);
 
     const [avatar, setAvatar] = useState({
@@ -67,30 +69,25 @@ export default function HomeSetting() {
 
 function BodySetting() {
     const nav = useNavigation();
-    const [fingerPrint, setFingerPrint] = useState(false);
     const dispatch = useDispatch();
 
-    const handleFingerPrint = async () => {
-        let fp = !fingerPrint
-        setFingerPrint(fp);
-        await AsyncStorage.setItem(
-            'fingerPrint',
-            `${fp}`
-        );
+    const handleLogout = () => {
+        let alert = Alert.alert("Thông báo", "Bạn có chắc chắn muốn đăng xuất tài khoản?", [
+            {
+                text: "Hủy",
+                onPress: () => {
+                    console.log("Người dùng đã hủy thao tác");
+                },
+            },
+            {
+                text: "Đồng ý",
+                onPress: () => {
+                    dispatch(logoutSubmit())
+                }
+            }
+        ])
+
     }
-
-    const getFinger = async () => {
-        let func = await AsyncStorage.getItem('fingerPrint')
-        if (func) {
-            let bool = func === "true"
-            setFingerPrint(bool)
-        }
-    }
-
-    useEffect(() => {
-        getFinger()
-    }, [])
-
 
     return <View style={[bodys.container]}>
         <View style={[bodys.wrapper]}>
@@ -99,7 +96,7 @@ function BodySetting() {
                     <FontAwesome5 name="user-circle" size={35} color="#1e20e7" />
                 </View>
                 <View style={[bodys.wrapperMiddle]}>
-                    <Text style={[bodys.wrapperText]}>Thông tin cá nhân</Text>
+                    <Text style={[bodys.wrapperText]}>{Screens.Personal}</Text>
                 </View>
                 <View style={[bodys.wrapperRight]}>
                     <MaterialIcons name="keyboard-arrow-right" size={35} color="#494949" />
@@ -108,12 +105,14 @@ function BodySetting() {
         </View>
 
         <View style={[bodys.wrapper]}>
-            <TouchableOpacity style={[bodys.buttonComponent]}>
+            <TouchableOpacity style={[bodys.buttonComponent]} onPress={() => {
+                nav.push(Screens.Setting)
+            }}>
                 <View style={[bodys.wrapperLeft]}>
                     <Feather name="settings" size={35} color="#1e20e7" />
                 </View>
                 <View style={[bodys.wrapperMiddle]}>
-                    <Text style={[bodys.wrapperText]}>Cài đặt</Text>
+                    <Text style={[bodys.wrapperText]}>{Screens.Setting}</Text>
                 </View>
                 <View style={[bodys.wrapperRight]}>
                     <MaterialIcons name="keyboard-arrow-right" size={35} color="#494949" />
@@ -121,61 +120,15 @@ function BodySetting() {
             </TouchableOpacity>
         </View>
 
-        {/* <View style={[bodys.wrapper]}>
-            <TouchableOpacity style={[bodys.buttonComponent]}>
-                <View style={[bodys.wrapperLeft]}>
-                    <MaterialIcons name="fingerprint" size={35} color="black" />
-                </View>
-                <View style={[bodys.wrapperMiddle]}>
-                    <Text style={[bodys.wrapperText]}>Đăng nhập vân tay</Text>
-                </View>
-                <View style={[bodys.wrapperRight]}>
-                    <Switch
-                        style={[bodys.switch]}
-                        onValueChange={handleFingerPrint}
-                        value={fingerPrint}
-                    />
-                </View>
-            </TouchableOpacity>
-        </View> */}
-
-        {/* <View style={[bodys.wrapper]}>
-            <TouchableOpacity style={[bodys.buttonComponent]}>
-                <View style={[bodys.wrapperLeft]}>
-                    <AntDesign name="lock" size={35} color="black" />
-                </View>
-                <View style={[bodys.wrapperMiddle]}>
-                    <Text style={[bodys.wrapperText]}>Đổi mật khẩu</Text>
-                </View>
-                <View style={[bodys.wrapperRight]}>
-                    <MaterialIcons name="keyboard-arrow-right" size={35} color="black" />
-                </View>
-            </TouchableOpacity>
-        </View> */}
-
-        <View style={[bodys.wrapper]} >
-            <TouchableOpacity style={[bodys.buttonComponent]} onPress={() => {
-                dispatch(logoutSubmit());
-            }}>
-                <View style={[bodys.wrapperLeft]}>
-                    <Feather name="log-out" size={35} color="black" />
-                </View>
-                <View style={[bodys.wrapperMiddle]}>
-                    <Text style={[bodys.wrapperText]}>Đăng xuất</Text>
-                </View>
-                <View style={[bodys.wrapperRight]}>
-                </View>
-            </TouchableOpacity>
-        </View>
 
 
-        <View style={[bodys.buttonWrap]}>
-            <TouchableOpacity style={[bodys.button]}
-                onPress={() => {
-                    nav.navigate(Screens.Home)
-                }}
-            >
-                <Text style={[bodys.buttonText, { color: "#fff" }]}>Quay lại</Text>
+        <View style={[bodys.wrapper, { marginTop: 40 }]} >
+            <TouchableOpacity style={[bodys.buttonComponent, bodys.buttonComponentLogout]} onPress={handleLogout}>
+
+                <View style={[bodys.wrapperMiddleLogout]}>
+                    <MaterialCommunityIcons name="logout" size={35} color="red" />
+                    <Text style={[bodys.wrapperText, bodys.wrapperTextLogout]}>Đăng xuất</Text>
+                </View>
             </TouchableOpacity>
         </View>
     </View>
@@ -195,7 +148,6 @@ const styles = {
         flex: 1,
         flexDirection: 'row',
         backgroundColor: '#243ffa',
-        paddingTop: 30
     },
     navLeft: {
         flex: 2,
@@ -256,6 +208,9 @@ const bodys = {
         backgroundColor: "#fff",
         borderRadius: 10
     },
+    buttonComponentLogout: {
+        backgroundColor: '#fcdede'
+    },
     wrapperLeft: {
         flex: 1,
         alignItems: "flex-end",
@@ -263,10 +218,19 @@ const bodys = {
     wrapperMiddle: {
         flex: 4
     },
+    wrapperMiddleLogout: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     wrapperText: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 500,
         paddingLeft: 20
+    },
+    wrapperTextLogout: {
+        color: 'red',
+        paddingLeft: 5
     },
     wrapperRight: {
         flex: 1,
