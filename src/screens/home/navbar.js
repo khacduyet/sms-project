@@ -1,8 +1,8 @@
 import { SafeAreaView, Text, View, TouchableOpacity, Image } from "react-native";
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { useNavigation } from "@react-navigation/native";
-import { Screens } from "../../common/constant";
-import { StatusBar } from "expo-status-bar";
+import { BASE_URL, Screens } from "../../common/constant";
+import { StatusBar } from "react-native";
 import { useMemo } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -16,6 +16,7 @@ export default function HomeNavBar({ currentUser }) {
     })
 
     const getAvatar = async () => {
+        console.log("currentUser", currentUser);
         if (currentUser.LinkAnhDaiDien) {
             let url = BASE_URL + currentUser.LinkAnhDaiDien
             let obj = {
@@ -31,16 +32,18 @@ export default function HomeNavBar({ currentUser }) {
     }, [currentUser.LinkAnhDaiDien])
 
     const nameStudent = useMemo(() => {
-        let arr = currentUser.TenNhanVien.split(" ");
-        return arr.length && arr[arr.length - 1]
+        if (currentUser.TenNhanVien) {
+            let arr = currentUser.TenNhanVien.split(" ");
+            return arr.length && arr[arr.length - 1]
+        }
+        return ''
     }, [currentUser.TenNhanVien])
 
     return <>
-        <StatusBar style="light" backgroundColor="#243ffa" />
         <View style={[styles.container]}>
             <View style={[styles.user]}>
                 <TouchableOpacity style={[styles.button, styles.buttonUser]} onPress={() => {
-                    navigate.push(Screens.Setting)
+                    // navigate.navigate(Screens.Setting)
                 }}>
                     <Image style={[styles.avatar]} source={avatar.isExternal ? { uri: avatar.url } : require(`../../resources/avatar-student.png`)} resizeMode='stretch' />
                     <Text style={[styles.buttonText]}>Xin chào! <Text style={[styles.buttonText, styles.buttonTextName]}>{nameStudent}</Text></Text>
@@ -60,14 +63,15 @@ export default function HomeNavBar({ currentUser }) {
 
 const styles = {
     container: {
-        paddingTop: "10%",
         width: "100%",
-        height: 85,
+        height: 50,
         backgroundColor: "#cfe2ff",
         flexDirection: 'row',
         justifyContent: "center",
         alignItems: 'center',
-        borderRadius: 15
+        // borderRadius: 15,
+        borderBottomLeftRadius: 15,
+        borderBottomRightRadius: 15,
     },
     bell: {
         flex: 1,
@@ -102,8 +106,8 @@ const styles = {
         paddingLeft: 10
     },
     avatar: {
-        width: 50,
-        height: 50
+        width: 30,
+        height: 30
     },
     button: {
         height: "100%",

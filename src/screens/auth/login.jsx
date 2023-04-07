@@ -14,54 +14,37 @@ import {
   Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Checkbox from "expo-checkbox";
+import { Feather } from "@expo/vector-icons";
 import { getCurrentUser, loginSubmit } from "../../redux/actions/loginAction";
 import Loading from "../loading";
 import * as LocalAuthentication from "expo-local-authentication";
 import { setLoading } from "../../redux/actions/loadingAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Screens } from "../../common/constant";
+import { BASE_URL, Screens } from "../../common/constant";
+import { useRoute } from "@react-navigation/native";
 
 export default function LoginPage({ navigation }) {
   const [keyboardShow, setKeyboardShow] = useState(false);
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+  const [hasBiometric, setHasBiometric] = useState(null);
   const loading = useSelector((state) => state.loading);
-
   const [fingerPrint, setFingerPrint] = useState(false);
-
   const currentUser = useSelector((state) => state.currentUser);
+  const dispatch = useDispatch();
 
-  const [avatar, setAvatar] = useState({
-    isExternal: false,
-    url: "../../resources/avatar-student.png",
-  });
-
-  const getAvatar = async () => {
-    if (currentUser.LinkAnhDaiDien) {
-      let url = BASE_URL + currentUser.LinkAnhDaiDien;
-      let obj = {
-        isExternal: true,
-        url: url,
-      };
-      setAvatar(obj);
-      await AsyncStorage.setItem("avatarCurrent", url);
-    }
-  };
-
+  //#region Đăng nhập bằng vân tay
   const getFinger = async () => {
     let func = await AsyncStorage.getItem("fingerPrint");
     if (func) {
       let bool = func === "true";
-      if (bool) {
+      if (bool && !hasBiometric) {
         await handleBiometricAuth();
       }
-      setFingerPrint(bool);
+      if (bool !== fingerPrint) {
+        setFingerPrint(bool);
+      }
     }
   };
-
-  useEffect(() => {
-    getAvatar();
-  }, [currentUser.LinkAnhDaiDien]);
 
   useEffect(() => {
     Keyboard.addListener("keyboardDidShow", () => {
@@ -127,10 +110,18 @@ export default function LoginPage({ navigation }) {
       disableDeviceFallback: true,
     });
 
-    if (biometricAuth) {
+    let account = await AsyncStorage.getItem("account");
+    if (biometricAuth.success) {
+      setHasBiometric(true);
+      dispatch(loginSubmit(JSON.parse(account)));
       navigation.navigate(Screens.Home);
+    } else {
+      setHasBiometric(false);
+      // await AsyncStorage.removeItem("token");
+      return;
     }
   };
+  //#endregion Đăng nhập bằng vân tay
 
   return (
     <View style={{ position: "relative" }}>
@@ -139,12 +130,14 @@ export default function LoginPage({ navigation }) {
         <KeyboardAvoidingView>
           <View style={[styles.container, {}]}>
             <HeaderLogin keyboardShow={keyboardShow} />
-            <BodyLogin keyboardShow={keyboardShow} navigation={navigation} />
-            <FooterLogin
+            <BodyLogin
+              keyboardShow={keyboardShow}
+              navigation={navigation}
+              hasBiometric={hasBiometric}
               handleBiometricAuth={handleBiometricAuth}
               fingerPrint={fingerPrint}
+              setFingerPrint={setFingerPrint}
             />
-            {/* {!keyboardShow && <FooterLogin />} */}
           </View>
         </KeyboardAvoidingView>
       </SafeAreaView>
@@ -152,16 +145,29 @@ export default function LoginPage({ navigation }) {
   );
 }
 
-function BodyLogin({ keyboardShow, navigation, _loading }) {
+function BodyLogin({
+  keyboardShow,
+  navigation,
+  hasBiometric,
+  handleBiometricAuth,
+  fingerPrint,
+  setFingerPrint,
+}) {
   const [account, setAccount] = useState({
     username: "nypt",
     password: "123456",
   });
-  const loading = useSelector((state) => state.loading);
+  const [submitForm, setSubmitForm] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+
   const tokenReducer = useSelector((state) => state.tokenReducer);
   const currentUser = useSelector((state) => state.currentUser);
+  const [userRemember, setUserRemember] = useState({
+    hasRemember: currentUser && currentUser?.Id ? true : false,
+    info: currentUser && currentUser?.Id ? currentUser : null,
+  });
   const dispatch = useDispatch();
-  // console.log("loading", loading);
+  const route = useRoute();
 
   const onChangeText = (value, prop) => {
     if (value !== undefined && value !== null) {
@@ -173,61 +179,163 @@ function BodyLogin({ keyboardShow, navigation, _loading }) {
   };
 
   const handleLogin = () => {
-    // dispatch(setLoading(true));
+    setTimeout(() => {
+      setSubmitForm(false);
+    }, 2000);
+    dispatch(setLoading(true));
     dispatch(loginSubmit(account));
   };
 
   useEffect(() => {
-    dispatch(getCurrentUser());
-    if (currentUser && currentUser.TenNhanVien) {
-      setTimeout(() => {
+    if (route.name === Screens.Login) {
+      dispatch(getCurrentUser());
+      if (hasBiometric) {
         navigation.navigate(Screens.Home);
-      }, 1000);
+        dispatch(setLoading(false));
+        return;
+      }
+      if (submitForm) {
+        if (currentUser && currentUser.TenNhanVien) {
+          navigation.navigate(Screens.Home);
+          dispatch(setLoading(false));
+        }
+      }
     }
-  }, [tokenReducer]);
+  }, [tokenReducer, currentUser?.Id, hasBiometric, submitForm]);
+
+  useEffect(() => {
+    let userRem = {
+      hasRemember: currentUser && currentUser?.Id ? true : false,
+      info: currentUser && currentUser?.Id ? currentUser : null,
+    };
+    if (!userRem.hasRemember) {
+      setFingerPrint(false);
+    }
+    setUserRemember(userRem);
+  }, [currentUser?.Id]);
+
+  //#region Lấy avatar
+  const [avatar, setAvatar] = useState({
+    isExternal: false,
+    url: "../../resources/avatar-student.png",
+  });
+
+  const getAvatar = async () => {
+    if (currentUser.LinkAnhDaiDien) {
+      let url = BASE_URL + currentUser.LinkAnhDaiDien;
+      let obj = {
+        isExternal: true,
+        url: url,
+      };
+      setAvatar(obj);
+      await AsyncStorage.setItem("avatarCurrent", url);
+    }
+  };
+  useEffect(() => {
+    getAvatar();
+  }, [currentUser.LinkAnhDaiDien]);
+  //#endregion Lấy avatar
 
   return (
     <View
       style={[
         {
-          height: keyboardShow ? "60%" : "35%",
+          height: keyboardShow ? "50%" : "20%",
           width: "100%",
           flexDirection: "column",
         },
         styles.body,
       ]}
     >
-      <View style={{ width: "100%" }}>
-        <Text style={styles.label}>Tên tài khoản</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(e) => onChangeText(e, "username")}
-          value={account.username}
-          placeholder="Nhập tài khoản hoặc email của bạn"
-        />
-      </View>
-      <View style={{ width: "100%", marginTop: 10 }}>
-        <Text style={styles.label}>Mật khẩu</Text>
-        <TextInput
-          secureTextEntry
-          style={styles.input}
-          onChangeText={(e) => onChangeText(e, "password")}
-          value={account.password}
-          placeholder="Nhập mật khẩu của bạn"
-        />
-      </View>
+      {userRemember.hasRemember ? (
+        <>
+          <View style={[{ width: "100%" }, styles.wrapAvatar]}>
+            <Image
+              style={[styles.avatar]}
+              source={
+                avatar.isExternal
+                  ? { uri: avatar.url }
+                  : require(`../../resources/avatar-student.png`)
+              }
+              resizeMode="stretch"
+            />
+            <Text>Xin chào, {`${currentUser.TenNhanVien}`.toUpperCase()}</Text>
+          </View>
+          <View style={[{ width: "100%", marginTop: 10 }, styles.wrapPassword]}>
+            <TextInput
+              secureTextEntry={showPass ? false : true}
+              style={[styles.inputPassword]}
+              onChangeText={(e) => onChangeText(e, "password")}
+              value={account.password}
+              placeholder="Nhập mật khẩu"
+            />
+            {account.password && (
+              <TouchableOpacity
+                style={[styles.buttonShowPass]}
+                onPress={() => {
+                  setShowPass(!showPass);
+                }}
+              >
+                {showPass && <Feather name="eye" size={24} color="black" />}
+                {!showPass && (
+                  <Feather name="eye-off" size={24} color="black" />
+                )}
+              </TouchableOpacity>
+            )}
+          </View>
+        </>
+      ) : (
+        <>
+          <View style={[{ width: "100%" }, styles.wrapViewInput]}>
+            <Text style={styles.label}>Tên tài khoản</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={(e) => onChangeText(e, "username")}
+              value={account.username}
+              placeholder="Nhập tài khoản hoặc email"
+            />
+          </View>
+          <View
+            style={[{ width: "100%", marginTop: 10 }, styles.wrapViewInput]}
+          >
+            <Text style={styles.label}>Mật khẩu</Text>
+            <TextInput
+              secureTextEntry={showPass ? false : true}
+              style={styles.input}
+              onChangeText={(e) => onChangeText(e, "password")}
+              value={account.password}
+              placeholder="Nhập mật khẩu"
+            />
+            {account.password && (
+              <TouchableOpacity
+                style={[styles.buttonShowPass]}
+                onPress={() => {
+                  setShowPass(!showPass);
+                }}
+              >
+                {showPass && <Feather name="eye" size={24} color="black" />}
+                {!showPass && (
+                  <Feather name="eye-off" size={24} color="black" />
+                )}
+              </TouchableOpacity>
+            )}
+          </View>
+        </>
+      )}
+
       <View style={{ height: 50 }}>
-        <View style={{ flexDirection: "row", marginTop: 20 }}>
-          <View style={{ flexDirection: "row", flex: 1 }}></View>
-          <View style={{ flex: 2 }}>
+        <View style={{ marginTop: 20 }}>
+          <View style={{}}>
             <TouchableOpacity style={{ width: "100%", height: "100%" }}>
               <Text
-                style={{
-                  width: "100%",
-                  fontSize: 17,
-                  color: "#223ffa",
-                  textAlign: "right",
-                }}
+                style={[
+                  {
+                    width: "100%",
+                    fontSize: 14,
+                    color: "#223ffa",
+                    textAlign: "center",
+                  },
+                ]}
               >
                 Quên mật khẩu?
               </Text>
@@ -238,14 +346,15 @@ function BodyLogin({ keyboardShow, navigation, _loading }) {
       <View style={styles.button}>
         <TouchableOpacity
           style={{
-            width: "100%",
+            width: "80%",
             height: 50,
             backgroundColor: "#037bff",
             justifyContent: "center",
             alignItems: "center",
-            borderRadius: 10,
+            borderRadius: 50,
           }}
           onPress={() => {
+            setSubmitForm(true);
             handleLogin();
           }}
         >
@@ -261,6 +370,48 @@ function BodyLogin({ keyboardShow, navigation, _loading }) {
           </Text>
         </TouchableOpacity>
       </View>
+      <View
+        style={[
+          {
+            width: "100%",
+            // height: "40%",
+            alignItems: "center",
+            position: "relative",
+          },
+          styles.footer,
+        ]}
+      >
+        {fingerPrint && (
+          <TouchableOpacity
+            style={{
+              width: "80%",
+              height: 100,
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+            onPress={handleBiometricAuth}
+          >
+            <View style={{ flex: 1, alignItems: "flex-end" }}>
+              <Image
+                style={{ width: 30, height: 30 }}
+                resizeMode="stretch"
+                source={require("../../resources/fingerprint.png")}
+              />
+            </View>
+            <Text
+              style={{
+                marginLeft: 10,
+                color: "#000",
+                fontSize: 16,
+                flex: 3,
+              }}
+            >
+              Đăng nhập bằng vân tay
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 }
@@ -272,8 +423,8 @@ function HeaderLogin({ keyboardShow }) {
       style={[
         {
           width: "100%",
-          height: keyboardShow ? "40%" : "25%",
-          justifyContent: "center",
+          height: keyboardShow ? "40%" : "20%",
+          justifyContent: "flex-start",
           alignItems: "center",
         },
         styles.header,
@@ -297,66 +448,6 @@ function HeaderLogin({ keyboardShow }) {
     </View>
   );
 }
-
-function FooterLogin({ handleBiometricAuth, fingerPrint }) {
-  return (
-    <View
-      style={[
-        {
-          width: "100%",
-          height: "40%",
-          alignItems: "center",
-          position: "relative",
-        },
-        styles.footer,
-      ]}
-    >
-      {fingerPrint && (
-        <TouchableOpacity
-          style={{
-            width: "80%",
-            height: 100,
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "row",
-          }}
-          onPress={handleBiometricAuth}
-        >
-          <View style={{ flex: 1, alignItems: "flex-end" }}>
-            <Image
-              style={{ width: 30, height: 30 }}
-              resizeMode="stretch"
-              source={require("../../resources/fingerprint.png")}
-            />
-          </View>
-          <Text
-            style={{
-              marginLeft: 10,
-              color: "#000",
-              fontSize: 16,
-              flex: 3,
-            }}
-          >
-            Đăng nhập bằng vân tay
-          </Text>
-        </TouchableOpacity>
-      )}
-
-      {/* <Text style={{ fontSize: 14, marginTop: 10 }}>
-        Phần mềm được phát triển bởi
-      </Text>
-      <Text
-        style={{
-          fontSize: 14,
-          marginBottom: 10,
-        }}
-      >
-        Công ty TNHH Giải pháp doanh nghiệp Hài Hòa
-      </Text> */}
-    </View>
-  );
-}
-
 //#endregion
 
 const styles = {
@@ -369,21 +460,27 @@ const styles = {
     flex: 1,
   },
   body: {
-    flex: 2,
+    flex: 3,
   },
   footer: {
     flex: 1,
   },
+  wrapViewInput: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+  },
   label: {
-    fontSize: 18,
+    fontSize: 16,
   },
   input: {
-    width: "100%",
+    width: "80%",
     height: 50,
-    borderWidth: 1,
+    borderBottomWidth: 1,
+    borderColor: "grey",
     fontSize: 18,
     padding: 10,
-    borderRadius: 10,
+    textAlign: "center",
   },
   checkbox: {
     width: 23,
@@ -393,5 +490,34 @@ const styles = {
   button: {
     width: "100%",
     height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  wrapAvatar: {
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30,
+    paddingBottom: 30,
+  },
+  avatar: {
+    width: 50,
+    height: 50,
+  },
+  inputPassword: {
+    textAlign: "center",
+    borderBottomWidth: 1,
+    borderColor: "grey",
+    width: "80%",
+    height: 50,
+    fontSize: 18,
+    padding: 10,
+  },
+  buttonShowPass: {
+    position: "absolute",
+    right: "10%",
+  },
+  wrapPassword: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 };

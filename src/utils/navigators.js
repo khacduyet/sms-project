@@ -1,75 +1,141 @@
-import { Image, StyleSheet, Text, View } from "react-native"
-import PersonalPage from '../screens/settings';
+import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native"
 import AcademicPage from '../screens/accademics';
 import AttendancePage from '../screens/attendances';
 import SchedulePage from '../screens/schedules';
 import { BlurView } from 'expo-blur';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Entypo } from '@expo/vector-icons';
 import HomePage from "../screens/home";
-import HomeSetting from "../screens/home/setting";
+import HomeMore from "../screens/more/index";
 import { Screens } from "../common/constant";
 import HomeNavBar from "../screens/home/navbar";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
+const CustomBarButton = ({ children, onPress }) => (<TouchableOpacity style={[{
+    top: -20,
+    justifyContent: 'center',
+    alignItems: 'center',
+}]} onPress={onPress}>
+    <View style={{
+        width: 70,
+        height: 70,
+        borderRadius: 35,
+        backgroundColor: '#fff'
+    }}>
+        {children}
+    </View>
+</TouchableOpacity>);
+
 export function TabNavigatior() {
     const currentUser = useSelector((state) => state.currentUser);
+    const nav = useNavigation();
+
+    useEffect(() => {
+        if (currentUser && currentUser?.Error === 0) {
+            nav.navigate(Screens.Login)
+        }
+    }, [currentUser])
+
     return <Tab.Navigator initialRouteName="HomeIndex" screenOptions={{
-        // headerShown: false,
+        tabBarShowLabel: false,
         header: ({ navigation }) => {
             return <HomeNavBar currentUser={currentUser} />
         },
         tabBarBackground: () => (
-            <BlurView tint="light" intensity={100} style={{ backgroundColor: "#cfe2ff" }} />
+            <Image source={require("../resources/bg-blue.png")} style={{ width: '100%', height: '100%', borderRadius: 15 }} resizeMode="stretch" />
         ),
-        tabBarActiveTintColor: '#e91e63',
-        tabBarActiveBackgroundColor: '#C7D3E6'
-    }} >
+        tabBarActiveTintColor: '#2b4afa',
+        tabBarStyle: {
+            position: 'absolute',
+            bottom: 20,
+            left: 15,
+            right: 15,
+            borderRadius: 15,
+            height: 80
+        }
+    }}>
         <Tab.Screen name="Schedula" component={SchedulePage}
             options={{
-                tabBarLabel: "Thời khóa biểu",
-                tabBarIcon: () => {
-                    return <Image source={require("../resources/icons/calendar.png")} style={{ width: 30, height: 30 }} resizeMode="stretch" />
+                tabBarIcon: ({ focused }) => {
+                    return <>
+                        <Image source={require("../resources/icons/calendar.png")} style={[styles.tabBarImage, {
+                            tintColor: focused ? '#f5191b' : '#748c94'
+                        }]} resizeMode="stretch" />
+                        <Text style={[styles.tabBarText, {
+                            color: focused ? '#f5191b' : '#748c94'
+                        }]}>{Screens.Schedula}</Text>
+                    </>
                 }
             }}
         />
         <Tab.Screen name="Attendance" component={AttendancePage}
             options={{
-                tabBarLabel: "Điểm danh",
-                tabBarIcon: () => {
-                    return <Image source={require("../resources/icons/personal-tick.png")} style={{ width: 30, height: 30 }} resizeMode="stretch" />
+                tabBarIcon: ({ focused }) => {
+                    return <>
+                        <Image source={require("../resources/icons/personal-tick.png")} style={[styles.tabBarImage, {
+                            tintColor: focused ? '#f5191b' : '#748c94'
+                        }]} resizeMode="stretch" />
+                        <Text style={[styles.tabBarText, {
+                            color: focused ? '#f5191b' : '#748c94'
+                        }]}>{Screens.Attendance}</Text>
+                    </>
                 }
             }}
         />
         <Tab.Screen name="HomeIndex" component={HomePage} options={{
             // tabBarBadge: 3,
-            tabBarLabel: "Home",
-            tabBarIcon: () => {
-                return <Image source={require("../resources/icons/home.png")} style={{ width: 30, height: 30 }} resizeMode="stretch" />
-            },
-
-            tabBarIconStyle: {
-                width: 50,
-                height: 50
+            tabBarIcon: ({ focused }) => (<Entypo name="home" size={35} color="black" />),
+            tabBarButton: (props) => {
+                return <CustomBarButton {...props} />
             }
         }} />
         <Tab.Screen name="Academic" component={AcademicPage}
             options={{
-                tabBarLabel: "KQHT",
-                tabBarIcon: () => {
-                    return <Image source={require("../resources/icons/book.png")} style={{ width: 30, height: 30 }} resizeMode="stretch" />
+                tabBarIcon: ({ focused }) => {
+                    return <>
+                        <Image source={require("../resources/icons/book.png")} style={[styles.tabBarImage, {
+                            tintColor: focused ? '#f5191b' : '#748c94'
+                        }]} resizeMode="stretch" />
+                        <Text style={[styles.tabBarText, {
+                            color: focused ? '#f5191b' : '#748c94'
+                        }]}>{Screens.Academic}</Text>
+                    </>
                 }
             }}
         />
-        <Tab.Screen name={Screens.Personal} component={PersonalPage}
+        <Tab.Screen name={Screens.More} component={HomeMore}
             options={{
-                tabBarLabel: Screens.Personal,
-                tabBarIcon: () => {
-                    return <Image source={require("../resources/icons/personal.png")} style={{ width: 30, height: 30 }} resizeMode="stretch" />
+                headerShown: false,
+                tabBarIcon: ({ focused }) => {
+                    return <>
+                        <Entypo name="dots-three-horizontal" size={30} color="black" style={[styles.tabBarImage, {
+                            color: focused ? '#f5191b' : '#748c94'
+                        }]} />
+                        <Text style={[styles.tabBarText, {
+                            color: focused ? '#f5191b' : '#748c94'
+                        }]}>{Screens.More}</Text>
+                    </>
                 }
             }}
         />
     </Tab.Navigator>
 }
+
+const styles = StyleSheet.create({
+    tabBarImageHome: {
+        width: 50,
+        height: 50
+    },
+    tabBarImage: {
+        width: 30,
+        height: 30
+    },
+    tabBarText: {
+        fontSize: 12
+    }
+})
