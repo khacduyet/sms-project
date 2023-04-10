@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   View,
   Keyboard,
-  ToastAndroid,
   KeyboardAvoidingView,
   Modal,
   Pressable,
@@ -21,7 +20,7 @@ import * as LocalAuthentication from "expo-local-authentication";
 import { setLoading } from "../../redux/actions/loadingAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL, Screens } from "../../common/constant";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function LoginPage({ navigation }) {
   const [keyboardShow, setKeyboardShow] = useState(false);
@@ -153,6 +152,7 @@ function BodyLogin({
   fingerPrint,
   setFingerPrint,
 }) {
+  const nav = useNavigation();
   const [account, setAccount] = useState({
     username: "nypt",
     password: "123456",
@@ -184,6 +184,10 @@ function BodyLogin({
     }, 2000);
     dispatch(setLoading(true));
     dispatch(loginSubmit(account));
+  };
+
+  const handleForgotPassword = () => {
+    nav.navigate(Screens.ForgotPassword);
   };
 
   useEffect(() => {
@@ -326,7 +330,10 @@ function BodyLogin({
       <View style={{ height: 50 }}>
         <View style={{ marginTop: 20 }}>
           <View style={{}}>
-            <TouchableOpacity style={{ width: "100%", height: "100%" }}>
+            <TouchableOpacity
+              style={{ width: "100%", height: "100%" }}
+              onPress={handleForgotPassword}
+            >
               <Text
                 style={[
                   {

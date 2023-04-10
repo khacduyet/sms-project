@@ -26,5 +26,8 @@ export const AuthServices = {
         let _header = await getHeaders();
         return await get(smarteos + `/QuanTri/GetCurrentUser`, _header)
     },
-
+    changePassword: async (data) => {
+        let _header = await getHeaders();
+        return await post(smarteos + `/QuanTri/ChangePass`, data, _header)
+    },
 }

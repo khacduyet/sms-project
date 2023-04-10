@@ -25,9 +25,11 @@ export const Screens = {
     AddServer: 'AddServer',
     AddTask: 'AddTask',
     ChangePassword: 'Đổi mật khẩu',
+    ForgotPassword: 'Quên mật khẩu',
     Chat: 'Chat',
     NotificationGeneral: 'Thông báo chung',
     Personal: 'Thông tin cá nhân',
+    InfoSupport: 'Thông tin hỗ trợ',
     Setting: 'Cài đặt',
     Schedula: 'TKB',
     Attendance: 'Điểm danh',
@@ -35,3 +37,13 @@ export const Screens = {
     More: 'Thêm',
 
 };
+
+export const TextButton = {
+    Accept: "Xác nhận",
+    Cancel: "Hủy bỏ",
+    Close: "Đóng",
+    Close: "Tiếp theo",
+    Back: "Quay lại",
+    Previous: "Trước",
+    Next: "Tiếp theo",
+}

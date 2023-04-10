@@ -1,10 +1,11 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getCurrentUser } from "../../redux/actions/loginAction";
 import { setLoading } from "../../redux/actions/loadingAction";
 import HomeNavBar from "./navbar";
+import { ToastMessage } from "../../common/components";
 
 
 export default function HomePage({ navigation }) {
@@ -13,7 +14,7 @@ export default function HomePage({ navigation }) {
     const dispatch = useDispatch();
 
     function showToast() {
-        ToastAndroid.show(`Chào bạn ${currentUser.TenNhanVien}`, ToastAndroid.LONG);
+        ToastMessage(`Chào bạn ${currentUser.TenNhanVien}`)
     }
 
     useEffect(() => {

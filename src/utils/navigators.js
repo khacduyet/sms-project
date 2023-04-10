@@ -51,12 +51,12 @@ export function TabNavigatior() {
         ),
         tabBarActiveTintColor: '#2b4afa',
         tabBarStyle: {
-            position: 'absolute',
-            bottom: 20,
-            left: 15,
-            right: 15,
+            // position: 'absolute',
+            // bottom: 0,
+            // left: 0,
+            // right: 0,
             borderRadius: 15,
-            height: 80
+            height: 60
         }
     }}>
         <Tab.Screen name="Schedula" component={SchedulePage}
@@ -89,7 +89,9 @@ export function TabNavigatior() {
         />
         <Tab.Screen name="HomeIndex" component={HomePage} options={{
             // tabBarBadge: 3,
-            tabBarIcon: ({ focused }) => (<Entypo name="home" size={35} color="black" />),
+            tabBarIcon: ({ focused }) => (<Entypo name="home" size={35} color="black" style={[{
+                color: focused ? '#f5191b' : '#748c94'
+            }]} />),
             tabBarButton: (props) => {
                 return <CustomBarButton {...props} />
             }
