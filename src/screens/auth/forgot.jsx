@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -7,17 +7,25 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { Button } from "../../common/components";
+import { Button, ToastMessage } from "../../common/components";
 import { Screens, TextButton } from "../../common/constant";
 import OTPTextInput from "react-native-otp-textinput";
 import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
 import HeaderBack from "../../common/header";
 import Stepper from "react-native-stepper-ui";
+import { AuthServices, DanhMucServices } from "../../services/auth.service";
+import { current } from "@reduxjs/toolkit";
+import { useNavigation } from "@react-navigation/native";
+import {
+  hideMaskEmailOrPhone,
+  returnMessage,
+  StatusCode,
+  TYPE,
+} from "../../common/common";
+import { useDispatch } from "react-redux";
+import { setLoading } from "../../redux/actions/loadingAction";
 
-const TYPE = {
-  phone: "phone",
-  email: "email",
-};
+const SECONDS_OTP = 120;
 
 const StepOne = ({ value, setValue, handleNext }) => {
   return (
@@ -36,7 +44,11 @@ const StepOne = ({ value, setValue, handleNext }) => {
   );
 };
 
-const StepTwo = ({ current, setCurrent, handleNext }) => {
+const StepTwo = ({ current, setCurrent, handleNext, user, next }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setLoading(false));
+  }, []);
   return (
     <View>
       <View style={styles.formWrapInput}>
@@ -55,7 +67,8 @@ const StepTwo = ({ current, setCurrent, handleNext }) => {
             value={TYPE.email}
             label={
               <Text style={{ marginBottom: 10 }}>
-                Xác minh qua email đã đăng ký
+                Xác minh qua email đã đăng ký{" "}
+                {hideMaskEmailOrPhone(user.Email, TYPE.email)}
               </Text>
             }
           />
@@ -63,23 +76,69 @@ const StepTwo = ({ current, setCurrent, handleNext }) => {
             value={TYPE.phone}
             label={
               <Text style={{ marginBottom: 10 }}>
-                Xác minh qua số điện thoại đã đăng ký
+                Xác minh qua số điện thoại đã đăng ký{" "}
+                {hideMaskEmailOrPhone(user.DienThoai, TYPE.phone)}
               </Text>
             }
           />
         </RadioButtonGroup>
       </View>
-      <Button text={TextButton.Next} onPress={handleNext} />
+      <Button
+        text={TextButton.Next}
+        onPress={() => {
+          handleNext();
+          next();
+        }}
+      />
     </View>
   );
 };
 
-const StepThree = ({ value, setValue, handleNext, type }) => {
+const StepThree = ({ type, user, handleNextStepTwo, next }) => {
   const otpInput = useRef(null);
+  const [seconds, setSeconds] = useState(SECONDS_OTP);
+  const [title, setTitle] = useState(`Mã OTP có hiệu lực trong vòng `);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    if (seconds === 0) {
+      setTitle(`Mã OTP đã hết hạn`);
+    }
+    const interval = setInterval(() => {
+      if (seconds > 0) {
+        setSeconds((seconds) => seconds - 1);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [seconds]);
+
+  const pushOTPServer = async (otp) => {
+    let _otp = "";
+    otp.map((x) => {
+      _otp += x;
+    });
+    if (_otp.length === 6) {
+      let res = await DanhMucServices.XacMinhOTP({
+        IdUser: user.IdUser,
+        OTP: parseInt(_otp),
+      });
+      if (res.StatusCode === 500) {
+        ToastMessage(res.Message);
+        clearText();
+      } else {
+        next();
+      }
+    }
+  };
 
   const clearText = () => {
     otpInput.current.clear();
   };
+
   return (
     <View>
       <View style={(styles.formWrapInput, styles.centers)}>
@@ -87,32 +146,53 @@ const StepThree = ({ value, setValue, handleNext, type }) => {
           Mã xác minh đã được gửi đến {type === TYPE.email ? "Email" : "SĐT"}
         </Text>
         <Text style={[styles.formText]}>
-          Mã xác minh đã được gửi đến {type === TYPE.email ? "Email" : "SĐT"}
+          {hideMaskEmailOrPhone(
+            type === TYPE.email ? user.Email : user.DienThoai,
+            type
+          )}
         </Text>
         <OTPTextInput
           ref={otpInput}
           inputCount={6}
           handleTextChange={() => {
-            console.log("otpInput.current", otpInput.current.state.otpText);
-            let _boll = otpInput.current.state.otpText.filter((x) => !x).length;
-            console.log("_boll", _boll);
+            pushOTPServer(otpInput.current.state.otpText);
           }}
         />
+        <Text style={[styles.formText]}>
+          <Text
+            style={{ color: seconds > 0 ? "#000" : "red", fontWeight: 400 }}
+          >
+            {title}
+          </Text>
+
+          {seconds > 0 && <Text style={styles.formTextNote}>{seconds}s</Text>}
+        </Text>
+        <TouchableOpacity
+          onPress={() => {
+            handleNextStepTwo();
+            setTitle(`Mã OTP có hiệu lực trong vòng `);
+            setSeconds(SECONDS_OTP);
+          }}
+        >
+          <Text style={[styles.formText, styles.formTextNote]}>Gửi lại mã</Text>
+        </TouchableOpacity>
       </View>
-      <Button
+      {/* <Button
         text={TextButton.Next}
-        onPress={handleNext}
-        disabled={
-          otpInput
-            ? otpInput.current.state.otpText.filter((x) => !x).length > 0
-            : false
-        }
-      />
+        onPress={() => {
+          console.log(
+            "otp",
+            otp.filter((x) => x)
+          );
+        }}
+        disabled={otp.filter((x) => x).length !== 6}
+      /> */}
     </View>
   );
 };
 
-const StepFour = ({ value, setValue, handleNext }) => {
+const StepFour = ({ user }) => {
+  const nav = useNavigation();
   const [isShow, setIsShow] = useState(true);
   const [isMatch, setIsMatch] = useState(true);
   const [passwords, setPasswords] = useState({
@@ -127,12 +207,19 @@ const StepFour = ({ value, setValue, handleNext }) => {
       });
     }
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (passwords.password != passwords.repassword) {
       setIsMatch(false);
       return;
     }
-    handleNext();
+    let res = await AuthServices.ResetForgotPasswordNoLogin({
+      IdUser: user.IdUser,
+      NewPassword: passwords.password,
+    });
+    if (res.Error === 4) {
+      ToastMessage(returnMessage(StatusCode.UPDATE_PASSWORD));
+      nav.navigate("Login");
+    }
   };
   return (
     <View>
@@ -151,9 +238,9 @@ const StepFour = ({ value, setValue, handleNext }) => {
             onChangeText={(e) => setForm(e, `password`)}
             placeholder={`Mật khẩu mới`}
           />
-          {!isMatch && (
+          {/* {!isMatch && (
             <Text style={[{ color: "red" }]}>Mật khẩu không khớp!</Text>
-          )}
+          )} */}
         </View>
         <Text style={[styles.formText, styles.formTextLabel]}>
           Nhập lại mật khẩu mới:
@@ -181,15 +268,29 @@ const StepFour = ({ value, setValue, handleNext }) => {
 export default function ForgotPassword() {
   const [value, setValue] = useState("");
   const [active, setActive] = useState(0);
-  const [current, setCurrent] = useState(TYPE.phone);
+  const [current, setCurrent] = useState(TYPE.email);
   const [user, setUser] = useState({});
+  const dispatch = useDispatch();
 
-  const handleNext = () => {
-    let _next = active + 1;
-    setActive(_next);
+  const handleNext = async () => {
+    dispatch(setLoading(true));
+    let res = await DanhMucServices.GetUserByUserName(value);
+    if (res) {
+      setUser(res.Data);
+    }
+    next();
   };
 
-  const handleNextStepTwo = () => {
+  const handleNextStepTwo = async () => {
+    dispatch(setLoading(true));
+    if (current === TYPE.email) {
+      await DanhMucServices.MaOtpEmail(user.Email, user.IdUser);
+    } else {
+      await DanhMucServices.MaOtpSMS(user.DienThoai, user.IdUser);
+    }
+  };
+
+  const next = () => {
     let _next = active + 1;
     setActive(_next);
   };
@@ -205,20 +306,19 @@ export default function ForgotPassword() {
     <StepTwo
       current={current}
       setCurrent={setCurrent}
+      user={user}
       handleNext={handleNextStepTwo}
+      next={next}
     />,
     <StepThree
       current={current}
       setCurrent={setCurrent}
       type={current}
       user={user}
+      handleNextStepTwo={handleNextStepTwo}
+      next={next}
     />,
-    <StepFour
-      current={current}
-      setCurrent={setCurrent}
-      type={current}
-      user={user}
-    />,
+    <StepFour user={user} />,
   ];
 
   return (
@@ -226,14 +326,15 @@ export default function ForgotPassword() {
       <SafeAreaView style={[styles.container]}>
         <HeaderBack header={Screens.ForgotPassword} />
         <View style={[styles.wrapper]}>
-          <Stepper
-            // showButton={false}
+          {/* <Stepper
+            showButton={false}
             active={active}
             content={content}
             onBack={() => setActive((p) => p - 1)}
             onFinish={() => alert("Finish")}
             onNext={() => setActive((p) => p + 1)}
-          />
+          /> */}
+          {content[active]}
         </View>
       </SafeAreaView>
     </>
@@ -255,6 +356,9 @@ const styles = StyleSheet.create({
   formText: {
     fontSize: 18,
     fontWeight: 600,
+  },
+  formTextNote: {
+    color: "#223ffa",
   },
   formTextLabel: {
     fontSize: 18,

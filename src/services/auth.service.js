@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const { get, post } = axiosClient;
 
 const smarteos = `SmartEOSAPI/`
+const qlsv = `QLSV`
 
 const getHeaders = async () => {
     const sjwt = await AsyncStorage.getItem('token');
@@ -29,5 +30,23 @@ export const AuthServices = {
     changePassword: async (data) => {
         let _header = await getHeaders();
         return await post(smarteos + `/QuanTri/ChangePass`, data, _header)
+    },
+    ResetForgotPasswordNoLogin: (data) => {
+        return post(smarteos + `/QuanTri/ResetForgotPasswordNoLogin`, data)
+    },
+}
+
+export const DanhMucServices = {
+    GetUserByUserName: (username) => {
+        return get(qlsv + `/DanhMuc/GetUserByUserName?UserName=` + username)
+    },
+    MaOtpSMS: (phone, idUser) => {
+        return get(qlsv + `/DanhMuc/MaOtpSMS?PhoneNumber=` + phone + `&IdUser=` + idUser)
+    },
+    MaOtpEmail: (email, idUser) => {
+        return get(qlsv + `/DanhMuc/MaOtpEmail?Email=` + email + `&IdUser=` + idUser)
+    },
+    XacMinhOTP: (data) => {
+        return post(qlsv + `/DanhMuc/XacMinhOTP`, data)
     },
 }
