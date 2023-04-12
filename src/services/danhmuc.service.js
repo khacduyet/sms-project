@@ -17,6 +17,20 @@ const getHeaders = async () => {
     return headers;
 }
 
+export const DMGeneralServices = {
+    Notification: {
+        GetList: async (IdUser, IdLast) => {
+            let _header = await getHeaders();
+            // IdLast => scroll lazy load 
+            return get(smarteos + `Notification/GetListNotificationLoaiBoLoai?Loai=abc&IdUser=${IdUser}&idIdLast=${IdLast}`, _header)
+        },
+        Seen: async (item) => {
+            let _header = await getHeaders();
+            return post(smarteos + `Notification/XemNotification`, { Item: item }, _header)
+        },
+    }
+}
+
 export const AuthServices = {
     loginUser: async (data) => {
         const tokenfirebase = await AsyncStorage.getItem('deviceToken');
@@ -33,20 +47,5 @@ export const AuthServices = {
     },
     ResetForgotPasswordNoLogin: (data) => {
         return post(smarteos + `/QuanTri/ResetForgotPasswordNoLogin`, data)
-    },
-}
-
-export const DanhMucAccountServices = {
-    GetUserByUserName: (username) => {
-        return get(qlsv + `/DanhMuc/GetUserByUserName?UserName=` + username)
-    },
-    MaOtpSMS: (phone, idUser) => {
-        return get(qlsv + `/DanhMuc/MaOtpSMS?PhoneNumber=` + phone + `&IdUser=` + idUser)
-    },
-    MaOtpEmail: (email, idUser) => {
-        return get(qlsv + `/DanhMuc/MaOtpEmail?Email=` + email + `&IdUser=` + idUser)
-    },
-    XacMinhOTP: (data) => {
-        return post(qlsv + `/DanhMuc/XacMinhOTP`, data)
     },
 }

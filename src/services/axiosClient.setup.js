@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { ToastAndroid } from 'react-native';
 import { returnMessage, StatusCode } from '../common/common';
+import { ToastMessage } from '../common/components';
 import { BASE_URL } from '../common/constant';
 
 
@@ -20,11 +20,11 @@ axiosClient.interceptors.response.use(
     (er) => {
         if (er.response.status === 400) {
             let _msg = returnMessage(StatusCode.ERROR_USER)
-            ToastAndroid.show(_msg, ToastAndroid.SHORT);
+            ToastMessage(_msg)
             return;
         }
         let _msg = returnMessage(StatusCode.CONTACT_DEV)
-        ToastAndroid.show(_msg, ToastAndroid.SHORT);
+        ToastMessage(_msg)
     }
 );
 export default axiosClient;

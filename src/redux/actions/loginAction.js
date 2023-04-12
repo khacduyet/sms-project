@@ -9,6 +9,7 @@ import { setLoading } from "./loadingAction";
 export const loginSubmit = (data) => async dispatch => {
     try {
         let res = await AuthServices.loginUser(data)
+        console.log("res", res);
         if (res) {
             await AsyncStorage.setItem(
                 'account',
@@ -22,7 +23,8 @@ export const loginSubmit = (data) => async dispatch => {
                 type: SET_TOKEN,
                 payload: res
             })
-
+        } else {
+            dispatch(setLoading(false));
         }
     } catch (error) {
         console.log("error: ", error);

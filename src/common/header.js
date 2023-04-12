@@ -37,5 +37,6 @@ const styles = {
     },
     headerText: {
         fontSize: 20,
+        fontWeight: 600
     }
 }

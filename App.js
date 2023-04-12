@@ -3,7 +3,8 @@ import { store } from './src/redux/store';
 import AppContainer from './AppContainer';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
-import { StatusBar } from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -15,10 +16,12 @@ Notifications.setNotificationHandler({
 
 export default function App() {
   return (
-    <Provider store={store}>
+    <RootSiblingParent>
       <StatusBar style="light" backgroundColor="#243ffa" />
-      <AppContainer />
-    </Provider>
+      <Provider store={store}>
+        <AppContainer />
+      </Provider>
+    </RootSiblingParent>
   );
 }
 

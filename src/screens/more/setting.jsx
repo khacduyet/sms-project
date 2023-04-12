@@ -14,7 +14,7 @@ import { BASE_URL, Screens } from "../../common/constant";
 import HeaderBack from "../../common/header";
 import { StatusBar } from "expo-status-bar";
 
-export default function Setting() {
+export default function Setting({ navigation }) {
 
     const [fingerPrint, setFingerPrint] = useState(false);
     const dispatch = useDispatch();
@@ -26,6 +26,10 @@ export default function Setting() {
             'fingerPrint',
             `${fp}`
         );
+    }
+
+    const handleChangePassword = () => {
+        navigation.navigate(Screens.ChangePassword)
     }
 
     const getFinger = async () => {
@@ -46,7 +50,7 @@ export default function Setting() {
         <View style={[bodys.wrapper]}>
             <TouchableOpacity style={[bodys.buttonComponent]}>
                 <View style={[bodys.wrapperLeft]}>
-                    <MaterialIcons name="fingerprint" size={35} color="black" />
+                    <MaterialIcons name="fingerprint" size={35} color="#1e20e7" />
                 </View>
                 <View style={[bodys.wrapperMiddle]}>
                     <Text style={[bodys.wrapperText]}>Đăng nhập vân tay</Text>
@@ -62,9 +66,11 @@ export default function Setting() {
         </View>
 
         <View style={[bodys.wrapper]}>
-            <TouchableOpacity style={[bodys.buttonComponent]}>
+            <TouchableOpacity style={[bodys.buttonComponent]} onPress={() => {
+                handleChangePassword()
+            }}>
                 <View style={[bodys.wrapperLeft]}>
-                    <AntDesign name="lock" size={35} color="black" />
+                    <AntDesign name="lock" size={35} color="#1e20e7" />
                 </View>
                 <View style={[bodys.wrapperMiddle]}>
                     <Text style={[bodys.wrapperText]}>Đổi mật khẩu</Text>

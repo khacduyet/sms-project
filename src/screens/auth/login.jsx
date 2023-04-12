@@ -3,11 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   Image,
   Text,
-  TextInput,
+  // TextInput,
   TouchableOpacity,
   View,
   Keyboard,
-  ToastAndroid,
   KeyboardAvoidingView,
   Modal,
   Pressable,
@@ -15,13 +14,19 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
-import { getCurrentUser, loginSubmit } from "../../redux/actions/loginAction";
+import {
+  getCurrentUser,
+  loginSubmit,
+  logoutSubmit,
+} from "../../redux/actions/loginAction";
+import { SimpleLineIcons } from "@expo/vector-icons";
 import Loading from "../loading";
 import * as LocalAuthentication from "expo-local-authentication";
 import { setLoading } from "../../redux/actions/loadingAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL, Screens } from "../../common/constant";
-import { useRoute } from "@react-navigation/native";
+import { BASE_URL, Screens, TextButton } from "../../common/constant";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { TextInput } from "@react-native-material/core";
 
 export default function LoginPage({ navigation }) {
   const [keyboardShow, setKeyboardShow] = useState(false);
@@ -68,15 +73,6 @@ export default function LoginPage({ navigation }) {
 
   const fallBackToDefaultAuth = () => {
     console.log("fall back to password authentication");
-  };
-
-  const alertComponent = (title, mess, btnTxt, btnFunc) => {
-    return Alert.alert(title, mess, [
-      {
-        text: btnTxt,
-        onPress: btnFunc,
-      },
-    ]);
   };
 
   const handleBiometricAuth = async () => {
@@ -145,6 +141,15 @@ export default function LoginPage({ navigation }) {
   );
 }
 
+const alertComponent = (title, mess, btnTxt, btnFunc) => {
+  return Alert.alert(title, mess, [
+    {
+      text: btnTxt,
+      onPress: btnFunc,
+    },
+  ]);
+};
+
 function BodyLogin({
   keyboardShow,
   navigation,
@@ -153,12 +158,14 @@ function BodyLogin({
   fingerPrint,
   setFingerPrint,
 }) {
+  const nav = useNavigation();
   const [account, setAccount] = useState({
     username: "nypt",
     password: "123456",
   });
   const [submitForm, setSubmitForm] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const tokenReducer = useSelector((state) => state.tokenReducer);
   const currentUser = useSelector((state) => state.currentUser);
@@ -184,6 +191,28 @@ function BodyLogin({
     }, 2000);
     dispatch(setLoading(true));
     dispatch(loginSubmit(account));
+  };
+
+  const handleForgotPassword = () => {
+    nav.navigate(Screens.ForgotPassword, {
+      username: account.username,
+    });
+  };
+
+  const handleLogout = () => {
+    Alert.alert("Thông báo", "Bạn có chắc muốn đổi tài khoản?", [
+      {
+        text: TextButton.Cancel,
+        onPress: () => {},
+      },
+      {
+        text: TextButton.Accept,
+        onPress: () => {
+          dispatch(logoutSubmit());
+          setRefresh(!refresh);
+        },
+      },
+    ]);
   };
 
   useEffect(() => {
@@ -250,16 +279,33 @@ function BodyLogin({
       {userRemember.hasRemember ? (
         <>
           <View style={[{ width: "100%" }, styles.wrapAvatar]}>
-            <Image
-              style={[styles.avatar]}
-              source={
-                avatar.isExternal
-                  ? { uri: avatar.url }
-                  : require(`../../resources/avatar-student.png`)
-              }
-              resizeMode="stretch"
-            />
-            <Text>Xin chào, {`${currentUser.TenNhanVien}`.toUpperCase()}</Text>
+            <View>
+              <Image
+                style={[styles.avatar]}
+                source={
+                  avatar.isExternal
+                    ? { uri: avatar.url }
+                    : require(`../../resources/avatar-student.png`)
+                }
+                resizeMode="stretch"
+              />
+              <TouchableOpacity
+                style={[styles.buttonLogout]}
+                onPress={handleLogout}
+              >
+                <SimpleLineIcons name="logout" size={24} color="red" />
+              </TouchableOpacity>
+            </View>
+            <Text
+              style={[
+                {
+                  paddingTop: 10,
+                  fontSize: 16,
+                },
+              ]}
+            >
+              Xin chào, {`${currentUser.TenNhanVien}`.toUpperCase()}
+            </Text>
           </View>
           <View style={[{ width: "100%", marginTop: 10 }, styles.wrapPassword]}>
             <TextInput
@@ -267,7 +313,8 @@ function BodyLogin({
               style={[styles.inputPassword]}
               onChangeText={(e) => onChangeText(e, "password")}
               value={account.password}
-              placeholder="Nhập mật khẩu"
+              label="Mật khẩu"
+              variant="standard"
             />
             {account.password && (
               <TouchableOpacity
@@ -287,24 +334,26 @@ function BodyLogin({
       ) : (
         <>
           <View style={[{ width: "100%" }, styles.wrapViewInput]}>
-            <Text style={styles.label}>Tên tài khoản</Text>
+            {/* <Text style={styles.label}>Tên tài khoản</Text> */}
             <TextInput
               style={styles.input}
               onChangeText={(e) => onChangeText(e, "username")}
               value={account.username}
-              placeholder="Nhập tài khoản hoặc email"
+              label="Tên tài khoản"
+              variant="standard"
             />
           </View>
           <View
             style={[{ width: "100%", marginTop: 10 }, styles.wrapViewInput]}
           >
-            <Text style={styles.label}>Mật khẩu</Text>
+            {/* <Text style={styles.label}>Mật khẩu</Text> */}
             <TextInput
               secureTextEntry={showPass ? false : true}
               style={styles.input}
               onChangeText={(e) => onChangeText(e, "password")}
               value={account.password}
-              placeholder="Nhập mật khẩu"
+              label="Mật khẩu"
+              variant="standard"
             />
             {account.password && (
               <TouchableOpacity
@@ -326,7 +375,10 @@ function BodyLogin({
       <View style={{ height: 50 }}>
         <View style={{ marginTop: 20 }}>
           <View style={{}}>
-            <TouchableOpacity style={{ width: "100%", height: "100%" }}>
+            <TouchableOpacity
+              style={{ width: "100%", height: "100%" }}
+              onPress={handleForgotPassword}
+            >
               <Text
                 style={[
                   {
@@ -412,6 +464,17 @@ function BodyLogin({
           </TouchableOpacity>
         )}
       </View>
+      <Text
+        style={{
+          position: "absolute",
+          bottom: 0,
+          right: 10,
+          fontSize: 16,
+          color: "#939191",
+        }}
+      >
+        @HarmonyES
+      </Text>
     </View>
   );
 }
@@ -424,13 +487,13 @@ function HeaderLogin({ keyboardShow }) {
         {
           width: "100%",
           height: keyboardShow ? "40%" : "20%",
-          justifyContent: "flex-start",
+          justifyContent: "center",
           alignItems: "center",
         },
         styles.header,
       ]}
     >
-      <Text
+      {/* <Text
         style={{
           fontSize: 24,
           fontWeight: "bold",
@@ -439,9 +502,9 @@ function HeaderLogin({ keyboardShow }) {
         }}
       >
         Trường cao đẳng kỹ nghệ II
-      </Text>
+      </Text> */}
       <Image
-        style={{ width: 250, height: 80 }}
+        style={{ width: 230, height: 60 }}
         resizeMode="stretch"
         source={require("../../resources/logo.png")}
       />
@@ -460,11 +523,9 @@ const styles = {
     flex: 1,
   },
   body: {
-    flex: 3,
+    flex: 4,
   },
-  footer: {
-    flex: 1,
-  },
+
   wrapViewInput: {
     alignItems: "center",
     justifyContent: "center",
@@ -476,11 +537,11 @@ const styles = {
   input: {
     width: "80%",
     height: 50,
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     borderColor: "grey",
     fontSize: 18,
     padding: 10,
-    textAlign: "center",
+    // textAlign: "center",
   },
   checkbox: {
     width: 23,
@@ -496,21 +557,19 @@ const styles = {
   wrapAvatar: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 30,
-    paddingBottom: 30,
+    paddingBottom: 20,
   },
   avatar: {
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
   },
   inputPassword: {
     textAlign: "center",
-    borderBottomWidth: 1,
-    borderColor: "grey",
+    // borderColor: "grey",
     width: "80%",
     height: 50,
     fontSize: 18,
-    padding: 10,
+    // padding: 10,
   },
   buttonShowPass: {
     position: "absolute",
@@ -519,5 +578,11 @@ const styles = {
   wrapPassword: {
     alignItems: "center",
     justifyContent: "center",
+  },
+  buttonLogout: {
+    position: "absolute",
+    left: 0,
+    bottom: 0,
+    backgroundColor: "#fff",
   },
 };

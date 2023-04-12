@@ -1,16 +1,16 @@
-import { Image, SafeAreaView, Text, View, TouchableOpacity, Switch, ImageBackground, Alert } from "react-native";
+import { Image, SafeAreaView, Text, View, TouchableOpacity, Switch, ImageBackground, Alert, ScrollView } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import { SimpleLineIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import { Octicons } from '@expo/vector-icons';
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logoutSubmit } from "../../redux/actions/loginAction";
-import { BASE_URL, Screens } from "../../common/constant";
+import { BASE_URL, height, Screens } from "../../common/constant";
+
 
 export default function HomeMore() {
     const currentUser = useSelector((state) => state.currentUser);
@@ -72,7 +72,7 @@ function BodySetting() {
     const dispatch = useDispatch();
 
     const handleLogout = () => {
-        let alert = Alert.alert("Thông báo", "Bạn có chắc chắn muốn đăng xuất tài khoản?", [
+        Alert.alert("Thông báo", "Bạn có chắc chắn muốn đăng xuất tài khoản?", [
             {
                 text: "Hủy",
                 onPress: () => {
@@ -86,51 +86,66 @@ function BodySetting() {
                 }
             }
         ])
+    }
 
+    const ButtonData = [
+        {
+            icon: <FontAwesome5 name="user-circle" size={35} color="#1e20e7" />,
+            text: Screens.Personal,
+            func: () => {
+
+            }
+        },
+        {
+            icon: <Feather name="settings" size={35} color="#1e20e7" />,
+            text: Screens.Setting,
+            func: () => {
+                nav.push(Screens.Setting)
+            }
+        },
+        {
+            icon: <Octicons name="info" size={35} color="#1e20e7" />,
+            text: Screens.InfoSupport,
+            func: () => {
+
+            }
+        },
+    ]
+
+    const ButtonItem = ({ icon, text, func, value }) => {
+        return <View style={[bodys.wrapper]}>
+            <TouchableOpacity style={[bodys.buttonComponent]} onPress={func}>
+                <View style={[bodys.wrapperLeft]}>
+                    {icon}
+                </View>
+                <View style={[bodys.wrapperMiddle]}>
+                    <Text style={[bodys.wrapperText]}>{text}</Text>
+                </View>
+                <View style={[bodys.wrapperRight]}>
+                    <MaterialIcons name="keyboard-arrow-right" size={35} color="#494949" />
+                </View>
+            </TouchableOpacity>
+        </View>
     }
 
     return <View style={[bodys.container]}>
-        <View style={[bodys.wrapper]}>
-            <TouchableOpacity style={[bodys.buttonComponent]}>
-                <View style={[bodys.wrapperLeft]}>
-                    <FontAwesome5 name="user-circle" size={35} color="#1e20e7" />
-                </View>
-                <View style={[bodys.wrapperMiddle]}>
-                    <Text style={[bodys.wrapperText]}>{Screens.Personal}</Text>
-                </View>
-                <View style={[bodys.wrapperRight]}>
-                    <MaterialIcons name="keyboard-arrow-right" size={35} color="#494949" />
-                </View>
-            </TouchableOpacity>
-        </View>
+        <ScrollView style={[{
+            width: '100%',
+        }]}>
+            {ButtonData.map((x, index) => {
+                return <ButtonItem {...x} key={index} />
+            })}
 
-        <View style={[bodys.wrapper]}>
-            <TouchableOpacity style={[bodys.buttonComponent]} onPress={() => {
-                nav.push(Screens.Setting)
-            }}>
-                <View style={[bodys.wrapperLeft]}>
-                    <Feather name="settings" size={35} color="#1e20e7" />
-                </View>
-                <View style={[bodys.wrapperMiddle]}>
-                    <Text style={[bodys.wrapperText]}>{Screens.Setting}</Text>
-                </View>
-                <View style={[bodys.wrapperRight]}>
-                    <MaterialIcons name="keyboard-arrow-right" size={35} color="#494949" />
-                </View>
-            </TouchableOpacity>
-        </View>
+            <View style={[bodys.wrapper, { marginTop: 40, marginBottom: 40 }]} >
+                <TouchableOpacity style={[bodys.buttonComponent, bodys.buttonComponentLogout]} onPress={handleLogout}>
 
-
-
-        <View style={[bodys.wrapper, { marginTop: 40 }]} >
-            <TouchableOpacity style={[bodys.buttonComponent, bodys.buttonComponentLogout]} onPress={handleLogout}>
-
-                <View style={[bodys.wrapperMiddleLogout]}>
-                    <MaterialCommunityIcons name="logout" size={35} color="red" />
-                    <Text style={[bodys.wrapperText, bodys.wrapperTextLogout]}>Đăng xuất</Text>
-                </View>
-            </TouchableOpacity>
-        </View>
+                    <View style={[bodys.wrapperMiddleLogout]}>
+                        <MaterialCommunityIcons name="logout" size={35} color="red" />
+                        <Text style={[bodys.wrapperText, bodys.wrapperTextLogout]}>Đăng xuất</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+        </ScrollView>
     </View>
 }
 
