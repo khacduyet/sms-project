@@ -3,7 +3,6 @@ import {
   Platform,
   SafeAreaView,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -17,6 +16,7 @@ import { AuthServices } from "../../../services/auth.service";
 import Toast from "react-native-root-toast";
 import { useDispatch } from "react-redux";
 import { logoutSubmit } from "../../../redux/actions/loginAction";
+import { TextInput } from "@react-native-material/core";
 
 export default function ChangePassword() {
   const [isShow, setIsShow] = useState(true);
@@ -146,13 +146,22 @@ const FormItem = ({
   return (
     <View style={[styles.formItem]}>
       <View style={[styles.labelWrap]}>
-        <Text style={[styles.label]}>{label}</Text>
+        {/* <Text style={[styles.label]}>{label}</Text> */}
         {setIsShow && (
           <TouchableOpacity
             style={[styles.showPassButton]}
             onPress={() => setIsShow(!isShow)}
           >
-            <Text style={[styles.showPassText]}>HIỆN</Text>
+            <Text
+              style={[
+                styles.showPassText,
+                {
+                  color: isShow ? "#000" : "blue",
+                },
+              ]}
+            >
+              HIỆN
+            </Text>
           </TouchableOpacity>
         )}
       </View>
@@ -161,8 +170,10 @@ const FormItem = ({
           style={[styles.input]}
           value={value[prop]}
           onChangeText={(e) => setValue(e, prop)}
-          placeholder={placeholder}
+          // placeholder={placeholder}
           secureTextEntry={isShow}
+          label={placeholder}
+          variant="standard"
         />
         {!isValids[prop] && (
           <View style={[styles.inputValid]}>
@@ -191,27 +202,34 @@ const styles = {
   },
   showPassButton: {
     position: "absolute",
-    right: 0,
+    right: 10,
     top: 0,
+    zIndex: 2,
   },
-  showPassText: {},
+  showPassText: {
+    textDecorationLine: "underline",
+  },
   labelWrap: {},
   label: {
     fontSize: 18,
   },
-  inputWrap: {},
+  inputWrap: {
+    marginTop: 20,
+  },
   input: {
-    borderWidth: 1,
+    // borderWidth: 1,
     width: "100%",
     height: 40,
     borderRadius: 10,
-    padding: 10,
+    // padding: 10,
+    // marginTop: 20,
   },
   inputValid: {},
   inputValidText: {
     color: "red",
   },
   buttonWrap: {
+    marginTop: 20,
     width: "100%",
     flex: 3,
   },

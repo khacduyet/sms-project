@@ -7,28 +7,37 @@ import { setLoading } from "../../redux/actions/loadingAction";
 import HomeNavBar from "./navbar";
 import { ToastMessage } from "../../common/components";
 
-
 export default function HomePage({ navigation }) {
-    const currentUser = useSelector((state) => state.currentUser);
-    // console.log("currentUser", currentUser);
-    const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.currentUser);
+  // console.log("currentUser", currentUser);
+  const dispatch = useDispatch();
 
-    function showToast() {
-        ToastMessage(`Chào bạn ${currentUser.TenNhanVien}`)
+  function showToast() {
+    ToastMessage(`Chào bạn ${currentUser.TenNhanVien}`);
+  }
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+    if (currentUser && currentUser.TenNhanVien) {
+      showToast();
     }
+  }, [currentUser.TenNhanVien]);
 
-    useEffect(() => {
-        dispatch(getCurrentUser())
-        if (currentUser && currentUser.TenNhanVien) {
-            showToast()
-        }
-    }, [currentUser.TenNhanVien])
-
-
-    return <SafeAreaView>
-        {/* <HomeNavBar currentUser={currentUser} /> */}
-        <View style={{ width: "100%", height: "80%", alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ fontSize: 20, }}>Xin chào {currentUser.TenNhanVien}!</Text>
-        </View>
+  return (
+    <SafeAreaView>
+      <View
+        style={{
+          width: "100%",
+          height: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+          //   backgroundColor: "blue",
+        }}
+      >
+        <Text style={{ fontSize: 20 }}>
+          Xin chào {currentUser.TenNhanVien}!
+        </Text>
+      </View>
     </SafeAreaView>
+  );
 }

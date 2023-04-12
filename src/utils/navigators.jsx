@@ -1,4 +1,12 @@
-import { Image, StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+  Platform,
+} from "react-native";
 import AcademicPage from "../screens/accademics";
 import AttendancePage from "../screens/attendances";
 import SchedulePage from "../screens/schedules";
@@ -52,191 +60,217 @@ export function TabNavigatior() {
   }, [currentUser]);
 
   return (
-    <Tab.Navigator
-      initialRouteName="HomeIndex"
-      screenOptions={{
-        tabBarShowLabel: false,
-        header: ({ navigation }) => {
-          return <HomeNavBar currentUser={currentUser} />;
-        },
-        // tabBarBackground: () => (
-        //   <Image
-        //     source={require("../resources/bg-blue.png")}
-        //     style={{
-        //       width: "100%",
-        //       height: "100%",
-        //       borderTopLeftRadius: 20,
-        //       borderTopRightRadius: 20,
-        //       // borderRadius: 15
-        //     }}
-        //     resizeMode="stretch"
-        //   />
-        // ),
-        tabBarActiveTintColor: "#243ffa",
-        tabBarStyle: {
-          // position: 'absolute',
-          // bottom: 0,
-          // left: 20,
-          // right: 0,
-          borderTopLeftRadius: 35,
-          borderTopRightRadius: 35,
-          height: 60,
-        },
-      }}
+    <SafeAreaView
+      style={{ width: "100%", height: Platform.OS === "ios" ? "105%" : "100%" }}
     >
-      <Tab.Screen
-        name="Schedula"
-        component={SchedulePage}
-        options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <>
-                <Image
-                  source={require("../resources/icons/calendar.png")}
-                  style={[
-                    styles.tabBarImage,
-                    {
-                      tintColor: focused ? "#243ffa" : "#748c94",
-                    },
-                  ]}
-                  resizeMode="stretch"
-                />
-                <Text
-                  style={[
-                    styles.tabBarText,
-                    {
-                      color: focused ? "#243ffa" : "#748c94",
-                    },
-                  ]}
-                >
-                  {Screens.Schedula}
-                </Text>
-              </>
-            );
+      <Tab.Navigator
+        initialRouteName="HomeIndex"
+        screenOptions={{
+          tabBarShowLabel: false,
+          header: ({ navigation }) => {
+            return <HomeNavBar currentUser={currentUser} />;
+          },
+          // tabBarBackground: () => (
+          //   <Image
+          //     source={require("../resources/bg-blue.png")}
+          //     style={{
+          //       width: "100%",
+          //       height: "100%",
+          //       borderTopLeftRadius: 20,
+          //       borderTopRightRadius: 20,
+          //       // borderRadius: 15
+          //     }}
+          //     resizeMode="stretch"
+          //   />
+          // ),
+          tabBarActiveTintColor: "#243ffa",
+          tabBarStyle: {
+            // position: 'absolute',
+            // bottom: 0,
+            // left: 20,
+            // right: 0,
+            // borderTopLeftRadius: 35,
+            // borderTopRightRadius: 35,
+            height: Platform.OS === "ios" ? 80 : 60,
           },
         }}
-      />
-      <Tab.Screen
-        name="Attendance"
-        component={AttendancePage}
-        options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <>
-                <Image
-                  source={require("../resources/icons/personal-tick.png")}
-                  style={[
-                    styles.tabBarImage,
-                    {
-                      tintColor: focused ? "#243ffa" : "#748c94",
-                    },
-                  ]}
-                  resizeMode="stretch"
-                />
-                <Text
-                  style={[
-                    styles.tabBarText,
-                    {
-                      color: focused ? "#243ffa" : "#748c94",
-                    },
-                  ]}
-                >
-                  {Screens.Attendance}
-                </Text>
-              </>
-            );
-          },
-        }}
-      />
-      <Tab.Screen
-        name="HomeIndex"
-        component={HomePage}
-        options={{
-          // tabBarBadge: 3,
-          tabBarIcon: ({ focused }) => (
-            <Entypo
-              name="home"
-              size={35}
-              color="black"
-              style={[
-                {
-                  color: focused ? "#243ffa" : "#748c94",
-                },
-              ]}
-            />
-          ),
-          tabBarButton: (props) => {
-            return <CustomBarButton {...props} />;
-          },
-        }}
-      />
-      <Tab.Screen
-        name="Academic"
-        component={AcademicPage}
-        options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <>
-                <Image
-                  source={require("../resources/icons/book.png")}
-                  style={[
-                    styles.tabBarImage,
-                    {
-                      tintColor: focused ? "#243ffa" : "#748c94",
-                    },
-                  ]}
-                  resizeMode="stretch"
-                />
-                <Text
-                  style={[
-                    styles.tabBarText,
-                    {
-                      color: focused ? "#243ffa" : "#748c94",
-                    },
-                  ]}
-                >
-                  {Screens.Academic}
-                </Text>
-              </>
-            );
-          },
-        }}
-      />
-      <Tab.Screen
-        name={Screens.More}
-        component={HomeMore}
-        options={{
-          headerShown: false,
-          tabBarIcon: ({ focused }) => {
-            return (
-              <>
-                <Entypo
-                  name="dots-three-horizontal"
-                  size={30}
-                  color="black"
-                  style={[
-                    styles.tabBarImage,
-                    {
-                      color: focused ? "#243ffa" : "#748c94",
-                    },
-                  ]}
-                />
-                <Text
-                  style={[
-                    styles.tabBarText,
-                    {
-                      color: focused ? "#243ffa" : "#748c94",
-                    },
-                  ]}
-                >
-                  {Screens.More}
-                </Text>
-              </>
-            );
-          },
-        }}
-      />
-    </Tab.Navigator>
+      >
+        <Tab.Screen
+          name="Schedula"
+          component={SchedulePage}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <>
+                  {focused && <View style={styles.tabBarFocus}></View>}
+                  <Image
+                    source={require("../resources/icons/calendar.png")}
+                    style={[
+                      styles.tabBarImage,
+                      {
+                        tintColor: focused ? "#243ffa" : "#748c94",
+                      },
+                    ]}
+                    resizeMode="stretch"
+                  />
+                  <Text
+                    style={[
+                      styles.tabBarText,
+                      {
+                        color: focused ? "#243ffa" : "#748c94",
+                      },
+                    ]}
+                  >
+                    {Screens.Schedula}
+                  </Text>
+                </>
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Attendance"
+          component={AttendancePage}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <>
+                  {focused && <View style={styles.tabBarFocus}></View>}
+                  <Image
+                    source={require("../resources/icons/personal-tick.png")}
+                    style={[
+                      styles.tabBarImage,
+                      {
+                        tintColor: focused ? "#243ffa" : "#748c94",
+                      },
+                    ]}
+                    resizeMode="stretch"
+                  />
+                  <Text
+                    style={[
+                      styles.tabBarText,
+                      {
+                        color: focused ? "#243ffa" : "#748c94",
+                      },
+                    ]}
+                  >
+                    {Screens.Attendance}
+                  </Text>
+                </>
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name="HomeIndex"
+          component={HomePage}
+          options={{
+            // tabBarBadge: 3,
+            tabBarIcon: ({ focused }) => {
+              return (
+                <>
+                  {focused && (
+                    <View
+                      style={{
+                        width: "100%",
+                        borderRadius: 50,
+                        height: "100%",
+                        // backgroundColor: "#243ffa",
+                        borderWidth: 2,
+                        borderColor: "blue",
+                        position: "absolute",
+                        top: 0,
+                      }}
+                    ></View>
+                  )}
+                  <Entypo
+                    name="home"
+                    size={35}
+                    color="black"
+                    style={[
+                      {
+                        color: focused ? "#243ffa" : "#748c94",
+                      },
+                    ]}
+                  />
+                </>
+              );
+            },
+            tabBarButton: (props) => {
+              return <CustomBarButton {...props} />;
+            },
+          }}
+        />
+        <Tab.Screen
+          name="Academic"
+          component={AcademicPage}
+          options={{
+            tabBarIcon: ({ focused }) => {
+              return (
+                <>
+                  {focused && <View style={styles.tabBarFocus}></View>}
+                  <Image
+                    source={require("../resources/icons/book.png")}
+                    style={[
+                      styles.tabBarImage,
+                      {
+                        tintColor: focused ? "#243ffa" : "#748c94",
+                      },
+                    ]}
+                    resizeMode="stretch"
+                  />
+                  <Text
+                    style={[
+                      styles.tabBarText,
+                      {
+                        color: focused ? "#243ffa" : "#748c94",
+                      },
+                    ]}
+                  >
+                    {Screens.Academic}
+                  </Text>
+                </>
+              );
+            },
+          }}
+        />
+        <Tab.Screen
+          name={Screens.More}
+          component={HomeMore}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused }) => {
+              return (
+                <>
+                  {focused && <View style={styles.tabBarFocus}></View>}
+                  <Entypo
+                    name="dots-three-horizontal"
+                    size={30}
+                    color="black"
+                    style={[
+                      styles.tabBarImage,
+                      {
+                        color: focused ? "#243ffa" : "#748c94",
+                      },
+                    ]}
+                  />
+                  <Text
+                    style={[
+                      styles.tabBarText,
+                      {
+                        color: focused ? "#243ffa" : "#748c94",
+                      },
+                    ]}
+                  >
+                    {Screens.More}
+                  </Text>
+                </>
+              );
+            },
+          }}
+        />
+      </Tab.Navigator>
+    </SafeAreaView>
   );
 }
 
@@ -244,6 +278,13 @@ const styles = StyleSheet.create({
   tabBarImageHome: {
     width: 50,
     height: 50,
+  },
+  tabBarFocus: {
+    width: "50%",
+    height: 2,
+    backgroundColor: "#243ffa",
+    position: "absolute",
+    top: 0,
   },
   tabBarImage: {
     width: 30,

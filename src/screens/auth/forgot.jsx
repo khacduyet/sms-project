@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableOpacity,
 } from "react-native";
 import { Button, ToastMessage } from "../../common/components";
@@ -13,7 +12,10 @@ import OTPTextInput from "react-native-otp-textinput";
 import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
 import HeaderBack from "../../common/header";
 import Stepper from "react-native-stepper-ui";
-import { AuthServices, DanhMucServices } from "../../services/auth.service";
+import {
+  AuthServices,
+  DanhMucAccountServices,
+} from "../../services/auth.service";
 import { current } from "@reduxjs/toolkit";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -24,6 +26,7 @@ import {
 } from "../../common/common";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../../redux/actions/loadingAction";
+import { TextInput } from "@react-native-material/core";
 
 const SECONDS_OTP = 120;
 
@@ -31,12 +34,14 @@ const StepOne = ({ value, setValue, handleNext }) => {
   return (
     <View>
       <View style={styles.formWrapInput}>
-        <Text style={styles.formText}>Vui lòng nhập tên tài khoản</Text>
+        {/* <Text style={styles.formText}>Vui lòng nhập tên tài khoản</Text> */}
         <TextInput
           style={styles.formInput}
           value={value}
           onChangeText={setValue}
-          placeholder={`Tên tài khoản`}
+          // placeholder={`Tên tài khoản`}
+          label="Tên tài khoản"
+          variant="standard"
         />
       </View>
       <Button text={TextButton.Next} onPress={handleNext} disabled={!value} />
@@ -46,6 +51,34 @@ const StepOne = ({ value, setValue, handleNext }) => {
 
 const StepTwo = ({ current, setCurrent, handleNext, user, next }) => {
   const dispatch = useDispatch();
+  const [value, setValue] = useState("");
+  const [error, setError] = useState({
+    isShow: false,
+    message: ``,
+  });
+
+  const handleNextStep = () => {
+    if (current === TYPE.phone) {
+      if (value !== user.DienThoai) {
+        setError({
+          isShow: true,
+          message: `Số điện thoại không đúng với số đã đăng ký`,
+        });
+        return;
+      }
+    } else {
+      if (value !== user.Email) {
+        setError({
+          isShow: true,
+          message: `Email không đúng với email đã đăng ký`,
+        });
+        return;
+      }
+    }
+    handleNext();
+    next();
+  };
+
   useEffect(() => {
     dispatch(setLoading(false));
   }, []);
@@ -66,7 +99,7 @@ const StepTwo = ({ current, setCurrent, handleNext, user, next }) => {
           <RadioButtonItem
             value={TYPE.email}
             label={
-              <Text style={{ marginBottom: 10 }}>
+              <Text style={{ marginBottom: 10, marginLeft: 10 }}>
                 Xác minh qua email đã đăng ký{" "}
                 {hideMaskEmailOrPhone(user.Email, TYPE.email)}
               </Text>
@@ -75,7 +108,7 @@ const StepTwo = ({ current, setCurrent, handleNext, user, next }) => {
           <RadioButtonItem
             value={TYPE.phone}
             label={
-              <Text style={{ marginBottom: 10 }}>
+              <Text style={{ marginBottom: 10, marginLeft: 10 }}>
                 Xác minh qua số điện thoại đã đăng ký{" "}
                 {hideMaskEmailOrPhone(user.DienThoai, TYPE.phone)}
               </Text>
@@ -83,12 +116,34 @@ const StepTwo = ({ current, setCurrent, handleNext, user, next }) => {
           />
         </RadioButtonGroup>
       </View>
+      <View style={styles.formWrapInput}>
+        <TextInput
+          style={styles.formInput}
+          value={value}
+          onChangeText={(e) => {
+            if (error.isShow) {
+              setError({
+                ...error,
+                isShow: false,
+              });
+            }
+            setValue(e);
+          }}
+          label={
+            current === TYPE.phone
+              ? `Vui lòng nhập lại SĐT đã đăng ký`
+              : `Vui lòng nhập lại Email đã đăng ký`
+          }
+          variant="standard"
+        />
+        {error.isShow && (
+          <Text style={{ color: "red", marginTop: 20 }}>{error.message}</Text>
+        )}
+      </View>
       <Button
         text={TextButton.Next}
-        onPress={() => {
-          handleNext();
-          next();
-        }}
+        onPress={handleNextStep}
+        disabled={value.length === 0}
       />
     </View>
   );
@@ -122,7 +177,7 @@ const StepThree = ({ type, user, handleNextStepTwo, next }) => {
       _otp += x;
     });
     if (_otp.length === 6) {
-      let res = await DanhMucServices.XacMinhOTP({
+      let res = await DanhMucAccountServices.XacMinhOTP({
         IdUser: user.IdUser,
         OTP: parseInt(_otp),
       });
@@ -225,32 +280,36 @@ const StepFour = ({ user }) => {
     <View>
       <View style={styles.formWrapInput}>
         <View style={{ marginBottom: 10 }}>
-          <Text style={[styles.formText, styles.formTextLabel]}>
+          {/* <Text style={[styles.formText, styles.formTextLabel]}>
             Mật khẩu mới:
-          </Text>
+          </Text> */}
           <TouchableOpacity onPress={() => setIsShow(!isShow)}>
-            <Text style={[styles.isShow]}>Hiện</Text>
+            <Text style={[styles.isShow, { color: isShow ? "#000" : "blue" }]}>
+              Hiện
+            </Text>
           </TouchableOpacity>
           <TextInput
             secureTextEntry={isShow}
             style={styles.formInput}
             value={passwords.password}
             onChangeText={(e) => setForm(e, `password`)}
-            placeholder={`Mật khẩu mới`}
+            label="Mật khẩu mới"
+            variant="standard"
           />
           {/* {!isMatch && (
             <Text style={[{ color: "red" }]}>Mật khẩu không khớp!</Text>
           )} */}
         </View>
-        <Text style={[styles.formText, styles.formTextLabel]}>
+        {/* <Text style={[styles.formText, styles.formTextLabel]}>
           Nhập lại mật khẩu mới:
-        </Text>
+        </Text> */}
         <TextInput
           secureTextEntry={isShow}
           style={styles.formInput}
           value={passwords.repassword}
           onChangeText={(e) => setForm(e, `repassword`)}
-          placeholder={`Mật khẩu mới`}
+          label=" Nhập lại mật khẩu mới"
+          variant="standard"
         />
         {!isMatch && (
           <Text style={[{ color: "red" }]}>Mật khẩu không khớp!</Text>
@@ -265,8 +324,9 @@ const StepFour = ({ user }) => {
   );
 };
 
-export default function ForgotPassword() {
-  const [value, setValue] = useState("");
+export default function ForgotPassword({ route }) {
+  const { username } = route.params;
+  const [value, setValue] = useState(username);
   const [active, setActive] = useState(0);
   const [current, setCurrent] = useState(TYPE.email);
   const [user, setUser] = useState({});
@@ -274,7 +334,7 @@ export default function ForgotPassword() {
 
   const handleNext = async () => {
     dispatch(setLoading(true));
-    let res = await DanhMucServices.GetUserByUserName(value);
+    let res = await DanhMucAccountServices.GetUserByUserName(value);
     if (res) {
       setUser(res.Data);
     }
@@ -284,9 +344,9 @@ export default function ForgotPassword() {
   const handleNextStepTwo = async () => {
     dispatch(setLoading(true));
     if (current === TYPE.email) {
-      await DanhMucServices.MaOtpEmail(user.Email, user.IdUser);
+      await DanhMucAccountServices.MaOtpEmail(user.Email, user.IdUser);
     } else {
-      await DanhMucServices.MaOtpSMS(user.DienThoai, user.IdUser);
+      await DanhMucAccountServices.MaOtpSMS(user.DienThoai, user.IdUser);
     }
   };
 
@@ -352,6 +412,7 @@ const styles = StyleSheet.create({
   formWrapInput: {
     padding: 20,
     marginTop: 30,
+    marginBottom: 30,
   },
   formText: {
     fontSize: 18,
@@ -374,12 +435,13 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 40,
     borderRadius: 10,
-    borderWidth: 1,
-    padding: 10,
+    marginBottom: 20,
+    // borderWidth: 1,
+    // padding: 10,
   },
   isShow: {
     position: "absolute",
-    top: -22,
+    top: -10,
     right: 5,
   },
 });

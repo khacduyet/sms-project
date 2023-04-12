@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import Loading from './src/screens/loading';
 import ChangePassword from './src/screens/more/settings/changepass';
 import ForgotPassword from './src/screens/auth/forgot';
+import { NotificationPage } from './src/screens/home/navbar';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,7 @@ function StackNavigator() {
   return <Stack.Navigator initialRouteName={Screens.Login} screenOptions={{ headerShown: false }}>
     <Stack.Screen name={Screens.Login} component={LoginPage} />
     <Stack.Screen name={Screens.More} component={HomeMore} />
+    <Stack.Screen name={Screens.Notification} component={NotificationPage} />
     <Stack.Screen name={Screens.Setting} component={Setting} />
     <Stack.Screen name={Screens.ChangePassword} component={ChangePassword} />
     <Stack.Screen name={Screens.ForgotPassword} component={ForgotPassword} />
