@@ -5,11 +5,12 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { BASE_URL, Screens } from "../../common/constant";
-import { StatusBar } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useMemo } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -17,21 +18,30 @@ import HeaderBack from "../../common/header";
 import { Entypo } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { notifyReducer } from "../../redux/reducers/notifyReducer";
-import { getListNotify } from "../../redux/actions/notifyAction";
+import {
+  getBadgeNotify,
+  getListNotify,
+} from "../../redux/actions/notifyAction";
 import { formatDateStringGMT } from "../../common/common";
 import { DMGeneralServices } from "../../services/danhmuc.service";
+import { ToastMessage } from "../../common/components";
 
 export default function HomeNavBar({ currentUser }) {
   const navigate = useNavigation();
   const nav = useNavigation();
+  const notify = useSelector((state) => state.notify);
+  const [badge, setBadge] = useState(0);
 
   const [avatar, setAvatar] = useState({
     isExternal: false,
     url: "../../resources/avatar-student.png",
   });
 
+  const getBadgeNotification = async () => {
+    setBadge(notify?.Count);
+  };
+
   const getAvatar = async () => {
-    console.log("currentUser", currentUser);
     if (currentUser.LinkAnhDaiDien) {
       let url = BASE_URL + currentUser.LinkAnhDaiDien;
       let obj = {
@@ -41,6 +51,10 @@ export default function HomeNavBar({ currentUser }) {
       setAvatar(obj);
     }
   };
+
+  useEffect(() => {
+    getBadgeNotification();
+  }, [notify?.Count]);
 
   useEffect(() => {
     getAvatar();
@@ -89,9 +103,11 @@ export default function HomeNavBar({ currentUser }) {
             }}
           >
             <SimpleLineIcons name="bell" size={25} color="black" />
-            <View style={[styles.buttonTextContainBadge]}>
-              <Text style={[styles.buttonTextBadge]}>2</Text>
-            </View>
+            {badge > 0 && (
+              <View style={[styles.buttonTextContainBadge]}>
+                <Text style={[styles.buttonTextBadge]}>{badge}</Text>
+              </View>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -100,23 +116,98 @@ export default function HomeNavBar({ currentUser }) {
 }
 
 export function NotificationPage() {
-  const notifies = useSelector((state) => state.notify);
   const currentUser = useSelector((state) => state.currentUser);
-  const dispatch = useDispatch();
+  const [lastId, setLastId] = useState(`0`);
   const [refresh, setRefresh] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const [notifies, setNotifies] = useState([]);
+  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getListNotify(currentUser.Id, `0`));
+    getNotification();
   }, []);
 
+  const getNotification = async () => {
+    let res = await DMGeneralServices.Notification.GetList(
+      currentUser.Id,
+      lastId
+    );
+    if (res) {
+      let data = res.ListItem;
+      if (data.length) {
+        let lastId = data[data.length - 1].Id;
+        setLastId(`${lastId}`);
+        setNotifies([...notifies, ...data]);
+      }
+    }
+    setLoading(false);
+  };
+
+  const getMoreNotification = () => {
+    setLoading(true);
+    getNotification();
+  };
+
   const seenNotification = async (item) => {
+    let idx = notifies.findIndex((x) => x.Id === item.Id);
+    if (idx !== -1) {
+      let temp = notifies[idx];
+      temp = {
+        ...temp,
+        TrangThai: 2,
+      };
+      notifies[idx] = temp;
+      setNotifies(notifies);
+    }
     await DMGeneralServices.Notification.Seen(item);
+    dispatch(getBadgeNotify());
     setRefresh(!refresh);
+  };
+
+  const seenAllNotification = async () => {
+    let temp = notifies.map((x) => {
+      return {
+        ...x,
+        TrangThai: 2,
+      };
+    });
+    setNotifies(temp);
+    await DMGeneralServices.Notification.SeenAll();
+    dispatch(getBadgeNotify());
+    setRefresh(!refresh);
+    ToastMessage("Đã đọc tất cả");
+  };
+
+  const renderFotter = () => {
+    return loading ? (
+      <View
+        style={{
+          marginTop: 10,
+          alignItems: "center",
+        }}
+      >
+        <ActivityIndicator size="large" />
+      </View>
+    ) : null;
+  };
+
+  const rightItem = () => {
+    return (
+      <TouchableOpacity
+        style={{
+          position: "absolute",
+          right: "5%",
+          top: "10%",
+        }}
+        onPress={seenAllNotification}
+      >
+        <Ionicons name="checkmark-done-sharp" size={35} color="black" />
+      </TouchableOpacity>
+    );
   };
 
   return (
     <SafeAreaView style={[]}>
-      <HeaderBack header={Screens.Notification} />
+      <HeaderBack header={Screens.Notification} RightItem={rightItem} />
       <View style={[styles.wrapNotification]}>
         <FlatList
           data={notifies}
@@ -124,17 +215,31 @@ export function NotificationPage() {
             <ItemNotification item={item} seenNotification={seenNotification} />
           )}
           keyExtractor={(item) => item.Id}
+          ListEmptyComponent={EmptyNotification}
+          ListFooterComponent={renderFotter}
+          onEndReached={getMoreNotification}
+          onEndReachedThreshold={0}
         />
       </View>
     </SafeAreaView>
   );
 }
 
+const EmptyNotification = () => {
+  return (
+    <View>
+      <Text>Không có thông báo!</Text>
+    </View>
+  );
+};
+
 const ItemNotification = ({ item, seenNotification }) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        seenNotification(item);
+        if (item.TrangThai !== 2) {
+          seenNotification(item);
+        }
       }}
     >
       <View style={[notifies.itemNoti]}>
@@ -223,7 +328,10 @@ const styles = {
   buttonTextName: {
     fontWeight: 600,
   },
-  wrapNotification: {},
+  wrapNotification: {
+    // backgroundColor: "#ccc",
+    height: "100%",
+  },
 };
 
 const notifies = {
@@ -232,7 +340,8 @@ const notifies = {
     borderRadius: 5,
     // height: 100,
     backgroundColor: "#E2EAF6",
-    marginBottom: 10,
+    marginTop: 5,
+    marginBottom: 5,
     marginLeft: 10,
     marginRight: 10,
     paddingLeft: 10,

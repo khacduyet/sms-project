@@ -2,12 +2,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { getBadgeNotify } from '../redux/actions/notifyAction';
 
 export default function Notification() {
     const [expoPushToken, setExpoPushToken] = useState('');
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         registerForPushNotificationsAsync().then(async token => {
@@ -23,6 +26,7 @@ export default function Notification() {
         });
 
         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log("response receiver");
             console.log(response);
         });
 
@@ -31,6 +35,10 @@ export default function Notification() {
             Notifications.removeNotificationSubscription(responseListener.current);
         };
     }, []);
+
+    useEffect(() => {
+        dispatch(getBadgeNotify())
+    }, [notification])
 }
 
 async function sendPushNotification(expoPushToken) {

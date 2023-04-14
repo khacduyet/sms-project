@@ -5,6 +5,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { SafeAreaView, StatusBar } from 'react-native';
 import { RootSiblingParent } from 'react-native-root-siblings';
+import { Colors } from './src/common/constant';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -17,7 +18,7 @@ Notifications.setNotificationHandler({
 export default function App() {
   return (
     <RootSiblingParent>
-      <StatusBar style="light" backgroundColor="#243ffa" />
+      <StatusBar style="light" backgroundColor={Colors.Primary} />
       <Provider store={store}>
         <AppContainer />
       </Provider>

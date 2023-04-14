@@ -2,7 +2,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Text, TouchableOpacity, View, StatusBar } from 'react-native';
 
-export default function HeaderBack({ header }) {
+export default function HeaderBack({ header, RightItem }) {
     const nav = useNavigation()
     return <>
         <View style={[styles.container]}>
@@ -13,6 +13,7 @@ export default function HeaderBack({ header }) {
                     </View>
                 </TouchableOpacity>
                 <Text style={[styles.headerText]}>{header}</Text>
+                {RightItem && <RightItem />}
             </View>
         </View>
     </>

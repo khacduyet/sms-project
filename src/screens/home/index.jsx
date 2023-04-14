@@ -6,10 +6,10 @@ import { getCurrentUser } from "../../redux/actions/loginAction";
 import { setLoading } from "../../redux/actions/loadingAction";
 import HomeNavBar from "./navbar";
 import { ToastMessage } from "../../common/components";
+import { getBadgeNotify } from "../../redux/actions/notifyAction";
 
 export default function HomePage({ navigation }) {
   const currentUser = useSelector((state) => state.currentUser);
-  // console.log("currentUser", currentUser);
   const dispatch = useDispatch();
 
   function showToast() {
@@ -18,6 +18,7 @@ export default function HomePage({ navigation }) {
 
   useEffect(() => {
     dispatch(getCurrentUser());
+    dispatch(getBadgeNotify());
     if (currentUser && currentUser.TenNhanVien) {
       showToast();
     }

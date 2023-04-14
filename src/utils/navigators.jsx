@@ -16,7 +16,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Entypo } from "@expo/vector-icons";
 import HomePage from "../screens/home";
 import HomeMore from "../screens/more/index";
-import { Screens } from "../common/constant";
+import { Colors, Screens } from "../common/constant";
 import HomeNavBar from "../screens/home/navbar";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -83,7 +83,7 @@ export function TabNavigatior() {
           //     resizeMode="stretch"
           //   />
           // ),
-          tabBarActiveTintColor: "#243ffa",
+          tabBarActiveTintColor: Colors.Primary,
           tabBarStyle: {
             // position: 'absolute',
             // bottom: 0,
@@ -99,6 +99,7 @@ export function TabNavigatior() {
           name="Schedula"
           component={SchedulePage}
           options={{
+            headerShown: false,
             tabBarIcon: ({ focused }) => {
               return (
                 <>
@@ -108,7 +109,7 @@ export function TabNavigatior() {
                     style={[
                       styles.tabBarImage,
                       {
-                        tintColor: focused ? "#243ffa" : "#748c94",
+                        tintColor: focused ? Colors.Primary : "#748c94",
                       },
                     ]}
                     resizeMode="stretch"
@@ -117,7 +118,7 @@ export function TabNavigatior() {
                     style={[
                       styles.tabBarText,
                       {
-                        color: focused ? "#243ffa" : "#748c94",
+                        color: focused ? Colors.Primary : "#748c94",
                       },
                     ]}
                   >
@@ -141,7 +142,7 @@ export function TabNavigatior() {
                     style={[
                       styles.tabBarImage,
                       {
-                        tintColor: focused ? "#243ffa" : "#748c94",
+                        tintColor: focused ? Colors.Primary : "#748c94",
                       },
                     ]}
                     resizeMode="stretch"
@@ -150,7 +151,7 @@ export function TabNavigatior() {
                     style={[
                       styles.tabBarText,
                       {
-                        color: focused ? "#243ffa" : "#748c94",
+                        color: focused ? Colors.Primary : "#748c94",
                       },
                     ]}
                   >
@@ -175,7 +176,7 @@ export function TabNavigatior() {
                         width: "100%",
                         borderRadius: 50,
                         height: "100%",
-                        // backgroundColor: "#243ffa",
+                        // backgroundColor: Colors.Primary,
                         borderWidth: 2,
                         borderColor: "blue",
                         position: "absolute",
@@ -189,7 +190,7 @@ export function TabNavigatior() {
                     color="black"
                     style={[
                       {
-                        color: focused ? "#243ffa" : "#748c94",
+                        color: focused ? Colors.Primary : "#748c94",
                       },
                     ]}
                   />
@@ -214,7 +215,7 @@ export function TabNavigatior() {
                     style={[
                       styles.tabBarImage,
                       {
-                        tintColor: focused ? "#243ffa" : "#748c94",
+                        tintColor: focused ? Colors.Primary : "#748c94",
                       },
                     ]}
                     resizeMode="stretch"
@@ -223,7 +224,7 @@ export function TabNavigatior() {
                     style={[
                       styles.tabBarText,
                       {
-                        color: focused ? "#243ffa" : "#748c94",
+                        color: focused ? Colors.Primary : "#748c94",
                       },
                     ]}
                   >
@@ -250,7 +251,7 @@ export function TabNavigatior() {
                     style={[
                       styles.tabBarImage,
                       {
-                        color: focused ? "#243ffa" : "#748c94",
+                        color: focused ? Colors.Primary : "#748c94",
                       },
                     ]}
                   />
@@ -258,7 +259,7 @@ export function TabNavigatior() {
                     style={[
                       styles.tabBarText,
                       {
-                        color: focused ? "#243ffa" : "#748c94",
+                        color: focused ? Colors.Primary : "#748c94",
                       },
                     ]}
                   >
@@ -282,7 +283,7 @@ const styles = StyleSheet.create({
   tabBarFocus: {
     width: "50%",
     height: 2,
-    backgroundColor: "#243ffa",
+    backgroundColor: Colors.Primary,
     position: "absolute",
     top: 0,
   },

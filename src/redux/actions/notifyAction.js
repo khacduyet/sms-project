@@ -1,13 +1,13 @@
 import { DMGeneralServices } from "../../services/danhmuc.service";
-import { LOAD_MORE_NOTIFY } from "../reducers/notifyReducer"
+import { BADGE_NOTIFY } from "../reducers/notifyReducer"
 
-export const getListNotify = (IdUser, IdLast) => async dispatch => {
+export const getBadgeNotify = () => async dispatch => {
     try {
-        let res = await DMGeneralServices.Notification.GetList(IdUser, IdLast)
+        let res = await DMGeneralServices.Notification.GetBadge()
         if (res) {
             dispatch({
-                type: LOAD_MORE_NOTIFY,
-                data: res.ListItem
+                type: BADGE_NOTIFY,
+                data: res
             })
         }
     } catch (error) {
