@@ -47,3 +47,15 @@ export const TextButton = {
     Previous: "Trước",
     Next: "Tiếp theo",
 }
+
+
+export const Colors = {
+    Primary: '#243ffa',
+    Secondary: '#6c757d',
+    Success: '#28a745',
+    Danger: '#dc3545',
+    Warning: '#ffc108',
+    Info: '#17a2b8',
+    Light: '#f8f9fa',
+    Dark: '#343a40',
+}

@@ -24,10 +24,20 @@ export const DMGeneralServices = {
             // IdLast => scroll lazy load 
             return get(smarteos + `Notification/GetListNotificationLoaiBoLoai?Loai=abc&IdUser=${IdUser}&idIdLast=${IdLast}`, _header)
         },
+        GetBadge: async () => {
+            let _header = await getHeaders();
+            // IdLast => scroll lazy load 
+            return get(smarteos + `Notification/GetNotification`, _header)
+        },
         Seen: async (item) => {
             let _header = await getHeaders();
             return post(smarteos + `Notification/XemNotification`, { Item: item }, _header)
         },
+        SeenAll: async () => {
+            let _header = await getHeaders();
+            return post(smarteos + `Notification/MarkAllRead`, {}, _header)
+        },
+
     }
 }
 

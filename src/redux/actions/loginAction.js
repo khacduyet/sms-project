@@ -9,7 +9,6 @@ import { setLoading } from "./loadingAction";
 export const loginSubmit = (data) => async dispatch => {
     try {
         let res = await AuthServices.loginUser(data)
-        console.log("res", res);
         if (res) {
             await AsyncStorage.setItem(
                 'account',

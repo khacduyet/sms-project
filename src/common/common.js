@@ -99,6 +99,9 @@ export function formatDateStringGMT(datestring, type) {
         case "dd/mm/yyyy":
             _return = datestring ? (dd + "/" + mm + "/" + yyyy) : ''
             break;
+        case "mm/yyyy":
+            _return = datestring ? (mm + "/" + yyyy) : ''
+            break;
         case "dd/mm/yyyy hh:mm":
             _return = datestring ? (dd + "/" + mm + "/" + yyyy + " " + hour + ":" + minute) : ''
             break;
@@ -107,4 +110,11 @@ export function formatDateStringGMT(datestring, type) {
             break;
     }
     return _return;
+}
+
+export function createGuid() {
+    function S4() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    }
+    return (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
 }
