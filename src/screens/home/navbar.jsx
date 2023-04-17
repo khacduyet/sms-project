@@ -18,6 +18,7 @@ import HeaderBack from "../../common/header";
 import { Entypo } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { notifyReducer } from "../../redux/reducers/notifyReducer";
+import { Badge } from "react-native-paper";
 import {
   getBadgeNotify,
   getListNotify,
@@ -104,9 +105,7 @@ export default function HomeNavBar({ currentUser }) {
           >
             <SimpleLineIcons name="bell" size={25} color="black" />
             {badge > 0 && (
-              <View style={[styles.buttonTextContainBadge]}>
-                <Text style={[styles.buttonTextBadge]}>{badge}</Text>
-              </View>
+              <Badge style={[styles.buttonTextContainBadge]}>{badge}</Badge>
             )}
           </TouchableOpacity>
         </View>
@@ -289,9 +288,9 @@ const styles = {
   },
   buttonTextContainBadge: {
     backgroundColor: "red",
-    width: 20,
-    height: 20,
-    borderRadius: 20 / 2,
+    // width: 20,
+    // height: 20,
+    // borderRadius: 20 / 2,
     justifyContent: "center",
     alignItems: "center",
     position: "absolute",

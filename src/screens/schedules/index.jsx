@@ -181,13 +181,13 @@ const data = [
   "T12/2022",
 ];
 
-const ItemSchedule = ({ item }) => {
+export const ItemSchedule = ({ item }) => {
   return (
     <View style={bodys.itemFlat}>
       <View style={bodys.itemFlatLeft}>
         <View style={bodys.itemFlatLeftCircle}>
-          <Text style={{}}>{item.Thu}</Text>
-          <Text style={{ fontSize: 22, fontWeight: 600 }}>{item.Ngay}</Text>
+          <Text style={{ fontSize: 10 }}>{item.Thu}</Text>
+          <Text style={{ fontSize: 18, fontWeight: 600 }}>{item.Ngay}</Text>
           <Text>{item.Ngay}</Text>
         </View>
 
@@ -200,37 +200,44 @@ const ItemSchedule = ({ item }) => {
       </View>
       <View style={bodys.itemFlatRight}>
         {item.listChiTiet.map((x, idx) => {
-          return <ItemChildSchedule data={x} maLop={item.MaLop} key={idx} />;
+          return (
+            <ItemChildSchedule
+              data={x}
+              maLop={item.MaLop}
+              key={idx}
+              style={items}
+            />
+          );
         })}
       </View>
     </View>
   );
 };
 
-const ItemChildSchedule = ({ data, maLop }) => {
+export const ItemChildSchedule = ({ data, maLop, style }) => {
   return (
-    <View style={items.wrap}>
-      <View style={items.header}>
-        <View style={items.headerLeft}>
+    <View style={[style.wrap]}>
+      <View style={[style.header]}>
+        <View style={[style.headerLeft]}>
           <AntDesign name="clockcircleo" size={24} color="black" />
-          <Text style={items.headerleftTime}>{data.ThoiGian}</Text>
+          <Text style={[style.headerleftTime]}>{data.ThoiGian}</Text>
         </View>
-        <View style={items.headerRight}>
-          <Text style={items.headerRightText}>{maLop}</Text>
+        <View style={[style.headerRight]}>
+          <Text style={[style.headerRightText]}>{maLop}</Text>
         </View>
       </View>
-      <View style={items.body}>
-        <View style={items.bodyItem}>
+      <View style={[style.body]}>
+        <View style={[style.bodyItem]}>
           <Entypo name="open-book" size={24} color="black" />
-          <Text style={items.bodyText}>{data.TenMonHoc}</Text>
+          <Text style={[style.bodyText]}>{data.TenMonHoc}</Text>
         </View>
-        <View style={items.bodyItem}>
+        <View style={[style.bodyItem]}>
           <FontAwesome5 name="chalkboard-teacher" size={20} color="black" />
-          <Text style={items.bodyText}>{data.TenGiaoVien}</Text>
+          <Text style={[style.bodyText]}>{data.TenGiaoVien}</Text>
         </View>
-        <View style={items.bodyItem}>
+        <View style={[style.bodyItem]}>
           <EvilIcons name="location" size={24} color="black" />
-          <Text style={items.bodyText}>{data.Phong}</Text>
+          <Text style={[style.bodyText]}>{data.Phong}</Text>
         </View>
       </View>
     </View>
@@ -424,10 +431,12 @@ const items = {
   headerleftTime: {
     fontWeight: 600,
     paddingLeft: 8,
+    fontSize: 12,
   },
   headerRight: {
     flex: 2,
     alignItems: "flex-end",
+    fontSize: 12,
   },
   headerRightText: {
     fontWeight: 600,
