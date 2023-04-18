@@ -18,6 +18,7 @@ axiosClient.interceptors.response.use(
         return res.data
     },
     (er) => {
+        console.log("er", er);
         if (er.response.status === 400) {
             let _msg = returnMessage(StatusCode.ERROR_USER)
             ToastMessage(_msg)

@@ -1,11 +1,15 @@
+import { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
   ScrollView,
+  ImageBackground,
 } from "react-native";
+import { formatDateStringGMT } from "../../../common/common";
 import { Colors, height, width } from "../../../common/constant";
+import { QuyTrinhServices } from "../../../services/danhmuc.service";
 import { ItemChildSchedule, ItemSchedule } from "../../schedules";
 
 const data = [
@@ -39,37 +43,57 @@ const data = [
 ];
 
 export default function LichHocHomNayComponent() {
+  const [today, setToday] = useState([]);
+
+  const getData = async () => {
+    let res = await QuyTrinhServices.ThoiKhoaBieu.GetThoiKhoaBieuSVToDay();
+    if (res) {
+      console.log("res", res);
+      setToday(res);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <View style={[styles.container]}>
-      <View style={[styles.header]}>
-        <Text style={[styles.headerTitle, styles.textColor]}>
-          Lịch học hôm nay (....)
-        </Text>
-        <TouchableOpacity style={[styles.headerButton]}>
-          <Text style={[styles.headerButtonText, styles.textColor]}>
-            Xem chi tiết
+      <ImageBackground
+        style={{ width: "100%", height: "100%", borderRadius: 0 }}
+        source={require("../../../resources/bg-lichhoc.png")}
+        resizeMode="stretch"
+      >
+        <View style={[styles.header]}>
+          <Text style={[styles.headerTitle, styles.textColor]}>
+            Lịch học hôm nay ({formatDateStringGMT(new Date(), "dd/mm/yyyy")})
           </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={[styles.body]}>
-        <ScrollView
-          style={styles.scrollView}
-          horizontal
-          scrollEventThrottle={16}
-          //   pagingEnabled
-        >
-          {data.map((x, index) => {
-            return (
-              <ItemChildSchedule
-                key={index}
-                data={x}
-                maLop={``}
-                style={items}
-              />
-            );
-          })}
-        </ScrollView>
-      </View>
+          <TouchableOpacity style={[styles.headerButton]}>
+            <Text style={[styles.headerButtonText, styles.textColor]}>
+              Xem chi tiết
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={[styles.body]}>
+          <ScrollView
+            style={styles.scrollView}
+            horizontal
+            scrollEventThrottle={16}
+            //   pagingEnabled
+          >
+            {today.map((x, index) => {
+              return (
+                <ItemChildSchedule
+                  key={index}
+                  data={x}
+                  maLop={``}
+                  style={items}
+                />
+              );
+            })}
+          </ScrollView>
+        </View>
+      </ImageBackground>
     </View>
   );
 }
@@ -79,7 +103,7 @@ const styles = StyleSheet.create({
     height: 180,
     width: "95%",
     backgroundColor: Colors.Primary,
-    borderRadius: 5,
+    borderRadius: 15,
     marginTop: 5,
   },
   header: {
@@ -90,7 +114,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 15,
     marginLeft: 10,
   },
   headerButton: {

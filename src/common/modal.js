@@ -39,10 +39,12 @@ export function MonthPicker({ data, isVisible, onClose, onFinish }) {
                 style={styles.picker}
                 itemStyle={styles.twoPickerItems}
                 selectedValue={date}
+                // mode={`dropdown`}
+                selectionColor={`#ccc`}
                 onValueChange={(itemValue) => setDate(itemValue)}
             >
                 {data.map((x, index) => {
-                    return <Picker.Item label={x} value={x} key={index} />
+                    return <Picker.Item label={x.label} value={x.value} key={index} />
                 })}
             </Picker>
         </View>

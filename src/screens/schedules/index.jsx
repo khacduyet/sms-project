@@ -1,15 +1,18 @@
-import { useCallback, useState } from "react";
-import { FlatList } from "react-native";
+import { useEffect, useState } from "react";
+import { FlatList, StyleSheet } from "react-native";
 import { SafeAreaView, Text, View, TouchableOpacity } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
-import { createGuid, formatDateStringGMT } from "../../common/common";
+import { createGuid, DateToFirstLastDateInMonth } from "../../common/common";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
-import { Colors } from "../../common/constant";
-import { MonthPicker } from "../../common/modal";
+import { Colors, height } from "../../common/constant";
+import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { IconButton } from "react-native-paper";
+import { QuyTrinhServices } from "../../services/danhmuc.service";
+import { ActivityIndicator } from "react-native";
 
 const TextButtonTab = {
   LichHoc: "Lịch học",
@@ -55,140 +58,223 @@ export default function SchedulePage() {
           </TouchableOpacity>
         </View>
         <View style={[bodys.container]}>
-          {tabIndex === 0 && <TabLichThi />}
+          {tabIndex === 0 && <TabLichHoc />}
+          {tabIndex === 1 && <TabLichThi />}
         </View>
       </View>
     </SafeAreaView>
   );
 }
 
-const tkb = [
-  {
-    Thu: "Thứ Hai",
-    Ngay: "21",
-    MaLop: "CNTT01_k43",
-    IdLop: "string",
-    listChiTiet: [
-      {
-        IdDsMonHoc: "string",
-        TenMonHoc: "Tin học đại cương",
-        IdGiaoVien: "string",
-        TenGiaoVien: "Hoàng Thị Ngân",
-        Phong: "P301",
-        ThoiGian: "Tiết 1-2 (7:30 - 8:00)",
-        SoTinChi: "3",
-      },
-      {
-        IdDsMonHoc: "string",
-        TenMonHoc: "Tin học đại cương",
-        IdGiaoVien: "string",
-        TenGiaoVien: "Hoàng Thị Ngân",
-        Phong: "P301",
-        ThoiGian: "Tiết 1-2 (7:30 - 8:00)",
-        SoTinChi: "3",
-      },
-      {
-        IdDsMonHoc: "string",
-        TenMonHoc: "Tin học đại cương",
-        IdGiaoVien: "string",
-        TenGiaoVien: "Hoàng Thị Ngân",
-        Phong: "P301",
-        ThoiGian: "Tiết 1-2 (7:30 - 8:00)",
-        SoTinChi: "3",
-      },
-    ],
+const ListEmptyComponent = (
+  <View
+    style={{
+      alignItems: "center",
+      justifyContent: "center",
+      height: height / 2,
+    }}
+  >
+    <Text>không có dữ liệu...</Text>
+  </View>
+);
+const ListFooterComponent = (
+  <View
+    style={{
+      width: "100%",
+      height: 200,
+      alignItems: "center",
+      justifyContent: "flex-start",
+    }}
+  >
+    <Text>Chúc bạn có một ngày học tập tốt...</Text>
+  </View>
+);
+
+// #region Lịch thi
+function TabLichThi() {
+  const [testSchedules, setTestSchedules] = useState([{}, {}, {}]);
+  return (
+    <View style={[styles.container]}>
+      <View style={[lichthis.header]}>
+        <Text style={[lichthis.headerText]}>Lịch thi học kỳ I 2022-2023</Text>
+        <View style={[lichthis.buttonWrap]}>
+          <TouchableOpacity onPress={() => {}} style={[lichthis.button]}>
+            <MaterialCommunityIcons
+              name="book-edit-outline"
+              size={24}
+              color="white"
+            />
+            <Text style={[lichthis.buttonText]}>Điều kiện thi</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={[lichthis.body]}>
+        <FlatList
+          data={testSchedules}
+          renderItem={({ item }) => (
+            <ItemTestSchedule item={item} style={items} />
+          )}
+          keyExtractor={(item, index) => index}
+          ListEmptyComponent={ListEmptyComponent}
+          ListHeaderComponent={
+            <View style={{ width: "100%", height: 10 }}></View>
+          }
+          ListFooterComponent={testSchedules.length && ListFooterComponent}
+        />
+      </View>
+    </View>
+  );
+}
+
+const ItemTestSchedule = ({ item, style }) => {
+  return (
+    <View style={[style.wrap]}>
+      <View style={[style.header]}>
+        <View style={[style.headerLeft]}>
+          <Entypo name="open-book" size={24} color="black" />
+          <Text
+            style={[style.bodyText, { fontWeight: 600, color: Colors.Danger }]}
+          >
+            MH04 - Thực hành cơ khí (2TC)
+          </Text>
+        </View>
+        <View style={[style.headerRight]}>
+          <Text style={[style.headerRightText]}>CNTT01_K43</Text>
+        </View>
+      </View>
+      <View style={[style.body]}>
+        <View style={[style.bodyItem, { flexDirection: "row" }]}>
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+            <AntDesign name="calendar" size={24} color="black" />
+            <Text style={[style.headerleftTime]}>Thứ 3, 25/05/2023</Text>
+          </View>
+
+          <Text
+            style={[
+              {
+                color: Colors.Warning,
+                alignItems: "flex-end",
+                fontStyle: "italic",
+                fontWeight: 500,
+              },
+            ]}
+          >
+            44 ngày nữa
+          </Text>
+        </View>
+        <View style={[style.bodyItem]}>
+          <AntDesign name="clockcircleo" size={24} color="black" />
+          <Text style={[style.headerleftTime]}>15:00 - 16:00</Text>
+        </View>
+        <View style={[style.bodyItem, { flexDirection: "row" }]}>
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+            <EvilIcons name="location" size={24} color="black" />
+            <Text style={[style.bodyText]}>Xưởng 602</Text>
+          </View>
+
+          <Text
+            style={[
+              {
+                color: Colors.Warning,
+                alignItems: "flex-end",
+                fontStyle: "italic",
+                fontWeight: 500,
+              },
+            ]}
+          >
+            Thi giữa kỳ
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const lichthis = StyleSheet.create({
+  buttonWrap: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
   },
-  {
-    Thu: "Thứ Ba",
-    Ngay: "22",
-    MaLop: "CNTT01_k43",
-    IdLop: "string",
-    listChiTiet: [
-      {
-        IdDsMonHoc: "string",
-        TenMonHoc: "Đại số tuyến tính",
-        IdGiaoVien: "string",
-        TenGiaoVien: "Mai Đình Trình",
-        Phong: "P301",
-        ThoiGian: "Tiết 3-4 (8:15 - 10:00)",
-        SoTinChi: "3",
-      },
-    ],
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: Colors.Primary,
+    padding: 3,
+    borderRadius: 5,
   },
-  {
-    Thu: "Thứ Tư",
-    Ngay: "23",
-    MaLop: "CNTT01_k43",
-    IdLop: "string",
-    listChiTiet: [
-      {
-        IdDsMonHoc: "string",
-        TenMonHoc: "Đại số tuyến tính",
-        IdGiaoVien: "string",
-        TenGiaoVien: "Mai Đình Trình",
-        Phong: "P301",
-        ThoiGian: "Tiết 3-4 (8:15 - 10:00)",
-        SoTinChi: "3",
-      },
-    ],
+  buttonText: {
+    color: "#fff",
+    paddingLeft: 3,
   },
-  {
-    Thu: "Thứ Năm",
-    Ngay: "24",
-    MaLop: "CNTT01_k43",
-    IdLop: "string",
-    listChiTiet: [
-      {
-        IdDsMonHoc: "string",
-        TenMonHoc: "Đại số tuyến tính",
-        IdGiaoVien: "string",
-        TenGiaoVien: "Mai Đình Trình",
-        Phong: "P301",
-        ThoiGian: "Tiết 3-4 (8:15 - 10:00)",
-        SoTinChi: "3",
-      },
-    ],
+  headerText: {
+    flex: 2,
+    fontSize: 16,
+    fontWeight: 600,
   },
-  {
-    Thu: "Thứ Sáu",
-    Ngay: "25",
-    MaLop: "CNTT01_k43",
-    IdLop: "string",
-    listChiTiet: [
-      {
-        IdDsMonHoc: "string",
-        TenMonHoc: "Đại số tuyến tính",
-        IdGiaoVien: "string",
-        TenGiaoVien: "Mai Đình Trình",
-        Phong: "P301",
-        ThoiGian: "Tiết 3-4 (8:15 - 10:00)",
-        SoTinChi: "3",
-      },
-    ],
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 10,
+    marginLeft: 10,
   },
-];
-const data = [
-  "T2/2022",
-  "T3/2022",
-  "T4/2022",
-  "T5/2022",
-  "T6/2022",
-  "T7/2022",
-  "T8/2022",
-  "T9/2022",
-  "T10/2022",
-  "T11/2022",
-  "T12/2022",
-];
+  body: {},
+});
+// #endregion Lịch thi
+
+// #region Lịch học
+const data = () => {
+  let _month = [];
+  let _currentYear = new Date().getFullYear();
+  [...Array(5)].forEach((x, index) => {
+    [...Array(12)].forEach((y, idx) => {
+      _month.push({
+        label: `Tháng ${idx + 1}/${_currentYear - 2 + index}`,
+        value: new Date(_currentYear - 2 + index, idx, 1),
+      });
+    });
+  });
+  return _month;
+};
+
+const WeekSchedule = ({ item }) => {
+  return (
+    <>
+      <View style={bodys.weekWrap}>
+        <Text
+          style={{
+            flex: 1,
+            textAlign: "center",
+            fontWeight: 600,
+            fontSize: 16,
+          }}
+        >
+          Tuần {item?.Tuan}
+        </Text>
+        <View style={{ flex: 3, borderBottomWidth: 1 }}></View>
+      </View>
+      {item?.listChiTiet.map((x, index) => {
+        return <ItemSchedule item={x} key={`${index}-${item?.Tuan}`} />;
+      })}
+    </>
+  );
+};
 
 export const ItemSchedule = ({ item }) => {
+  let _date = new Date(item.Ngay);
   return (
     <View style={bodys.itemFlat}>
       <View style={bodys.itemFlatLeft}>
         <View style={bodys.itemFlatLeftCircle}>
           <Text style={{ fontSize: 10 }}>{item.Thu}</Text>
-          <Text style={{ fontSize: 18, fontWeight: 600 }}>{item.Ngay}</Text>
-          <Text>{item.Ngay}</Text>
+          <Text style={{ fontSize: 18, fontWeight: 600 }}>
+            {_date?.getDate()}
+          </Text>
+          <Text style={{ fontSize: 10 }}>{`${
+            _date?.getMonth() + 1
+          }/${_date?.getFullYear()}`}</Text>
         </View>
 
         <Ionicons
@@ -204,7 +290,7 @@ export const ItemSchedule = ({ item }) => {
             <ItemChildSchedule
               data={x}
               maLop={item.MaLop}
-              key={idx}
+              key={`${idx}-${x.ThoiGian}`}
               style={items}
             />
           );
@@ -244,30 +330,91 @@ export const ItemChildSchedule = ({ data, maLop, style }) => {
   );
 };
 
-function TabLichThi() {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: "Apple", value: "apple" },
-    { label: "Banana", value: "banana" },
-  ]);
+function TabLichHoc() {
+  const [time, setTime] = useState(data());
+  const [timeActive, setTimeActive] = useState(20);
+  const [schedules, setSchedules] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [date, setDate] = useState(data[0]);
-  const [show, setShow] = useState(false);
-
-  const onHide = () => {
-    setShow(false);
+  const getAllOptions = async () => {
+    let _thisTime = time[timeActive];
+    let _time = DateToFirstLastDateInMonth(_thisTime.value);
+    let data = {
+      Nam: _thisTime.value.getFullYear(),
+      TuNgayUnix: _time.FirstUnix,
+      DenNgayUnix: _time.LastUnix,
+    };
+    let tkb = await QuyTrinhServices.ThoiKhoaBieu.GetThoiKhoaBieuSV(data);
+    if (tkb) {
+      setSchedules(tkb);
+      setLoading(false);
+    }
   };
 
-  const onFinish = (value) => {
-    setDate(value);
-    onHide();
+  useEffect(() => {
+    getAllOptions();
+  }, [timeActive]);
+
+  const handleChangeWeek = (_atc) => {
+    setLoading(true);
+    setTimeActive(_atc);
   };
 
   return (
     <View style={[bodys.wrap]}>
+      {/* <View style={[bodys.wrapTop]}> */}
       <View style={[bodys.wrapTop]}>
-        <TouchableOpacity
+        <IconButton
+          icon={() => {
+            return (
+              <MaterialIcons
+                name="arrow-back-ios"
+                size={24}
+                color={timeActive === 0 ? "#ccc" : "black"}
+              />
+            );
+          }}
+          disabled={timeActive === 0}
+          size={15}
+          style={{ flex: 1, alignItems: "flex-start" }}
+          onPress={() => {
+            let _atc = timeActive - 1;
+            if (_atc >= 0) {
+              handleChangeWeek(_atc);
+            }
+          }}
+        />
+        <Text
+          style={{
+            flex: 2,
+            textAlign: "center",
+            justifyContent: "center",
+          }}
+        >
+          {time[timeActive].label}
+        </Text>
+        <IconButton
+          icon={() => {
+            return (
+              <MaterialIcons
+                name="arrow-forward-ios"
+                size={24}
+                color={timeActive === time.length - 1 ? "#ccc" : "black"}
+              />
+            );
+          }}
+          size={15}
+          style={{ flex: 1, alignItems: "flex-end" }}
+          disabled={timeActive === time.length - 1}
+          onPress={() => {
+            let _atc = timeActive + 1;
+            if (_atc < time.length) {
+              handleChangeWeek(_atc);
+            }
+          }}
+        />
+
+        {/* <TouchableOpacity
           style={[bodys.dateButton]}
           onPress={() => {
             setShow(true);
@@ -276,43 +423,44 @@ function TabLichThi() {
           <Text style={[bodys.dateText]}>{date}</Text>
         </TouchableOpacity>
 
-        <View style={[bodys.dropdown]}>
-          <DropDownPicker
-            open={open}
-            value={value}
-            items={items}
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
-            style={bodys.dropdownBox}
-            textStyle={bodys.dropdownText}
-          />
-        </View>
         {show && (
           <MonthPicker
             onClose={onHide}
             isVisible={show}
-            data={data}
+            data={data()}
             onFinish={onFinish}
           />
-        )}
+        )} */}
       </View>
       <View style={[bodys.wrapContent]}>
-        <FlatList
-          data={tkb}
-          renderItem={({ item }) => <ItemSchedule item={item} />}
-          keyExtractor={(item) => item.Ngay}
-          ListHeaderComponent={
-            <View style={{ width: "100%", height: 10 }}></View>
-          }
-          ListFooterComponent={
-            <View style={{ marginTop: 100, width: "100%", height: 100 }}></View>
-          }
-        />
+        {loading && (
+          <View
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              height: height / 2,
+            }}
+          >
+            <ActivityIndicator size={36} />
+          </View>
+        )}
+        {!loading && (
+          <FlatList
+            data={schedules}
+            renderItem={({ item }) => <WeekSchedule item={item} />}
+            keyExtractor={() => createGuid()}
+            ListEmptyComponent={ListEmptyComponent}
+            ListHeaderComponent={
+              <View style={{ width: "100%", height: 10 }}></View>
+            }
+            ListFooterComponent={schedules.length && ListFooterComponent}
+          />
+        )}
       </View>
     </View>
   );
 }
+// #endregion Lịch học
 
 const styles = {
   container: {
@@ -347,14 +495,23 @@ const bodys = {
     height: "100%",
     // backgroundColor: "#ccc",
   },
-  wrap: {},
-  wrapTop: {
-    marginTop: 10,
-    margin: 5,
+  weekWrap: {
     flexDirection: "row",
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 15,
+    marginTop: 0,
+  },
+  wrapTop: {
+    // margin: 5,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   wrapContent: {
     height: "100%",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
   dateButton: {
     borderWidth: 1,
@@ -392,6 +549,7 @@ const bodys = {
     borderColor: "blue",
   },
   itemFlatRight: {
+    marginLeft: 10,
     flex: 3,
   },
   itemFlatLeftCircle: {

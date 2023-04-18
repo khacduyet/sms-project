@@ -160,7 +160,7 @@ function BodyLogin({
 }) {
   const nav = useNavigation();
   const [account, setAccount] = useState({
-    username: "nypt",
+    username: "emnk",
     password: "123456",
   });
   const [submitForm, setSubmitForm] = useState(false);

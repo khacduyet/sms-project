@@ -17,12 +17,9 @@ import { useEffect } from "react";
 import HeaderBack from "../../common/header";
 import { Entypo } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { notifyReducer } from "../../redux/reducers/notifyReducer";
+import { FontAwesome } from "@expo/vector-icons";
 import { Badge } from "react-native-paper";
-import {
-  getBadgeNotify,
-  getListNotify,
-} from "../../redux/actions/notifyAction";
+import { getBadgeNotify } from "../../redux/actions/notifyAction";
 import { formatDateStringGMT } from "../../common/common";
 import { DMGeneralServices } from "../../services/danhmuc.service";
 import { ToastMessage } from "../../common/components";
@@ -99,15 +96,23 @@ export default function HomeNavBar({ currentUser }) {
         <View style={[styles.bell]}>
           <TouchableOpacity
             style={[styles.button, styles.buttonBadge]}
-            onPress={() => {
-              nav.push(Screens.Notification);
-            }}
+            onPress={() => {}}
           >
-            <SimpleLineIcons name="bell" size={25} color="black" />
-            {badge > 0 && (
-              <Badge style={[styles.buttonTextContainBadge]}>{badge}</Badge>
-            )}
+            <FontAwesome name="qrcode" size={30} color="black" />
           </TouchableOpacity>
+          <View style={{ alignItems: "flex-end" }}>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonBadge]}
+              onPress={() => {
+                nav.push(Screens.Notification);
+              }}
+            >
+              <SimpleLineIcons name="bell" size={25} color="black" />
+              {badge > 0 && (
+                <Badge style={[styles.buttonTextContainBadge]}>{badge}</Badge>
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </>
@@ -279,9 +284,9 @@ const styles = {
   bell: {
     flex: 1,
     height: 50,
-    marginLeft: 10,
+    flexDirection: "row",
     alignItems: "flex-end",
-    paddingRight: 20,
+    justifyContent: "flex-end",
   },
   buttonBadge: {
     position: "relative",
@@ -303,7 +308,7 @@ const styles = {
     fontWeight: 600,
   },
   user: {
-    flex: 2,
+    flex: 4,
     alignItems: "flex-start",
     paddingLeft: 10,
   },
@@ -314,6 +319,7 @@ const styles = {
   button: {
     height: "100%",
     justifyContent: "center",
+    marginRight: 15,
   },
   buttonUser: {
     flexDirection: "row",

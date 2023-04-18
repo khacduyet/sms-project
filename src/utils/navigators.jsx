@@ -8,7 +8,7 @@ import {
   Platform,
 } from "react-native";
 import AcademicPage from "../screens/accademics";
-import AttendancePage from "../screens/attendances";
+import ChatPage from "../screens/chat";
 import SchedulePage from "../screens/schedules";
 import { BlurView } from "expo-blur";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -21,6 +21,7 @@ import HomeNavBar from "../screens/home/navbar";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -130,22 +131,17 @@ export function TabNavigatior() {
           }}
         />
         <Tab.Screen
-          name="Attendance"
-          component={AttendancePage}
+          name="Chat"
+          component={ChatPage}
           options={{
             tabBarIcon: ({ focused }) => {
               return (
                 <>
                   {focused && <View style={styles.tabBarFocus}></View>}
-                  <Image
-                    source={require("../resources/icons/personal-tick.png")}
-                    style={[
-                      styles.tabBarImage,
-                      {
-                        tintColor: focused ? Colors.Primary : "#748c94",
-                      },
-                    ]}
-                    resizeMode="stretch"
+                  <Ionicons
+                    name="chatbox-ellipses-outline"
+                    size={24}
+                    color={focused ? Colors.Primary : "#748c94"}
                   />
                   <Text
                     style={[
@@ -155,7 +151,7 @@ export function TabNavigatior() {
                       },
                     ]}
                   >
-                    {Screens.Attendance}
+                    {Screens.Chat}
                   </Text>
                 </>
               );
@@ -186,7 +182,7 @@ export function TabNavigatior() {
                   )}
                   <Entypo
                     name="home"
-                    size={35}
+                    size={30}
                     color="black"
                     style={[
                       {

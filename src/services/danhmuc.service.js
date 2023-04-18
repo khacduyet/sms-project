@@ -41,6 +41,19 @@ export const DMGeneralServices = {
     }
 }
 
+export const QuyTrinhServices = {
+    ThoiKhoaBieu: {
+        GetThoiKhoaBieuSV: async (data) => {
+            let _header = await getHeaders();
+            return post(qlsv + `/QuanLySinhVien/GetThoiKhoaBieuSV`, data, _header)
+        },
+        GetThoiKhoaBieuSVToDay: async () => {
+            let _header = await getHeaders();
+            return get(qlsv + `/QuanLySinhVien/GetThoiKhoaBieuSVToDay`, _header)
+        },
+    }
+}
+
 export const AuthServices = {
     loginUser: async (data) => {
         const tokenfirebase = await AsyncStorage.getItem('deviceToken');
