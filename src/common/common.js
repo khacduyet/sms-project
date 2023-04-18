@@ -1,4 +1,4 @@
-
+import moment from 'moment'
 
 export const StatusCode = {
     SUCCESS: 1,
@@ -117,4 +117,15 @@ export function createGuid() {
         return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
     }
     return (S4() + S4() + "-" + S4() + "-4" + S4().substr(0, 3) + "-" + S4() + "-" + S4() + S4() + S4()).toLowerCase();
+}
+
+export function DateToFirstLastDateInMonth(date) {
+    const firstDay = moment(date, 'YYYY-MM-DD').startOf('month')
+    const lastDay = moment(date, 'YYYY-MM-DD').endOf('month')
+    return {
+        First: firstDay,
+        FirstUnix: DateToUnix(firstDay),
+        Last: lastDay,
+        LastUnix: DateToUnix(lastDay)
+    }
 }

@@ -1,11 +1,33 @@
-import { Image, Pressable, Text } from "react-native";
+import {
+  Image,
+  Pressable,
+  Text,
+  TouchableHighlight,
+  TouchableOpacity,
+} from "react-native";
 import { StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { width } from "../../../common/constant";
 import { Avatar, Button, Card } from "react-native-paper";
 import Swiper from "react-native-swiper";
+import { useEffect, useState } from "react";
 
 export default function BangTinComponent() {
+  const [fakeData, setFakeData] = useState([]);
+
+  const getFakeDate = async () => {
+    const res = await fetch(
+      "http://thcsnguyendu.krongnang.daklak.edu.vn/Api/Notification"
+    ).then((response) => response.json());
+    if (res) {
+      setFakeData(res.filter((x, idx) => idx < 3));
+    }
+  };
+
+  useEffect(() => {
+    getFakeDate();
+  }, []);
+
   return (
     <View style={[styles.container]}>
       <View style={[styles.header]}>
@@ -14,8 +36,29 @@ export default function BangTinComponent() {
           <Ionicons name="arrow-forward-circle" size={24} color="blue" />
         </Pressable>
       </View>
-      <Swiper autoplay loop>
-        {[...Array(6)].map((x, index) => {
+      <Swiper autoplay loop autoplayTimeout={7}>
+        {fakeData.map((x, index) => {
+          return (
+            <TouchableOpacity key={index}>
+              <Card>
+                <Card.Cover borderRadius={0} source={{ uri: x.Images }} />
+                <Card.Content>
+                  <Text
+                    variant="titleLarge"
+                    style={[styles.wrapText]}
+                    numberOfLines={1}
+                  >
+                    {x.Title}
+                  </Text>
+                  <Text variant="bodyMedium" numberOfLines={2}>
+                    {x.Title} {x.Title} {x.Title} {x.Title} {x.Title} {x.Title}
+                  </Text>
+                </Card.Content>
+              </Card>
+            </TouchableOpacity>
+          );
+        })}
+        {/* {[...Array(6)].map((x, index) => {
           return (
             <Card key={index}>
               <Card.Cover
@@ -26,14 +69,24 @@ export default function BangTinComponent() {
                 <Text variant="titleLarge" style={[styles.wrapText]}>
                   Ngày hội học sinh, sinh viên
                 </Text>
-                <Text variant="bodyMedium">
-                  Tổ chức đoàn thanh niên cộng sản HCM, vào ngày 14/xx/xxxx đã
-                  tổ chức
+                <Text variant="bodyMedium" numberOfLines={2}>
+                  SMS Seydlitz là một tàu chiến-tuần dương tải trọng 25.000 tấn
+                  được Hải quân Đế quốc Đức (Kaiserliche Marine) chế tạo ngay
+                  trước Chiến tranh Thế giới thứ nhất. Được đặt hàng vào năm
+                  1910 và đưa ra hoạt động vào tháng 5 năm 1913, nó là chiếc tàu
+                  chiến-tuần dương thứ tư được chế tạo cho Hạm đội Biển khơi.
+                  Seydlitz được đặt tên theo Friedrich Wilhelm von Seydlitz, vị
+                  tướng Phổ vào triều đại vua Frederick đại đế và từng phục vụ
+                  trong cuộc Chiến tranh bảy năm. Thiết kế của Seydlitz phản ảnh
+                  sự tích lũy kinh nghiệm trong thế hệ đầu tiên của các tàu
+                  chiến-tuần dương Đức, khởi đầu từ chiếc Von der Tann vào năm
+                  1906 và tiếp nối bởi hai chiếc thuộc lớp Moltke được đặt hàng
+                  vào các năm 1907 và 1908.
                 </Text>
               </Card.Content>
             </Card>
           );
-        })}
+        })} */}
       </Swiper>
     </View>
   );

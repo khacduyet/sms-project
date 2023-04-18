@@ -26,7 +26,7 @@ export const Screens = {
     AddTask: 'AddTask',
     ChangePassword: 'Đổi mật khẩu',
     ForgotPassword: 'Quên mật khẩu',
-    Chat: 'Chat',
+    Chat: 'Trò chuyện',
     NotificationGeneral: 'Thông báo chung',
     Personal: 'Thông tin cá nhân',
     InfoSupport: 'Thông tin hỗ trợ',
