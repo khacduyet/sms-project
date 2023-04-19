@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { BASE_URL, Screens } from "../../common/constant";
+import { BASE_URL, Colors, Screens } from "../../common/constant";
 import { Ionicons } from "@expo/vector-icons";
 import { useMemo } from "react";
 import { useState } from "react";
@@ -362,6 +362,7 @@ const notifies = {
     marginTop: 5,
     marginBottom: 5,
     fontWeight: 600,
+    // fontStyle: "italic",
   },
   dots: {
     position: "absolute",
@@ -374,7 +375,10 @@ const notifies = {
   title: {
     fontWeight: 600,
     marginBottom: 5,
-    fontSize: 16,
+    fontSize: 15,
+    color: Colors.Primary,
   },
-  text: {},
+  text: {
+    fontSize: 14,
+  },
 };

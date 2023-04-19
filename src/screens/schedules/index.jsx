@@ -268,11 +268,11 @@ export const ItemSchedule = ({ item }) => {
     <View style={bodys.itemFlat}>
       <View style={bodys.itemFlatLeft}>
         <View style={bodys.itemFlatLeftCircle}>
-          <Text style={{ fontSize: 10 }}>{item.Thu}</Text>
-          <Text style={{ fontSize: 18, fontWeight: 600 }}>
+          <Text style={{ fontSize: 12 }}>{item.Thu}</Text>
+          <Text style={{ fontSize: 20, fontWeight: 600 }}>
             {_date?.getDate()}
           </Text>
-          <Text style={{ fontSize: 10 }}>{`${
+          <Text style={{ fontSize: 12, textAlign: "center" }}>{`${
             _date?.getMonth() + 1
           }/${_date?.getFullYear()}`}</Text>
         </View>
@@ -305,7 +305,12 @@ export const ItemChildSchedule = ({ data, maLop, style }) => {
     <View style={[style.wrap]}>
       <View style={[style.header]}>
         <View style={[style.headerLeft]}>
-          <AntDesign name="clockcircleo" size={24} color="black" />
+          <AntDesign
+            name="clockcircleo"
+            size={24}
+            color="black"
+            style={{ padding: 3 }}
+          />
           <Text style={[style.headerleftTime]}>{data.ThoiGian}</Text>
         </View>
         <View style={[style.headerRight]}>
@@ -314,15 +319,30 @@ export const ItemChildSchedule = ({ data, maLop, style }) => {
       </View>
       <View style={[style.body]}>
         <View style={[style.bodyItem]}>
-          <Entypo name="open-book" size={24} color="black" />
+          <Entypo
+            name="open-book"
+            size={24}
+            color="black"
+            style={{ paddingLeft: 3 }}
+          />
           <Text style={[style.bodyText]}>{data.TenMonHoc}</Text>
         </View>
         <View style={[style.bodyItem]}>
-          <FontAwesome5 name="chalkboard-teacher" size={20} color="black" />
+          <FontAwesome5
+            name="chalkboard-teacher"
+            size={20}
+            color="black"
+            style={{ paddingLeft: 3 }}
+          />
           <Text style={[style.bodyText]}>{data.TenGiaoVien}</Text>
         </View>
         <View style={[style.bodyItem]}>
-          <EvilIcons name="location" size={24} color="black" />
+          <EvilIcons
+            name="location"
+            size={24}
+            color="black"
+            style={{ paddingLeft: 3 }}
+          />
           <Text style={[style.bodyText]}>{data.Phong}</Text>
         </View>
       </View>
@@ -580,6 +600,8 @@ const items = {
     backgroundColor: "#cfe2ff",
     borderBottomWidth: 1,
     padding: 2,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
   },
   headerLeft: {
     flex: 3,
