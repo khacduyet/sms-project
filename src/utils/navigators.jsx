@@ -202,6 +202,7 @@ export function TabNavigatior() {
           name="Academic"
           component={AcademicPage}
           options={{
+            headerShown: false,
             tabBarIcon: ({ focused }) => {
               return (
                 <>
