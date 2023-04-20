@@ -36,7 +36,7 @@ export default function BangTinComponent() {
           <Ionicons name="arrow-forward-circle" size={24} color="blue" />
         </Pressable>
       </View>
-      <Swiper autoplay loop autoplayTimeout={7}>
+      <Swiper autoplay loop autoplayTimeout={1}>
         {fakeData.map((x, index) => {
           return (
             <TouchableOpacity key={index}>

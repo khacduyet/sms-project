@@ -12,43 +12,12 @@ import { Colors, height, width } from "../../../common/constant";
 import { QuyTrinhServices } from "../../../services/danhmuc.service";
 import { ItemChildSchedule, ItemSchedule } from "../../schedules";
 
-const data = [
-  {
-    IdDsMonHoc: "string",
-    TenMonHoc: "Tin học đại cương",
-    IdGiaoVien: "string",
-    TenGiaoVien: "Hoàng Thị Ngân",
-    Phong: "P301",
-    ThoiGian: "Tiết 1-2 (7:30 - 8:00)",
-    SoTinChi: "3",
-  },
-  {
-    IdDsMonHoc: "string",
-    TenMonHoc: "Tin học đại cương",
-    IdGiaoVien: "string",
-    TenGiaoVien: "Hoàng Thị Ngân",
-    Phong: "P301",
-    ThoiGian: "Tiết 1-2 (7:30 - 8:00)",
-    SoTinChi: "3",
-  },
-  {
-    IdDsMonHoc: "string",
-    TenMonHoc: "Tin học đại cương",
-    IdGiaoVien: "string",
-    TenGiaoVien: "Hoàng Thị Ngân",
-    Phong: "P301",
-    ThoiGian: "Tiết 1-2 (7:30 - 8:00)",
-    SoTinChi: "3",
-  },
-];
-
 export default function LichHocHomNayComponent() {
   const [today, setToday] = useState([]);
 
   const getData = async () => {
     let res = await QuyTrinhServices.ThoiKhoaBieu.GetThoiKhoaBieuSVToDay();
     if (res) {
-      console.log("res", res);
       setToday(res);
     }
   };
@@ -152,6 +121,8 @@ const items = {
     backgroundColor: "#cfe2ff",
     borderBottomWidth: 1,
     padding: 2,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
   },
   headerLeft: {
     flex: 3,

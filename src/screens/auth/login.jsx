@@ -94,17 +94,20 @@ export default function LoginPage({ navigation }) {
     const savedBiometrics = await LocalAuthentication.isEnrolledAsync();
     if (!savedBiometrics)
       return alertComponent(
-        "Biometric record not found",
-        "Please ...",
+        "Thông báo",
+        "Vân tay không được hỗ trợ trên thiết bị này!",
         "Ok",
         () => fallBackToDefaultAuth()
       );
 
-    const biometricAuth = await LocalAuthentication.authenticateAsync({
-      promptMessage: "HarmonyES",
-      cancelLabel: "cancel",
-      disableDeviceFallback: true,
-    });
+    const biometricAuth =
+      Platform.OS === "ios"
+        ? await LocalAuthentication.authenticateAsync()
+        : await LocalAuthentication.authenticateAsync({
+            promptMessage: "HarmonyES",
+            cancelLabel: "cancel",
+            disableDeviceFallback: true,
+          });
 
     let account = await AsyncStorage.getItem("account");
     if (biometricAuth.success) {

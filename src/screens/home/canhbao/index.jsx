@@ -1,8 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { height } from "../../../common/constant";
 
 export default function MonHocCanhBaoComponent() {
   return (
@@ -25,9 +24,9 @@ export default function MonHocCanhBaoComponent() {
         </Pressable>
         <View style={[styles.body]}>
           <View style={[styles.bodyWrap]}>
-            <MaterialIcons
-              name="menu-book"
-              size={20}
+            <Entypo
+              name="open-book"
+              size={24}
               color="black"
               style={[styles.bodyIcon]}
             />
@@ -37,9 +36,9 @@ export default function MonHocCanhBaoComponent() {
             <Text style={[styles.bodyWrapNote, styles.bodyText]}>2 TC</Text>
           </View>
           <View style={[styles.bodyWrap]}>
-            <MaterialIcons
-              name="menu-book"
-              size={20}
+            <Entypo
+              name="open-book"
+              size={24}
               color="black"
               style={[styles.bodyIcon]}
             />
@@ -49,9 +48,9 @@ export default function MonHocCanhBaoComponent() {
             <Text style={[styles.bodyWrapNote, styles.bodyText]}>2 TC</Text>
           </View>
           <View style={[styles.bodyWrap]}>
-            <MaterialIcons
-              name="menu-book"
-              size={20}
+            <Entypo
+              name="open-book"
+              size={24}
               color="black"
               style={[styles.bodyIcon]}
             />
@@ -102,6 +101,7 @@ const styles = StyleSheet.create({
   bodyWrap: {
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 5,
   },
   bodyIcon: {},
   bodyWrapText: {

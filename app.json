@@ -13,13 +13,29 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Cho phép $(PRODUCT_NAME) để dùng Face ID."
+      },
+      "bundleIdentifier": "com.khacduyet.smsproject"
     },
+    "plugins": [
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Cho phép $(PRODUCT_NAME) để dùng Face ID."
+        }
+      ]
+    ],
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -29,6 +45,12 @@
         "projectId": "e8f0f0a2-350b-40e5-9e8a-bc36bf748602"
       }
     },
-    "owner": "khacduyet"
+    "owner": "khacduyet",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/e8f0f0a2-350b-40e5-9e8a-bc36bf748602"
+    }
   }
 }
