@@ -137,7 +137,9 @@ function BodySetting() {
     {
       icon: <FontAwesome5 name="user-circle" size={35} color="#1e20e7" />,
       text: Screens.Personal,
-      func: () => {},
+      func: () => {
+        nav.push(Screens.Personal);
+      },
     },
     {
       icon: <Feather name="settings" size={35} color="#1e20e7" />,

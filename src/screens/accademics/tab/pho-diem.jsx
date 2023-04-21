@@ -1,58 +1,49 @@
 import * as React from 'react';
-import { Dimensions } from 'react-native';
 import { StyleSheet, Text, View, TextInput, Pressable, } from "react-native";
-import { BarChart } from "react-native-chart-kit";
+
+//
+import ItemPhoDiem from './screen/item-pho-diem'
+import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme } from 'victory-native';
+
+
 
 export default function PhoDiem() {
-  const data = {
-    labels: ["Yếu", "TB", "Khá", "Giỏi", "Xuất săc"],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 43],
-        colors: [
-          (opacity = 1) => `rgb(141, 153, 153), ${opacity})`,
-          (opacity = 1) => `rgb(141, 153, 153), ${opacity})`,
-          (opacity = 1) => `rgb(141, 153, 153), ${opacity})`,
-          (opacity = 1) => `rgb(141, 153, 153), ${opacity})`,
-          (opacity = 1) => `rgb(255,2,0), ${opacity})`,
-      ]
-      }
-    ]
-  };
-  const chartConfig = {
-    backgroundGradientFrom: "#fff",
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#fff",
-    backgroundGradientToOpacity: 0.5,
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-    barPercentage: 0.5,
-    decimalPlaces: 0, 
-    useShadowColorFromDataset: false,
-  };
-  const screenWidth = Dimensions.get("window").width;
-
-  function* yLabel() {
-    yield* [minValue, 90, 100];
-  }
-
+  const data = [
+    { quarter: 'Yếu', earnings: 23, color: '#C0C0C0' },
+    { quarter: 'TB', earnings: 16, color: '#C0C0C0' },
+    { quarter: 'Khá', earnings: 42, color: '#C0C0C0' },
+    { quarter: 'Giỏi', earnings: 19, color: '#C0C0C0' },
+    { quarter: 'Xuất sắc', earnings: 19, color: '#C0C0C0' },
+  ];
   return (
-    <View>
-      <Text>Phổ Điểm</Text>
-      <View>
-        <BarChart
+    <View style={styles.container}>
+      <VictoryChart
+        theme={VictoryTheme.material}
+        domainPadding={20}
+      >
+        <VictoryBar
+          style={{
+            data: {
+              fill: 'gold'
+            },
+          }}
+          labels={({ datum }) => `${datum.earnings}`}
           data={data}
-          width={screenWidth}
-          height={220}
-          yAxisLabel=""
-          chartConfig={chartConfig}
-          verticalLabelRotation={0}
-          withInnerLines= {false}
-          showBarTops={false}
-          showValuesOnTopOfBars={true}
-          flatColor={true}
-          withCustomBarColorFromData={true}
+          x="quarter"
+          y="earnings"
         />
-      </View>
+      </VictoryChart>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: "#f5fcff"
+  }
+});
+
+
