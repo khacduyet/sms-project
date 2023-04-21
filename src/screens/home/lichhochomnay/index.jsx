@@ -1,4 +1,6 @@
+import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native";
 import {
   StyleSheet,
   View,
@@ -8,17 +10,20 @@ import {
   ImageBackground,
 } from "react-native";
 import { formatDateStringGMT } from "../../../common/common";
-import { Colors, height, width } from "../../../common/constant";
+import { Colors, height, Screens, width } from "../../../common/constant";
 import { QuyTrinhServices } from "../../../services/danhmuc.service";
 import { ItemChildSchedule, ItemSchedule } from "../../schedules";
 
 export default function LichHocHomNayComponent() {
+  const nav = useNavigation();
   const [today, setToday] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getData = async () => {
     let res = await QuyTrinhServices.ThoiKhoaBieu.GetThoiKhoaBieuSVToDay();
     if (res) {
       setToday(res);
+      setLoading(false);
     }
   };
 
@@ -37,13 +42,40 @@ export default function LichHocHomNayComponent() {
           <Text style={[styles.headerTitle, styles.textColor]}>
             Lịch học hôm nay ({formatDateStringGMT(new Date(), "dd/mm/yyyy")})
           </Text>
-          <TouchableOpacity style={[styles.headerButton]}>
+          <TouchableOpacity
+            style={[styles.headerButton]}
+            onPress={() => {
+              nav.navigate(`Schedula`);
+            }}
+          >
             <Text style={[styles.headerButtonText, styles.textColor]}>
               Xem chi tiết
             </Text>
           </TouchableOpacity>
         </View>
         <View style={[styles.body]}>
+          {loading && (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                height: "80%",
+              }}
+            >
+              <ActivityIndicator size={30} />
+            </View>
+          )}
+          {!loading && today.length === 0 && (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                height: "80%",
+              }}
+            >
+              <Text style={{ color: "#fff" }}>Không có lịch học hôm nay!</Text>
+            </View>
+          )}
           <ScrollView
             style={styles.scrollView}
             horizontal
@@ -83,7 +115,7 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   headerTitle: {
-    fontSize: 15,
+    fontSize: 14,
     marginLeft: 10,
   },
   headerButton: {

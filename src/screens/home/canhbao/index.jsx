@@ -1,22 +1,33 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { Screens } from "../../../common/constant";
 
+const SIZE_ICON = 24;
 export default function MonHocCanhBaoComponent() {
+  const nav = useNavigation();
   return (
     <View style={[styles.container]}>
       <View style={[styles.wrap]}>
         <Pressable
           style={[styles.header]}
           onPress={() => {
-            console.log("aaa");
+            nav.push(Screens.TestSchedule, {
+              title: `Lịch thi học kỳ I 2022-2023`,
+            });
           }}
         >
-          <Feather name="bookmark" size={24} color="black" />
+          <Image
+            source={require("../../../resources/icons/color-alarm.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
+          />
+          {/* <Feather name="bookmark" size={24} color="black" /> */}
           <Text style={[styles.headerText]}>Môn học cảnh báo</Text>
-          <Ionicons
-            name="arrow-forward-circle"
+          <Feather
+            name="arrow-right-circle"
             size={24}
             color="blue"
             style={[styles.headerArrow]}
@@ -24,40 +35,32 @@ export default function MonHocCanhBaoComponent() {
         </Pressable>
         <View style={[styles.body]}>
           <View style={[styles.bodyWrap]}>
-            <Entypo
+            <Image
+              source={require("../../../resources/icons/open-book.png")}
+              style={{ width: SIZE_ICON, height: SIZE_ICON }}
+              resizeMode="stretch"
+            />
+            {/* <Entypo
               name="open-book"
               size={24}
               color="black"
               style={[styles.bodyIcon]}
-            />
+            /> */}
             <Text style={[styles.bodyWrapText, styles.bodyText]}>
               Thực hành cơ khí
             </Text>
             <Text style={[styles.bodyWrapNote, styles.bodyText]}>2 TC</Text>
           </View>
           <View style={[styles.bodyWrap]}>
-            <Entypo
-              name="open-book"
-              size={24}
-              color="black"
-              style={[styles.bodyIcon]}
+            <Image
+              source={require("../../../resources/icons/open-book.png")}
+              style={{ width: SIZE_ICON, height: SIZE_ICON }}
+              resizeMode="stretch"
             />
             <Text style={[styles.bodyWrapText, styles.bodyText]}>
               Đại số tuyến tính
             </Text>
             <Text style={[styles.bodyWrapNote, styles.bodyText]}>2 TC</Text>
-          </View>
-          <View style={[styles.bodyWrap]}>
-            <Entypo
-              name="open-book"
-              size={24}
-              color="black"
-              style={[styles.bodyIcon]}
-            />
-            <Text style={[styles.bodyWrapText, styles.bodyText]}>
-              Thiết kế đồ họa
-            </Text>
-            <Text style={[styles.bodyWrapNote, styles.bodyText]}>3 TC</Text>
           </View>
         </View>
       </View>
@@ -83,7 +86,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: "#cfe2ff",
     alignItems: "center",
-    padding: 3,
+    padding: 5,
     borderTopLeftRadius: 5,
     borderTopRightRadius: 5,
   },
@@ -95,7 +98,7 @@ const styles = StyleSheet.create({
   headerArrow: {
     position: "absolute",
     right: 5,
-    top: 0,
+    top: 3,
   },
   body: { padding: 5 },
   bodyWrap: {

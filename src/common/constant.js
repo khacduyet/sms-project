@@ -32,6 +32,7 @@ export const Screens = {
     InfoSupport: 'Thông tin hỗ trợ',
     Setting: 'Cài đặt',
     Schedula: 'TKB',
+    TestSchedule: 'Lịch thi',
     Attendance: 'Điểm danh',
     Academic: 'KQHT',
     More: 'Thêm',

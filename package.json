@@ -45,6 +45,7 @@
     "react-native-element-dropdown": "^2.9.0",
     "react-native-modal": "^13.0.1",
     "react-native-modal-datetime-picker": "^15.0.0",
+    "react-native-modalize": "^2.1.1",
     "react-native-month-year-picker": "^1.9.0",
     "react-native-otp-textinput": "^1.0.0",
     "react-native-paper": "^5.6.0",
