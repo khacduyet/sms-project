@@ -102,6 +102,8 @@ export default function BangDiem() {
                             <ItemMonHoc item={item} />
                         </TouchableOpacity>
                     )}
+                    ListFooterComponent={<View style={{width:'100%',height:450}}>
+                    </View>}
                     keyExtractor={() => createGuid()} />
 
             </View>

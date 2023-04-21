@@ -33,7 +33,7 @@ export default function ItemMonHoc({ item }) {
                             <Text style={styles.item_title_diem}> Điểm kiểm tra thường xuyên </Text>
                             <View style={styles.flex}>
                                 {item.listDiemKTThuongXuyen.map(x => {
-                                    let _key =createGuid()
+                                    let _key = createGuid()
                                     return <Text style={styles._diem} key={_key}> {x.Diem} </Text>
                                 })}
                             </View>
@@ -42,7 +42,7 @@ export default function ItemMonHoc({ item }) {
                             <Text> Điểm kiểm tra định kỳ </Text>
                             <View style={styles.flex}>
                                 {item.listDiemKTDinhKy.map(x => {
-                                    let _key =createGuid()
+                                    let _key = createGuid()
                                     return <Text style={styles._diem} key={_key}> {x.Diem} </Text>
                                 })}
                             </View>
@@ -55,10 +55,10 @@ export default function ItemMonHoc({ item }) {
                     <Text style={styles.item_title_number_diem}> {item.DiemThi} </Text>
                 </View>
                 <View style={styles.flex}>
-                    <Text style={styles.item_title_diem}> Điểm tổng kết: </Text>
-                    <Text style={item.DiemTongKet > 5 ? styles.item_number_diem_dat : styles.item_number_diem_truot}> {Math.round(item.DiemTongKet)} </Text>
-                    <View style={styles.item_xet_diem_thi}>
-                        <Text style={item.DiemTongKet > 5 ? styles.item_number_diem_dat : styles.item_number_diem_truot}> {item.KetQua} </Text>
+                    <Text style={[styles.item_title_diem]}> Điểm tổng kết: </Text>
+                    <Text style={[item.DiemTongKet > 5 ? styles.item_number_diem_dat : styles.item_number_diem_truot,]}> {Math.round(item.DiemTongKet)} </Text>
+                    <View style={[styles.item_xet_diem_thi,{flex:1}]}>
+                        <Text style={[item.DiemTongKet > 5 ? styles.item_number_diem_dat : styles.item_number_diem_truot, {textAlign:'right',flex:1}]}> {item.KetQua} </Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -86,13 +86,14 @@ const styles = StyleSheet.create({
     },
     item_xet_diem_thi: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
-        paddingLeft: 150
+        // justifyContent: 'flex-end',
+        // paddingLeft: 150
     },
     items: {
         borderColor: '#C6E2FF',
         borderWidth: 1,
         borderRadius: 8,
+        marginBottom:16
     },
     flex: {
         flexDirection: 'row',
