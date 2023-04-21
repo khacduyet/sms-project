@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -7,7 +7,7 @@ import { Colors, height, width } from "../../../common/constant";
 import { TouchableOpacity } from "react-native";
 import Swiper from "react-native-swiper";
 
-const SIZE_ICON = 30;
+const SIZE_ICON = 50;
 // 1 page - max 6 item
 const COMPONENTS_WITHPAGES = [
   {
@@ -16,60 +16,92 @@ const COMPONENTS_WITHPAGES = [
       {
         label: `Đăng ký học phần`,
         icon: (
-          <MaterialCommunityIcons
-            name="calendar-edit"
-            size={SIZE_ICON}
-            color={Colors.Primary}
+          <Image
+            source={require("../../../resources/icons/color-calendar.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
           />
+          // <MaterialCommunityIcons
+          //   name="calendar-edit"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
         ),
         onPress: () => {},
       },
       {
         label: `Đóng học phí`,
         icon: (
-          <FontAwesome5
-            name="dollar-sign"
-            size={SIZE_ICON}
-            color={Colors.Primary}
+          <Image
+            source={require("../../../resources/icons/color-money.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
           />
+          // <FontAwesome5
+          //   name="dollar-sign"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
         ),
         onPress: () => {},
       },
       {
         label: `Chương trình đào tạo`,
-        icon: <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />,
+        icon: (
+          <Image
+            source={require("../../../resources/icons/color-book.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
+          />
+          // <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />
+        ),
         onPress: () => {},
       },
       {
         label: `Xin bảo lưu`,
         icon: (
-          <FontAwesome5
-            name="user-clock"
-            size={SIZE_ICON}
-            color={Colors.Primary}
+          <Image
+            source={require("../../../resources/icons/color-time-paper.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
           />
+          // <FontAwesome5
+          //   name="user-clock"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
         ),
         onPress: () => {},
       },
       {
         label: `Chuyển lớp/chuyển ngành`,
         icon: (
-          <MaterialCommunityIcons
-            name="book-refresh"
-            size={SIZE_ICON}
-            color={Colors.Primary}
+          <Image
+            source={require("../../../resources/icons/color-change.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
           />
+          // <MaterialCommunityIcons
+          //   name="book-refresh"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
         ),
         onPress: () => {},
       },
       {
         label: `Đánh giá rèn luyện`,
         icon: (
-          <MaterialIcons
-            name="assessment"
-            size={SIZE_ICON}
-            color={Colors.Primary}
+          <Image
+            source={require("../../../resources/icons/color-note.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
           />
+          // <MaterialIcons
+          //   name="assessment"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
         ),
         onPress: () => {},
       },
@@ -81,38 +113,60 @@ const COMPONENTS_WITHPAGES = [
       {
         label: `Đăng ký học phần`,
         icon: (
-          <MaterialCommunityIcons
-            name="calendar-edit"
-            size={SIZE_ICON}
-            color={Colors.Primary}
+          <Image
+            source={require("../../../resources/icons/color-calendar.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
           />
+          // <MaterialCommunityIcons
+          //   name="calendar-edit"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
         ),
         onPress: () => {},
       },
       {
         label: `Đóng học phí`,
         icon: (
-          <FontAwesome5
-            name="dollar-sign"
-            size={SIZE_ICON}
-            color={Colors.Primary}
+          <Image
+            source={require("../../../resources/icons/color-money.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
           />
+          // <FontAwesome5
+          //   name="dollar-sign"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
         ),
         onPress: () => {},
       },
       {
         label: `Chương trình đào tạo`,
-        icon: <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />,
+        icon: (
+          <Image
+            source={require("../../../resources/icons/color-book.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
+          />
+          // <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />
+        ),
         onPress: () => {},
       },
       {
         label: `Xin bảo lưu`,
         icon: (
-          <FontAwesome5
-            name="user-clock"
-            size={SIZE_ICON}
-            color={Colors.Primary}
+          <Image
+            source={require("../../../resources/icons/color-time-paper.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
           />
+          // <FontAwesome5
+          //   name="user-clock"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
         ),
         onPress: () => {},
       },

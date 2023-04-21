@@ -12,7 +12,7 @@ export default function HeaderBack({ header, RightItem }) {
                         <MaterialIcons name="arrow-back-ios" size={35} color="black" />
                     </View>
                 </TouchableOpacity>
-                <Text style={[styles.headerText]}>{header}</Text>
+                <Text style={[styles.headerText]}>{`${header}`.toUpperCase()}</Text>
                 {RightItem && <RightItem />}
             </View>
         </View>
@@ -38,6 +38,7 @@ const styles = {
     },
     headerText: {
         fontSize: 20,
-        fontWeight: 600
+        fontWeight: 600,
+        textAlign: 'center'
     }
 }

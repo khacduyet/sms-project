@@ -6,11 +6,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { StyleSheet, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { width } from "../../../common/constant";
 import { Avatar, Button, Card } from "react-native-paper";
 import Swiper from "react-native-swiper";
 import { useEffect, useState } from "react";
+
+const SIZE_ICON = 24;
 
 export default function BangTinComponent() {
   const [fakeData, setFakeData] = useState([]);
@@ -31,12 +33,17 @@ export default function BangTinComponent() {
   return (
     <View style={[styles.container]}>
       <View style={[styles.header]}>
+        <Image
+          source={require("../../../resources/icons/color-voice.png")}
+          style={{ width: SIZE_ICON, height: SIZE_ICON, marginLeft: 5 }}
+          resizeMode="stretch"
+        />
         <Text style={[styles.headerText]}>Bảng tin</Text>
         <Pressable style={[styles.headerArrow]} onPress={() => {}}>
-          <Ionicons name="arrow-forward-circle" size={24} color="blue" />
+          <Feather name="arrow-right-circle" size={24} color="blue" />
         </Pressable>
       </View>
-      <Swiper autoplay loop autoplayTimeout={1}>
+      <Swiper autoplay loop autoplayTimeout={5}>
         {fakeData.map((x, index) => {
           return (
             <TouchableOpacity key={index}>
@@ -103,10 +110,12 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   header: {
-    width: "95%",
+    width: "100%",
     marginBottom: 10,
+    flexDirection: "row",
   },
   headerText: {
+    marginLeft: 5,
     fontSize: 18,
     fontWeight: 600,
   },

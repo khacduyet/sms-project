@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet } from "react-native";
+import { FlatList, Image, StyleSheet } from "react-native";
 import { SafeAreaView, Text, View, TouchableOpacity } from "react-native";
 import { createGuid, DateToFirstLastDateInMonth } from "../../common/common";
 import { AntDesign } from "@expo/vector-icons";
@@ -7,17 +7,22 @@ import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
-import { Colors, height } from "../../common/constant";
+import { Colors, height, Screens } from "../../common/constant";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { IconButton } from "react-native-paper";
 import { QuyTrinhServices } from "../../services/danhmuc.service";
 import { ActivityIndicator } from "react-native";
+import { width } from "../../common/constant";
+import { useNavigation } from "@react-navigation/native";
+import moment from "moment";
 
 const TextButtonTab = {
   LichHoc: "Lịch học",
   LichThi: "Lịch thi",
 };
+
+const SIZE_ICON = 25;
 
 // View Thời khóa biểu
 export default function SchedulePage() {
@@ -92,13 +97,22 @@ const ListFooterComponent = (
 
 // #region Lịch thi
 function TabLichThi() {
+  const nav = useNavigation();
   const [testSchedules, setTestSchedules] = useState([{}, {}, {}]);
+  const [title, setTitle] = useState(`học kỳ I 2022-2023`);
   return (
     <View style={[styles.container]}>
       <View style={[lichthis.header]}>
-        <Text style={[lichthis.headerText]}>Lịch thi học kỳ I 2022-2023</Text>
+        <Text style={[lichthis.headerText]}>Lịch thi {title}</Text>
         <View style={[lichthis.buttonWrap]}>
-          <TouchableOpacity onPress={() => {}} style={[lichthis.button]}>
+          <TouchableOpacity
+            onPress={() => {
+              nav.push(Screens.TestSchedule, {
+                title: title,
+              });
+            }}
+            style={[lichthis.button]}
+          >
             <MaterialCommunityIcons
               name="book-edit-outline"
               size={24}
@@ -131,28 +145,46 @@ const ItemTestSchedule = ({ item, style }) => {
     <View style={[style.wrap]}>
       <View style={[style.header]}>
         <View style={[style.headerLeft]}>
-          <Entypo name="open-book" size={24} color="black" />
+          <Image
+            source={require("../../resources/icons/open-book.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON, ...styles.iconImage }}
+            resizeMode="stretch"
+          />
           <Text
+            numberOfLines={1}
             style={[style.bodyText, { fontWeight: 600, color: Colors.Danger }]}
           >
             MH04 - Thực hành cơ khí (2TC)
           </Text>
         </View>
         <View style={[style.headerRight]}>
-          <Text style={[style.headerRightText]}>CNTT01_K43</Text>
+          <Text numberOfLines={1} style={[style.headerRightText]}>
+            CNTT01_K43
+          </Text>
         </View>
       </View>
       <View style={[style.body]}>
         <View style={[style.bodyItem, { flexDirection: "row" }]}>
           <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-            <AntDesign name="calendar" size={24} color="black" />
-            <Text style={[style.headerleftTime]}>Thứ 3, 25/05/2023</Text>
+            <Image
+              source={require("../../resources/icons/color-black-calendar.png")}
+              style={{
+                width: SIZE_ICON,
+                height: SIZE_ICON,
+                ...styles.iconImage,
+              }}
+              resizeMode="stretch"
+            />
+            <Text numberOfLines={1} style={[style.headerleftTime]}>
+              Thứ 3, 25/05/2023
+            </Text>
           </View>
 
           <Text
+            numberOfLines={1}
             style={[
               {
-                color: Colors.Warning,
+                color: `orange`,
                 alignItems: "flex-end",
                 fontStyle: "italic",
                 fontWeight: 500,
@@ -163,19 +195,36 @@ const ItemTestSchedule = ({ item, style }) => {
           </Text>
         </View>
         <View style={[style.bodyItem]}>
-          <AntDesign name="clockcircleo" size={24} color="black" />
-          <Text style={[style.headerleftTime]}>15:00 - 16:00</Text>
+          <Image
+            source={require("../../resources/icons/clock.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON, ...styles.iconImage }}
+            resizeMode="stretch"
+          />
+          <Text numberOfLines={1} style={[style.headerleftTime]}>
+            15:00 - 16:00
+          </Text>
         </View>
         <View style={[style.bodyItem, { flexDirection: "row" }]}>
           <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-            <EvilIcons name="location" size={24} color="black" />
-            <Text style={[style.bodyText]}>Xưởng 602</Text>
+            <Image
+              source={require("../../resources/icons/location.png")}
+              style={{
+                width: SIZE_ICON,
+                height: SIZE_ICON,
+                ...styles.iconImage,
+              }}
+              resizeMode="stretch"
+            />
+            <Text numberOfLines={1} style={[style.bodyText]}>
+              Xưởng 602
+            </Text>
           </View>
 
           <Text
+            numberOfLines={1}
             style={[
               {
-                color: Colors.Warning,
+                color: `orange`,
                 alignItems: "flex-end",
                 fontStyle: "italic",
                 fontWeight: 500,
@@ -305,45 +354,55 @@ export const ItemChildSchedule = ({ data, maLop, style }) => {
     <View style={[style.wrap]}>
       <View style={[style.header]}>
         <View style={[style.headerLeft]}>
-          <AntDesign
-            name="clockcircleo"
-            size={24}
-            color="black"
-            style={{ padding: 3 }}
+          <Image
+            source={require("../../resources/icons/clock.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON, ...styles.iconImage }}
+            resizeMode="stretch"
           />
-          <Text style={[style.headerleftTime]}>{data.ThoiGian}</Text>
+
+          <Text style={[style.headerleftTime]} numberOfLines={1}>
+            {data.ThoiGian}
+          </Text>
         </View>
         <View style={[style.headerRight]}>
-          <Text style={[style.headerRightText]}>{maLop}</Text>
+          <Text style={[style.headerRightText]} numberOfLines={1}>
+            {maLop}
+          </Text>
         </View>
       </View>
       <View style={[style.body]}>
         <View style={[style.bodyItem]}>
-          <Entypo
-            name="open-book"
-            size={24}
-            color="black"
-            style={{ paddingLeft: 3 }}
+          <Image
+            source={require("../../resources/icons/open-book.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON, ...styles.iconImage }}
+            resizeMode="stretch"
           />
-          <Text style={[style.bodyText]}>{data.TenMonHoc}</Text>
+
+          <Text style={[style.bodyText]} numberOfLines={1}>
+            {data.TenMonHoc}
+          </Text>
         </View>
         <View style={[style.bodyItem]}>
-          <FontAwesome5
-            name="chalkboard-teacher"
-            size={20}
-            color="black"
-            style={{ paddingLeft: 3 }}
+          <Image
+            source={require("../../resources/icons/teacher-board.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON, ...styles.iconImage }}
+            resizeMode="stretch"
           />
-          <Text style={[style.bodyText]}>{data.TenGiaoVien}</Text>
+
+          <Text style={[style.bodyText]} numberOfLines={1}>
+            {data.TenGiaoVien}
+          </Text>
         </View>
         <View style={[style.bodyItem]}>
-          <EvilIcons
-            name="location"
-            size={24}
-            color="black"
-            style={{ paddingLeft: 3 }}
+          <Image
+            source={require("../../resources/icons/location.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON, ...styles.iconImage }}
+            resizeMode="stretch"
           />
-          <Text style={[style.bodyText]}>{data.Phong}</Text>
+
+          <Text style={[style.bodyText]} numberOfLines={1}>
+            {data.Phong}
+          </Text>
         </View>
       </View>
     </View>
@@ -352,24 +411,40 @@ export const ItemChildSchedule = ({ data, maLop, style }) => {
 
 function TabLichHoc() {
   const [time, setTime] = useState(data());
-  const [timeActive, setTimeActive] = useState(20);
+  const [timeActive, setTimeActive] = useState(null);
   const [schedules, setSchedules] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const getAllOptions = async () => {
-    let _thisTime = time[timeActive];
-    let _time = DateToFirstLastDateInMonth(_thisTime.value);
-    let data = {
-      Nam: _thisTime.value.getFullYear(),
-      TuNgayUnix: _time.FirstUnix,
-      DenNgayUnix: _time.LastUnix,
-    };
-    let tkb = await QuyTrinhServices.ThoiKhoaBieu.GetThoiKhoaBieuSV(data);
-    if (tkb) {
-      setSchedules(tkb);
-      setLoading(false);
+    if (timeActive) {
+      let _thisTime = time[timeActive];
+      let _time = DateToFirstLastDateInMonth(_thisTime.value);
+      let data = {
+        Nam: _thisTime.value.getFullYear(),
+        TuNgayUnix: _time.FirstUnix,
+        DenNgayUnix: _time.LastUnix,
+      };
+      let tkb = await QuyTrinhServices.ThoiKhoaBieu.GetThoiKhoaBieuSV(data);
+      if (tkb) {
+        console.log("tkb", tkb);
+        setSchedules(tkb);
+        setLoading(false);
+      }
     }
   };
+
+  useEffect(() => {
+    let _date = new Date();
+    let _year = _date.getFullYear();
+    let _month = _date.getMonth();
+    let _newDate = new Date(_year, _month, 1);
+    let idx = time.findIndex((x) => x.value.getTime() === _newDate.getTime());
+    if (idx !== -1) {
+      setTimeActive(idx);
+    } else {
+      setTimeActive(0);
+    }
+  }, []);
 
   useEffect(() => {
     getAllOptions();
@@ -383,58 +458,59 @@ function TabLichHoc() {
   return (
     <View style={[bodys.wrap]}>
       {/* <View style={[bodys.wrapTop]}> */}
-      <View style={[bodys.wrapTop]}>
-        <IconButton
-          icon={() => {
-            return (
-              <MaterialIcons
-                name="arrow-back-ios"
-                size={24}
-                color={timeActive === 0 ? "#ccc" : "black"}
-              />
-            );
-          }}
-          disabled={timeActive === 0}
-          size={15}
-          style={{ flex: 1, alignItems: "flex-start" }}
-          onPress={() => {
-            let _atc = timeActive - 1;
-            if (_atc >= 0) {
-              handleChangeWeek(_atc);
-            }
-          }}
-        />
-        <Text
-          style={{
-            flex: 2,
-            textAlign: "center",
-            justifyContent: "center",
-          }}
-        >
-          {time[timeActive].label}
-        </Text>
-        <IconButton
-          icon={() => {
-            return (
-              <MaterialIcons
-                name="arrow-forward-ios"
-                size={24}
-                color={timeActive === time.length - 1 ? "#ccc" : "black"}
-              />
-            );
-          }}
-          size={15}
-          style={{ flex: 1, alignItems: "flex-end" }}
-          disabled={timeActive === time.length - 1}
-          onPress={() => {
-            let _atc = timeActive + 1;
-            if (_atc < time.length) {
-              handleChangeWeek(_atc);
-            }
-          }}
-        />
+      <View style={{ width: "100%", alignItems: "center" }}>
+        <View style={[bodys.wrapTop]}>
+          <IconButton
+            icon={() => {
+              return (
+                <MaterialIcons
+                  name="arrow-back-ios"
+                  size={24}
+                  color={timeActive === 0 ? "#ccc" : "black"}
+                />
+              );
+            }}
+            disabled={timeActive === 0}
+            size={15}
+            style={{ flex: 1, alignItems: "flex-start" }}
+            onPress={() => {
+              let _atc = timeActive - 1;
+              if (_atc >= 0) {
+                handleChangeWeek(_atc);
+              }
+            }}
+          />
+          <Text
+            style={{
+              flex: 2,
+              textAlign: "center",
+              justifyContent: "center",
+            }}
+          >
+            {timeActive && time[timeActive]?.label}
+          </Text>
+          <IconButton
+            icon={() => {
+              return (
+                <MaterialIcons
+                  name="arrow-forward-ios"
+                  size={24}
+                  color={timeActive === time.length - 1 ? "#ccc" : "black"}
+                />
+              );
+            }}
+            size={15}
+            style={{ flex: 1, alignItems: "flex-end" }}
+            disabled={timeActive === time.length - 1}
+            onPress={() => {
+              let _atc = timeActive + 1;
+              if (_atc < time.length) {
+                handleChangeWeek(_atc);
+              }
+            }}
+          />
 
-        {/* <TouchableOpacity
+          {/* <TouchableOpacity
           style={[bodys.dateButton]}
           onPress={() => {
             setShow(true);
@@ -451,6 +527,7 @@ function TabLichHoc() {
             onFinish={onFinish}
           />
         )} */}
+        </View>
       </View>
       <View style={[bodys.wrapContent]}>
         {loading && (
@@ -506,13 +583,19 @@ const styles = {
   buttonTabTextActive: {
     color: "#2f4bfb",
   },
-  buttonTabText: {},
+  buttonTabText: {
+    fontWeight: 600,
+  },
+  iconImage: {
+    marginLeft: 3,
+  },
 };
 
 const bodys = {
   container: {
     width: "100%",
     height: "100%",
+    // alignItems: "center",
     // backgroundColor: "#ccc",
   },
   weekWrap: {
@@ -527,6 +610,9 @@ const bodys = {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#fff",
+    width: "90%",
+    borderRadius: 20,
   },
   wrapContent: {
     height: "100%",
@@ -574,8 +660,8 @@ const bodys = {
   },
   itemFlatLeftCircle: {
     height: 80,
-    width: 80,
-    borderRadius: 80 / 2,
+    width: width / 5,
+    borderRadius: width / 5 / 2,
     borderWidth: 3,
     borderColor: Colors.Primary,
     alignItems: "center",
@@ -583,9 +669,9 @@ const bodys = {
   },
 };
 
-const items = {
+export const items = {
   wrap: {
-    width: "97%",
+    width: "95%",
     borderWidth: 1,
     borderRadius: 5,
     marginTop: 5,

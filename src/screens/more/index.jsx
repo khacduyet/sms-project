@@ -19,7 +19,14 @@ import { Octicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logoutSubmit } from "../../redux/actions/loginAction";
-import { BASE_URL, Colors, height, Screens } from "../../common/constant";
+import {
+  BASE_URL,
+  Colors,
+  height,
+  Screens,
+  width,
+} from "../../common/constant";
+import { Avatar } from "react-native-paper";
 
 export default function HomeMore() {
   const currentUser = useSelector((state) => state.currentUser);
@@ -57,7 +64,16 @@ export default function HomeMore() {
             <View style={[styles.navLeft]}>
               <TouchableOpacity>
                 <View style={[styles.navLeftContent]}>
-                  <Image
+                  <Avatar.Image
+                    size={width / 3}
+                    source={
+                      avatar.isExternal
+                        ? { uri: avatar.url }
+                        : require(`../../resources/avatar-student.png`)
+                    }
+                    style={{ backgroundColor: "transparent" }}
+                  />
+                  {/* <Image
                     style={[styles.avatar]}
                     source={
                       avatar.isExternal
@@ -65,19 +81,26 @@ export default function HomeMore() {
                         : require(`../../resources/avatar-student.png`)
                     }
                     resizeMode="stretch"
-                  />
+                  /> */}
                 </View>
               </TouchableOpacity>
             </View>
             <View style={[styles.navRight]}>
-              <Text style={[styles.navText, styles.navTextName]}>
+              <Text
+                style={[styles.navText, styles.navTextName]}
+                numberOfLines={1}
+              >
                 {currentUser && currentUser.TenNhanVien}
               </Text>
-              <Text style={[styles.navText]}>
+              <Text style={[styles.navText]} numberOfLines={1}>
                 MSV: {currentUser && currentUser.MaNhanVien}
               </Text>
-              <Text style={[styles.navText]}>Lớp: </Text>
-              <Text style={[styles.navText]}>Khóa: </Text>
+              <Text style={[styles.navText]} numberOfLines={1}>
+                Lớp: C22-Han-01
+              </Text>
+              <Text style={[styles.navText]} numberOfLines={1}>
+                Khóa: 2022-2025 - Cao đẳng
+              </Text>
             </View>
           </ImageBackground>
         </View>
@@ -205,28 +228,29 @@ const styles = {
   },
   navLeftContent: {
     backgroundColor: "#fff",
-    width: 125,
-    height: 125,
-    borderRadius: 125 / 2,
+    width: 110,
+    height: 110,
+    borderRadius: 110 / 2,
     alignItems: "center",
     justifyContent: "center",
   },
   avatar: {
-    width: 150,
-    height: 150,
+    width: 120,
+    height: 120,
   },
   navRight: {
-    flex: 3,
+    flex: 4,
+    justifyContent: "center",
   },
   navText: {
     color: "#fff",
-    fontSize: 20,
+    fontSize: 14,
     fontWeight: 600,
     paddingTop: 5,
     paddingLeft: 10,
   },
   navTextName: {
-    fontSize: 30,
+    fontSize: 22,
   },
   menuBody: {
     flex: 4,
