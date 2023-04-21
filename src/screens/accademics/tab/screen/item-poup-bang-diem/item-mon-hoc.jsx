@@ -58,7 +58,7 @@ export default function ItemMonHoc({ item }) {
                     <Text style={styles.item_title_diem}> Điểm tổng kết: </Text>
                     <Text style={item.DiemTongKet > 5 ? styles.item_number_diem_dat : styles.item_number_diem_truot}> {Math.round(item.DiemTongKet)} </Text>
                     <View style={styles.item_xet_diem_thi}>
-                        <Text style={item.DiemTongKet > 5 ? styles.item_number_diem_dat : styles.item_number_diem_truot}> Đạt </Text>
+                        <Text style={item.DiemTongKet > 5 ? styles.item_number_diem_dat : styles.item_number_diem_truot}> {item.KetQua} </Text>
                     </View>
                 </View>
             </TouchableOpacity>
