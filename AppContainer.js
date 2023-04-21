@@ -11,6 +11,8 @@ import Loading from './src/screens/loading';
 import ChangePassword from './src/screens/more/settings/changepass';
 import ForgotPassword from './src/screens/auth/forgot';
 import { NotificationPage } from './src/screens/home/navbar';
+import Canhan from './src/screens/more/personal';
+import Infor from './src/screens/more/personal/screen/infor';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +36,7 @@ function StackNavigator() {
     <Stack.Screen name={Screens.ChangePassword} component={ChangePassword} />
     <Stack.Screen name={Screens.ForgotPassword} component={ForgotPassword} />
     <Stack.Screen name={Screens.Home} component={TabNavigatior} />
+    <Stack.Screen name={Screens.Personal} component={Canhan} />
   </Stack.Navigator>
 }
 
