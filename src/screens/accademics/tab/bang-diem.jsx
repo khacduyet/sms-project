@@ -78,12 +78,12 @@ export default function BangDiem() {
                     <View style={styles.flex}>
                         <TouchableOpacity style={styles.justify_content_between}>
                             <View style={styles.left}>
-                                <ItemDiemTrungBinh />
+                                <ItemDiemTrungBinh Diem={data.DiemTBKy} TC={data.SoTinChiDatHocKy} title={'học kỳ'} />
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.justify_content_between}>
                             <View style={styles.right}>
-                                <ItemDiemTrungBinh />
+                                <ItemDiemTrungBinh Diem={data.DiemTichLuy} TC={data.SoTinChiTichLuy} title={'tích lũy'} />
                             </View>
                         </TouchableOpacity>
                     </View>
