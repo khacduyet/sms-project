@@ -1,12 +1,22 @@
-import { Image, SafeAreaView, TouchableOpacity } from "react-native";
+import {
+  FlatList,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
 import { StyleSheet } from "react-native";
 import { Text, View } from "react-native";
-import { Colors, Screens } from "../../common/constant";
+import { Colors, Screens, TextButton } from "../../common/constant";
 import HeaderBack from "../../common/header";
 import { Modalize } from "react-native-modalize";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { items } from "./index";
 import { createGuid } from "../../common/common";
+import { FontAwesome } from "@expo/vector-icons";
+import { Divider } from "react-native-paper";
+import { Backdrop } from "react-native-backdrop";
+import { ModalMonHoc } from "../../common/modal";
 
 const SIZE_ICON = 24;
 
@@ -41,17 +51,162 @@ const data = [
   },
 ];
 
+const PointArea = () => {
+  return (
+    <View style={[p.container]}>
+      <View style={[p.wrap]}>
+        <Text style={[p.title]}>Điểm kiểm tra thường xuyên (HS 1)</Text>
+        <View style={[p.items]}>
+          <View style={[p.itemsWrap]}>
+            <Text style={[p.item]}>8.0</Text>
+            <Text style={[p.item]}>7.0</Text>
+            <Text style={[p.item]}>5.0</Text>
+            <Text style={[p.item]}>__</Text>
+            <Text style={[p.item]}>__</Text>
+          </View>
+        </View>
+      </View>
+      <View style={[p.wrap]}>
+        <Text style={[p.title]}>Điểm kiểm tra định kỳ (HS 2)</Text>
+        <View style={[p.items]}>
+          <View style={[p.itemsWrap]}>
+            <Text style={[p.item]}>7.5</Text>
+            <Text style={[p.item]}>__</Text>
+            <Text style={[p.item]}>__</Text>
+            <Text style={[p.item]}></Text>
+            <Text style={[p.item]}></Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const p = StyleSheet.create({
+  container: {
+    width: "100%",
+    height: 120,
+    padding: 10,
+  },
+  wrap: { marginBottom: 10 },
+  title: {
+    fontStyle: "italic",
+  },
+  items: {
+    alignItems: "center",
+  },
+  itemsWrap: {
+    flexDirection: "row",
+    width: "70%",
+  },
+  item: {
+    flex: 1,
+    color: Colors.Primary,
+  },
+});
+
+export const DesistArea = ({ item }) => {
+  const arr = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+  return (
+    <View style={[d.container]}>
+      <View style={[d.topWrap]}>
+        <Text style={[d.topWrapText]}>Tổng số giờ nghỉ: 26</Text>
+        <Text style={[d.topWrapText]}>Có phép: 5</Text>
+        <Text style={[d.topWrapText]}>Không phép: 21</Text>
+      </View>
+      {/* <View style={[d.midWrap]}>
+        <FlatList
+          data={arr}
+          renderItem={(item) => <DesistItem item={item} />}
+          keyExtractor={() => createGuid()}
+        />
+      </View> */}
+
+      <View style={[{}]}>
+        <ScrollView style={[{}]}>
+          <View style={[d.midWrap]}>
+            {arr.map((_, i) => (
+              <DesistItem item={item} key={i} />
+            ))}
+          </View>
+          <View style={{ width: "100%", height: 150 }}></View>
+        </ScrollView>
+      </View>
+    </View>
+  );
+};
+
+const DesistItem = ({ item }) => {
+  return (
+    <View style={[d.item]}>
+      <View style={[d.headerWrap]}>
+        <Text style={[d.headerWrapText, d.text]}>25/03/2023</Text>
+      </View>
+      <View style={[d.bodyWrap]}>
+        <Text style={[d.bodyWrapText, d.text]}>Số giờ nghỉ: 5 (P)</Text>
+        <Text style={[d.bodyWrapText, d.text]}>Lý do: Bận việc gia đình</Text>
+      </View>
+    </View>
+  );
+};
+const d = StyleSheet.create({
+  container: {
+    width: "100%",
+  },
+  topWrap: {
+    height: 30,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+    paddingBottom: 0,
+  },
+  midWrap: {
+    padding: 10,
+  },
+  topWrapText: {},
+  item: {
+    width: "100%",
+    borderRadius: 5,
+    height: 90,
+    borderWidth: 1,
+    marginBottom: 10,
+  },
+  headerWrap: {
+    width: "100%",
+    backgroundColor: `#cfe2ff`,
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+  },
+  bodyWrap: {
+    height: 100,
+  },
+  headerWrapText: {
+    padding: 5,
+  },
+  bodyWrapText: {
+    padding: 5,
+  },
+  text: {
+    fontSize: 14,
+  },
+});
+
 export default function TestSchedule({ route }) {
-  const modalizeRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+  const { title } = route.params;
+
+  const handleOpen = () => {
+    setVisible(true);
+  };
+
+  const handleClose = () => {
+    setVisible(false);
+  };
 
   const onOpen = () => {
-    // modalizeRef.current?.open();
-  };
-  const onClose = () => {
-    modalizeRef.current?.close();
+    setVisible(true);
   };
 
-  const { title } = route.params;
   return (
     <SafeAreaView style={[styles.container]}>
       <View>
@@ -60,21 +215,34 @@ export default function TestSchedule({ route }) {
           return <ItemTestSchedule onOpen={onOpen} item={x} key={index} />;
         })}
       </View>
-      <Modalize
-        ref={modalizeRef}
-        snapPoint={300}
-        onOverlayPress={() => {
-          console.log("aaa");
-        }}
-      >
-        <TouchableOpacity onPress={onClose}>
-          <Text>Close</Text>
-        </TouchableOpacity>
-        <Text>...your content</Text>
-      </Modalize>
+
+      <_Modalize
+        title={`MH05 - Đại số tuyến tính`}
+        visible={visible}
+        onOpen={handleOpen}
+        onClose={handleClose}
+        childrens={
+          <View style={{ width: "100%", height: 500 }}>
+            <PointArea />
+            <Divider />
+            <DesistArea />
+          </View>
+        }
+      />
     </SafeAreaView>
   );
 }
+
+export const _Modalize = ({ visible, title, onOpen, onClose, childrens }) => {
+  return (
+    <ModalMonHoc
+      isVisible={visible}
+      onClose={onClose}
+      children={childrens}
+      title={title}
+    />
+  );
+};
 
 const ItemTestSchedule = ({ item, onOpen }) => {
   return (

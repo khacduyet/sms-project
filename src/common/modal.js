@@ -1,4 +1,4 @@
-import { Button, Pressable } from "react-native"
+import { Button, Pressable, TouchableOpacity } from "react-native"
 import { StyleSheet, Text, View } from "react-native"
 import { MaterialIcons } from '@expo/vector-icons';
 import Modal from "react-native-modal";
@@ -24,6 +24,25 @@ export function ModalGeneral({ isVisible, onClose, onFinish, children }) {
                 <TouchableHighlight style={styles.headerBtn} onPress={onFinish}>
                     <Text style={styles.headerBtnText}>{TextButton.Accept}</Text>
                 </TouchableHighlight>
+            </View>
+            {children}
+        </View>
+    </Modal>
+}
+
+export function ModalMonHoc({ isVisible, title, onClose, children }) {
+    return <Modal
+        style={styles.container}
+        isVisible={isVisible}
+        onBackdropPress={onClose}
+        onBackButtonPress={onClose}
+        useNativeDriver={true}>
+        <View style={styles.content}>
+            <View style={styles.header}>
+                <Text style={styles.headerBtnText}>{title}</Text>
+                <TouchableOpacity style={styles.headerBtn} onPress={onClose}>
+                    <Text style={styles.headerBtnText}>{TextButton.Close}</Text>
+                </TouchableOpacity>
             </View>
             {children}
         </View>
