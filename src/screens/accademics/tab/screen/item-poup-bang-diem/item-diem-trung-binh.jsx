@@ -2,18 +2,17 @@ import * as React from 'react';
 import { useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
-export default function ItemDiemTrungBinh() {
-    const [value, setValue] = useState(null);
+export default function ItemDiemTrungBinh({Diem,TC,title}) {
     return (
         <View>
             <TouchableOpacity style={styles.items}>
                 <View style={styles.flex}>
-                    <Text style={styles.item_title}>Điểm TB học kỳ:</Text>
-                    <Text style={styles.item_title}>8.55</Text>
+                    <Text style={styles.item_title}>Điểm TB {title}:</Text>
+                    <Text style={styles.item_title}>{Diem}</Text>
                 </View>
                 <View style={styles.flex}>
-                    <Text style={styles.item_title}>Số TC đạt học kỳ:</Text>
-                    <Text style={styles.item_title}>12/14</Text>
+                    <Text style={styles.item_title}>Số TC {title}:</Text>
+                    <Text style={styles.item_title}>{TC}</Text>
                 </View>
             </TouchableOpacity>
         </View>

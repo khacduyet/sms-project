@@ -4,7 +4,7 @@ import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown';
 
 
-export default function DropDown({ data, object, setObject, header }) {
+export default function DropDown({ data, object, setObject, header, setKyByNam }) {
     return (
         <View>
             <TouchableOpacity>
@@ -16,8 +16,13 @@ export default function DropDown({ data, object, setObject, header }) {
                     placeholder="Chọn"
                     style={styles.dropdown}
                     searchPlaceholder="Search..."
+                    // disable={object.isDisable}
                     value={object[header]}
                     onChange={item => {
+                        if (header === `Nam` && item.value === '0') {
+                            setKyByNam(item.value)
+                            return;
+                        }
                         setObject({
                             ...object,
                             [header]: item.value
@@ -31,7 +36,6 @@ export default function DropDown({ data, object, setObject, header }) {
 
 const styles = StyleSheet.create({
     dropdown: {
-        // margin: 16,
         height: 40,
         backgroundColor: 'white',
         borderRadius: 12,
