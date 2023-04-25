@@ -27,8 +27,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL, Screens, TextButton } from "../../common/constant";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { TextInput } from "@react-native-material/core";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function LoginPage({ navigation }) {
+  const handleGetUrl = async () => {
+    let url = await AsyncStorage.getItem("BASE_URL");
+    if (!url) {
+      navigation.navigate(Screens.Tutorials);
+    }
+  };
+
+  useEffect(() => {
+    handleGetUrl();
+  }, []);
+
   const [keyboardShow, setKeyboardShow] = useState(false);
   const [isBiometricSupported, setIsBiometricSupported] = useState(false);
   const [hasBiometric, setHasBiometric] = useState(null);
@@ -128,7 +140,7 @@ export default function LoginPage({ navigation }) {
       <SafeAreaView style={[{ margin: 10 }]}>
         <KeyboardAvoidingView>
           <View style={[styles.container, {}]}>
-            <HeaderLogin keyboardShow={keyboardShow} />
+            <HeaderLogin keyboardShow={keyboardShow} navigation={navigation} />
             <BodyLogin
               keyboardShow={keyboardShow}
               navigation={navigation}
@@ -483,7 +495,11 @@ function BodyLogin({
 }
 
 // #region
-function HeaderLogin({ keyboardShow }) {
+function HeaderLogin({ keyboardShow, navigation }) {
+  const handleChangeServer = async () => {
+    // await AsyncStorage.removeItem("BASE_URL");
+    navigation.navigate(Screens.Tutorials);
+  };
   return (
     <View
       style={[
@@ -496,6 +512,14 @@ function HeaderLogin({ keyboardShow }) {
         styles.header,
       ]}
     >
+      <TouchableOpacity
+        style={{ position: "absolute", right: 10, top: 10 }}
+        onPress={() => {
+          handleChangeServer();
+        }}
+      >
+        <Ionicons name="server" size={15} color="black" />
+      </TouchableOpacity>
       {/* <Text
         style={{
           fontSize: 24,

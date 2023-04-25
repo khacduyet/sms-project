@@ -3,9 +3,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { Colors, height, width } from "../../../common/constant";
+import { Colors, Screens, height, width } from "../../../common/constant";
 import { TouchableOpacity } from "react-native";
 import Swiper from "react-native-swiper";
+import { useNavigation } from "@react-navigation/native";
 
 const SIZE_ICON = 50;
 // 1 page - max 6 item
@@ -27,13 +28,15 @@ const COMPONENTS_WITHPAGES = [
           //   color={Colors.Primary}
           // />
         ),
-        onPress: () => {},
+        onPress: (nav) => {
+          // nav.navigate(Screens.Setting);
+        },
       },
       {
-        label: `Đóng học phí`,
+        label: `Đăng ký học lại`,
         icon: (
           <Image
-            source={require("../../../resources/icons/color-money.png")}
+            source={require("../../../resources/icons/color-register.png")}
             style={{ width: SIZE_ICON, height: SIZE_ICON }}
             resizeMode="stretch"
           />
@@ -43,7 +46,7 @@ const COMPONENTS_WITHPAGES = [
           //   color={Colors.Primary}
           // />
         ),
-        onPress: () => {},
+        onPress: (nav) => {},
       },
       {
         label: `Chương trình đào tạo`,
@@ -55,13 +58,13 @@ const COMPONENTS_WITHPAGES = [
           />
           // <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />
         ),
-        onPress: () => {},
+        onPress: (nav) => {},
       },
       {
-        label: `Xin bảo lưu`,
+        label: `Điểm danh`,
         icon: (
           <Image
-            source={require("../../../resources/icons/color-time-paper.png")}
+            source={require("../../../resources/icons/color-checkpoint.png")}
             style={{ width: SIZE_ICON, height: SIZE_ICON }}
             resizeMode="stretch"
           />
@@ -71,13 +74,15 @@ const COMPONENTS_WITHPAGES = [
           //   color={Colors.Primary}
           // />
         ),
-        onPress: () => {},
+        onPress: (nav) => {
+          nav.navigate(Screens.Attendance);
+        },
       },
       {
-        label: `Chuyển lớp/chuyển ngành`,
+        label: `Bảng điểm`,
         icon: (
           <Image
-            source={require("../../../resources/icons/color-change.png")}
+            source={require("../../../resources/icons/color-point.png")}
             style={{ width: SIZE_ICON, height: SIZE_ICON }}
             resizeMode="stretch"
           />
@@ -87,13 +92,15 @@ const COMPONENTS_WITHPAGES = [
           //   color={Colors.Primary}
           // />
         ),
-        onPress: () => {},
+        onPress: (nav) => {
+          nav.navigate(Screens.Academic);
+        },
       },
       {
-        label: `Đánh giá rèn luyện`,
+        label: `Hồ sơ cá nhân`,
         icon: (
           <Image
-            source={require("../../../resources/icons/color-note.png")}
+            source={require("../../../resources/icons/color-profile.png")}
             style={{ width: SIZE_ICON, height: SIZE_ICON }}
             resizeMode="stretch"
           />
@@ -103,7 +110,9 @@ const COMPONENTS_WITHPAGES = [
           //   color={Colors.Primary}
           // />
         ),
-        onPress: () => {},
+        onPress: (nav) => {
+          nav.navigate(Screens.Personal);
+        },
       },
     ],
   },
@@ -124,7 +133,7 @@ const COMPONENTS_WITHPAGES = [
           //   color={Colors.Primary}
           // />
         ),
-        onPress: () => {},
+        onPress: (nav) => {},
       },
       {
         label: `Đóng học phí`,
@@ -140,7 +149,7 @@ const COMPONENTS_WITHPAGES = [
           //   color={Colors.Primary}
           // />
         ),
-        onPress: () => {},
+        onPress: (nav) => {},
       },
       {
         label: `Chương trình đào tạo`,
@@ -152,7 +161,7 @@ const COMPONENTS_WITHPAGES = [
           />
           // <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />
         ),
-        onPress: () => {},
+        onPress: (nav) => {},
       },
       {
         label: `Xin bảo lưu`,
@@ -168,7 +177,39 @@ const COMPONENTS_WITHPAGES = [
           //   color={Colors.Primary}
           // />
         ),
-        onPress: () => {},
+        onPress: (nav) => {},
+      },
+      {
+        label: `Chuyển lớp/chuyển ngành`,
+        icon: (
+          <Image
+            source={require("../../../resources/icons/color-change.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
+          />
+          // <MaterialCommunityIcons
+          //   name="book-refresh"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
+        ),
+        onPress: (nav) => {},
+      },
+      {
+        label: `Đánh giá rèn luyện`,
+        icon: (
+          <Image
+            source={require("../../../resources/icons/color-note.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
+          />
+          // <MaterialIcons
+          //   name="assessment"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
+        ),
+        onPress: (nav) => {},
       },
     ],
   },
@@ -179,7 +220,7 @@ export default function ChucNangComponent() {
     <View style={[styles.container]}>
       <Swiper>
         {COMPONENTS_WITHPAGES.map((x, index) => {
-          return <Component_Page key={index} lstData={x.components} />;
+          return <Component_Page key={index} lstData={x.components} {...x} />;
         })}
       </Swiper>
     </View>
@@ -187,12 +228,16 @@ export default function ChucNangComponent() {
 }
 
 const Component_Page = ({ lstData }) => {
+  const nav = useNavigation();
   return (
     <View style={[components.container]}>
       {lstData.map((x, idx) => {
         return (
           <View style={[components.box, { ...styles.shadow }]} key={idx}>
-            <TouchableOpacity style={[components.item]}>
+            <TouchableOpacity
+              style={[components.item]}
+              onPress={() => x.onPress(nav)}
+            >
               <View style={[components.itemView]}>
                 {x.icon}
                 <Text style={[components.itemViewText]}>{x.label}</Text>

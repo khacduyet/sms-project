@@ -1,3 +1,4 @@
+import { BASE_URL } from "../common/constant";
 import axiosClient from "./axiosClient.setup";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const { get, post } = axiosClient;
@@ -7,12 +8,21 @@ const qlsv = `QLSV`
 
 const getHeaders = async () => {
     const sjwt = await AsyncStorage.getItem('token');
+    const url = await AsyncStorage.getItem('BASE_URL');
     let headers = {
         headers: {
             ContentType: "application/json;charset=UTF-8",
             Accept: "application/json, text/plain, */*",
             Authorization: ("BEARER " + sjwt)
-        }
+        },
+        baseURL: url
+    }
+    return headers;
+}
+const getHeadersURL = async () => {
+    const url = await AsyncStorage.getItem('BASE_URL');
+    let headers = {
+        baseURL: url
     }
     return headers;
 }
@@ -66,23 +76,34 @@ export const QuyTrinhServices = {
             return post(qlsv + `/QuanLySinhVien/GetDanhSachMonHocByKy`, data, _header)
         },
     },
-    ThongTinCaNhan: {
-        SetSoYeuLyLichSinhVien: async (data) => {
+    SinhVien: {
+        GetMonHocCanhBaoOfSinhVien: async (data) => {
             let _header = await getHeaders();
-            return post(qlsv + `/QuanLySinhVien/SetSoYeuLyLichSinhVien`, data, _header)
+            return post(qlsv + `/QuanLySinhVien/GetMonHocCanhBaoOfSinhVien`, data, _header)
         },
-        GetSoYeuLyLichSinhVien: async () => {
+        GetDiemDanhOfSinhVien: async (data) => {
             let _header = await getHeaders();
-            return get(qlsv + `/QuanLySinhVien/GetSoYeuLyLichSinhVien`, _header)
+            return post(qlsv + `/QuanLySinhVien/GetDiemDanhOfSinhVien`, data, _header)
         },
+        ThongTinCaNhan: {
+            SetSoYeuLyLichSinhVien: async (data) => {
+                let _header = await getHeaders();
+                return post(qlsv + `/QuanLySinhVien/SetSoYeuLyLichSinhVien`, data, _header)
+            },
+            GetSoYeuLyLichSinhVien: async () => {
+                let _header = await getHeaders();
+                return get(qlsv + `/QuanLySinhVien/GetSoYeuLyLichSinhVien`, _header)
+            },
+        }
     }
 }
 
 export const AuthServices = {
     loginUser: async (data) => {
+        let _header = await getHeadersURL();
         const tokenfirebase = await AsyncStorage.getItem('deviceToken');
         let _payload = `username=${data.username}&password=${data.password}&grant_type=password&tokenfirebase=${tokenfirebase}`
-        return post(smarteos + `oauth2/token`, _payload)
+        return post(smarteos + `oauth2/token`, _payload, _header)
     },
     currentUser: async () => {
         let _header = await getHeaders();
@@ -92,7 +113,8 @@ export const AuthServices = {
         let _header = await getHeaders();
         return await post(smarteos + `/QuanTri/ChangePass`, data, _header)
     },
-    ResetForgotPasswordNoLogin: (data) => {
-        return post(smarteos + `/QuanTri/ResetForgotPasswordNoLogin`, data)
+    ResetForgotPasswordNoLogin: async (data) => {
+        let _header = await getHeadersURL();
+        return post(smarteos + `/QuanTri/ResetForgotPasswordNoLogin`, data, _header)
     },
 }
