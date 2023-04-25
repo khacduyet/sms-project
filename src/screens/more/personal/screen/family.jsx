@@ -118,6 +118,55 @@ export default function Family() {
             label={'Địa chỉ liên lạc'}
             variant="standard" />
         </View>
+        {/* liên hệ khác */}
+        <View style={styles.markdown}></View>
+        <View style={styles.items}>
+          <View style={styles.flex}>
+            <Text style={styles.label}>Họ và Tên người thân khác:</Text>
+            <View style={styles.flex}>
+              <Checkbox.Android
+                status={checked ? "checked" : "unchecked"}
+                value={syll.itemSYLL?.LienHeKhanHoTen}
+                onPress={() => {
+                  setChecked(!checked);
+                }}
+              />
+              <Text>Liên hệ chính</Text>
+            </View>
+          </View>
+          <View>
+            <TextInput style={styles.inputtext} onChangeText={(e) => setForm(e, 'HoTenMe', 'itemSYLL')}
+              value={syll.itemSYLL?.HoTenMe} />
+          </View>
+        </View>
+        <View style={styles.items}>
+          <TextInput
+            onChangeText={(e) => setForm(e, 'NgheNghiepMe', 'itemSYLL')}
+            value={syll.itemSYLL?.NgheNghiepMe}
+            label={'Quan hệ'}
+            variant="standard" />
+        </View>
+        <View style={styles.items}>
+          <TextInput
+            onChangeText={(e) => setForm(e, 'DienThoaiMe', 'itemSYLL')}
+            value={syll.itemSYLL?.DienThoaiMe}
+            label={'Số diện thoại'}
+            variant="standard" />
+        </View>
+        <View style={styles.items}>
+          <TextInput
+            onChangeText={(e) => setForm(e, 'NgheNghiepMe', 'itemSYLL')}
+            value={syll.itemSYLL?.NgheNghiepMe}
+            label={'Nghề nghiệp'}
+            variant="standard" />
+        </View>
+        <View style={styles.items}>
+          <TextInput
+            onChangeText={(e) => setForm(e, 'DiaChiMe', 'itemSYLL')}
+            value={syll.itemSYLL?.DiaChiMe}
+            label={'Địa chỉ liên lạc'}
+            variant="standard" />
+        </View>
 
         <View style={styles.btn}>
           <Button icon="check" mode="contained"
@@ -132,7 +181,7 @@ export default function Family() {
 
 const styles = StyleSheet.create({
   btn: {
-  
+
     flexDirection: "row",
     justifyContent: 'center'
   },
