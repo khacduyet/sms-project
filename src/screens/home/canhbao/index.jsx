@@ -4,11 +4,30 @@ import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Screens } from "../../../common/constant";
+import { useEffect, useState } from "react";
+import { QuyTrinhServices } from "../../../services/danhmuc.service";
+import { createGuid } from "../../../common/common";
 
 const SIZE_ICON = 24;
 export default function MonHocCanhBaoComponent() {
   const nav = useNavigation();
-  return (
+  const [listCanhBao, setListCanhBao] = useState([]);
+
+  const getListCanhBao = async () => {
+    let res = await QuyTrinhServices.SinhVien.GetMonHocCanhBaoOfSinhVien({});
+    if (res) {
+      // if (res.length === 0) {
+      //   res = [{}, {}, {}, {}];
+      // }
+      setListCanhBao(res);
+    }
+  };
+
+  useEffect(() => {
+    getListCanhBao();
+  }, []);
+
+  return listCanhBao.length ? (
     <View style={[styles.container]}>
       <View style={[styles.wrap]}>
         <Pressable
@@ -34,39 +53,30 @@ export default function MonHocCanhBaoComponent() {
           />
         </Pressable>
         <View style={[styles.body]}>
-          <View style={[styles.bodyWrap]}>
-            <Image
-              source={require("../../../resources/icons/open-book.png")}
-              style={{ width: SIZE_ICON, height: SIZE_ICON }}
-              resizeMode="stretch"
-            />
-            {/* <Entypo
-              name="open-book"
-              size={24}
-              color="black"
-              style={[styles.bodyIcon]}
-            /> */}
-            <Text style={[styles.bodyWrapText, styles.bodyText]}>
-              Thực hành cơ khí
-            </Text>
-            <Text style={[styles.bodyWrapNote, styles.bodyText]}>2 TC</Text>
-          </View>
-          <View style={[styles.bodyWrap]}>
-            <Image
-              source={require("../../../resources/icons/open-book.png")}
-              style={{ width: SIZE_ICON, height: SIZE_ICON }}
-              resizeMode="stretch"
-            />
-            <Text style={[styles.bodyWrapText, styles.bodyText]}>
-              Đại số tuyến tính
-            </Text>
-            <Text style={[styles.bodyWrapNote, styles.bodyText]}>2 TC</Text>
-          </View>
+          {listCanhBao.map((x) => {
+            return <Item item={x} key={() => createGuid()} />;
+          })}
         </View>
       </View>
     </View>
-  );
+  ) : null;
 }
+
+const Item = ({ item }) => {
+  return (
+    <View style={[styles.bodyWrap]}>
+      <Image
+        source={require("../../../resources/icons/open-book.png")}
+        style={{ width: SIZE_ICON, height: SIZE_ICON }}
+        resizeMode="stretch"
+      />
+      <Text style={[styles.bodyWrapText, styles.bodyText]}>
+        Đại số tuyến tính
+      </Text>
+      <Text style={[styles.bodyWrapNote, styles.bodyText]}>2 TC</Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

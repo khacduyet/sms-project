@@ -94,12 +94,12 @@ export default function HomeNavBar({ currentUser }) {
           </TouchableOpacity>
         </View>
         <View style={[styles.bell]}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.button, styles.buttonBadge]}
             onPress={() => {}}
           >
             <FontAwesome name="qrcode" size={30} color="black" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <View style={{ alignItems: "flex-end" }}>
             <TouchableOpacity
               style={[styles.button, styles.buttonBadge]}

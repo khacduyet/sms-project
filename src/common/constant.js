@@ -18,6 +18,7 @@ export const BASE_URL = 'http://103.130.212.45:1889/';
 
 
 export const Screens = {
+    Tutorials: 'Hướng dẫn',
     Login: 'Login',
     Home: 'Trang Chủ',
     Notification: 'Thông báo',
@@ -36,17 +37,15 @@ export const Screens = {
     Attendance: 'Điểm danh',
     Academic: 'KQHT',
     More: 'Thêm',
-
 };
 
 export const TextButton = {
     Accept: "Xác nhận",
     Cancel: "Hủy bỏ",
     Close: "Đóng",
-    Close: "Tiếp theo",
+    Next: "Tiếp theo",
     Back: "Quay lại",
     Previous: "Trước",
-    Next: "Tiếp theo",
 }
 
 

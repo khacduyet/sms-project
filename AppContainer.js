@@ -14,6 +14,8 @@ import { NotificationPage } from './src/screens/home/navbar';
 import TestSchedule from './src/screens/schedules/testSchedule';
 import Canhan from './src/screens/more/personal';
 import Infor from './src/screens/more/personal/screen/infor';
+import AttendancePage from './src/screens/attendance';
+import TutorialPreview from './src/screens/tutorials';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +32,7 @@ export default function AppContainer() {
 
 function StackNavigator() {
   return <Stack.Navigator initialRouteName={Screens.Login} screenOptions={{ headerShown: false }}>
+    <Stack.Screen name={Screens.Tutorials} component={TutorialPreview} />
     <Stack.Screen name={Screens.Login} component={LoginPage} />
     <Stack.Screen name={Screens.More} component={HomeMore} />
     <Stack.Screen name={Screens.Notification} component={NotificationPage} />
@@ -39,6 +42,7 @@ function StackNavigator() {
     <Stack.Screen name={Screens.ForgotPassword} component={ForgotPassword} />
     <Stack.Screen name={Screens.Home} component={TabNavigatior} />
     <Stack.Screen name={Screens.Personal} component={Canhan} />
+    <Stack.Screen name={Screens.Attendance} component={AttendancePage} />
   </Stack.Navigator>
 }
 

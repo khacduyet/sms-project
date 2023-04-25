@@ -97,7 +97,7 @@ export function TabNavigatior() {
         }}
       >
         <Tab.Screen
-          name="Schedula"
+          name={Screens.Schedula}
           component={SchedulePage}
           options={{
             headerShown: false,
@@ -131,7 +131,7 @@ export function TabNavigatior() {
           }}
         />
         <Tab.Screen
-          name="Chat"
+          name={Screens.Chat}
           component={ChatPage}
           options={{
             tabBarIcon: ({ focused }) => {
@@ -199,7 +199,7 @@ export function TabNavigatior() {
           }}
         />
         <Tab.Screen
-          name="Academic"
+          name={Screens.Academic}
           component={AcademicPage}
           options={{
             headerShown: false,
