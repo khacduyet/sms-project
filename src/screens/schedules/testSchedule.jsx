@@ -219,7 +219,6 @@ export default function TestSchedule({ route }) {
       <_Modalize
         title={`MH05 - Đại số tuyến tính`}
         visible={visible}
-        onOpen={handleOpen}
         onClose={handleClose}
         childrens={
           <View style={{ width: "100%", height: 500 }}>
@@ -233,7 +232,7 @@ export default function TestSchedule({ route }) {
   );
 }
 
-export const _Modalize = ({ visible, title, onOpen, onClose, childrens }) => {
+export const _Modalize = ({ visible, title, onClose, childrens }) => {
   return (
     <ModalMonHoc
       isVisible={visible}

@@ -16,6 +16,7 @@ import Canhan from './src/screens/more/personal';
 import Infor from './src/screens/more/personal/screen/infor';
 import AttendancePage from './src/screens/attendance';
 import TutorialPreview from './src/screens/tutorials';
+import TrainingPlanPage from './src/screens/traningplan';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,7 @@ function StackNavigator() {
     <Stack.Screen name={Screens.Home} component={TabNavigatior} />
     <Stack.Screen name={Screens.Personal} component={Canhan} />
     <Stack.Screen name={Screens.Attendance} component={AttendancePage} />
+    <Stack.Screen name={Screens.TrainingPlan} component={TrainingPlanPage} />
   </Stack.Navigator>
 }
 
