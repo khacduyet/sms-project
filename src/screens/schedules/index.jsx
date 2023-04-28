@@ -29,33 +29,33 @@ export default function SchedulePage() {
   const [tabIndex, setTabIndex] = useState(0);
   return (
     <SafeAreaView>
-      <View style={[styles.container]}>
-        <View style={[styles.tab]}>
+      <View style={[tabs.container]}>
+        <View style={[tabs.tab]}>
           <TouchableOpacity
-            style={[styles.buttonTab, tabIndex === 0 && styles.buttonTabActive]}
+            style={[tabs.buttonTab, tabIndex === 0 && tabs.buttonTabActive]}
             onPress={() => {
               setTabIndex(0);
             }}
           >
             <Text
               style={[
-                styles.buttonTabText,
-                tabIndex === 0 && styles.buttonTabTextActive,
+                tabs.buttonTabText,
+                tabIndex === 0 && tabs.buttonTabTextActive,
               ]}
             >
               {TextButtonTab.LichHoc}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.buttonTab, tabIndex === 1 && styles.buttonTabActive]}
+            style={[tabs.buttonTab, tabIndex === 1 && tabs.buttonTabActive]}
             onPress={() => {
               setTabIndex(1);
             }}
           >
             <Text
               style={[
-                styles.buttonTabText,
-                tabIndex === 1 && styles.buttonTabTextActive,
+                tabs.buttonTabText,
+                tabIndex === 1 && tabs.buttonTabTextActive,
               ]}
             >
               {TextButtonTab.LichThi}
@@ -559,7 +559,7 @@ function TabLichHoc() {
 }
 // #endregion Lịch học
 
-const styles = {
+export const tabs = StyleSheet.create({
   container: {
     height: "100%",
     width: "100%",
@@ -578,16 +578,24 @@ const styles = {
   buttonTabActive: {
     borderBottomWidth: 2,
     borderColor: "#2f4bfb",
-    borderRadius: 5,
+    // borderRadius: 5,
   },
   buttonTabTextActive: {
     color: "#2f4bfb",
   },
   buttonTabText: {
     fontWeight: 600,
+    textAlign: "center",
   },
   iconImage: {
     marginLeft: 3,
+  },
+});
+
+const styles = {
+  container: {
+    height: "100%",
+    width: "100%",
   },
 };
 
