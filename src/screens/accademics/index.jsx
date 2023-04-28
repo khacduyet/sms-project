@@ -78,7 +78,6 @@ const bodys = {
     container: {
       width: "100%",
       height: "100%",
-      // backgroundColor: "#ccc",
     },
     weekWrap: {
       flexDirection: "row",
@@ -88,15 +87,12 @@ const bodys = {
       marginTop: 0,
     },
     wrapTop: {
-      // margin: 5,
       flexDirection: "row",
       justifyContent: "center",
       alignItems: "center",
     },
     wrapContent: {
       height: "100%",
-      // alignItems: "center",
-      // justifyContent: "center",
     },
     dateButton: {
       borderWidth: 1,
@@ -123,7 +119,6 @@ const bodys = {
   
     itemFlat: {
       width: "100%",
-      // backgroundColor: "#fff",
       paddingHorizontal: 15,
       marginBottom: 15,
       flexDirection: "row",

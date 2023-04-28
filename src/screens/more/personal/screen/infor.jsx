@@ -58,10 +58,12 @@ export default function Infor() {
   const GetSoYeuLyLichSinhVien = async () => {
     let res = await QuyTrinhServices.ThongTinCaNhan.GetSoYeuLyLichSinhVien();
     if (res) {
+      console.log('res', res);
       res = {
         ...res,
         NgaySinh: new Date(res.NgaySinh),
       };
+     
       setSyll(res);
     }
   };
@@ -73,6 +75,7 @@ export default function Infor() {
     let res = await QuyTrinhServices.ThongTinCaNhan.SetSoYeuLyLichSinhVien(
       syll
     );
+    console.log('gui len', syll);
     if (res) {
       ToastMessage(res);
     }
