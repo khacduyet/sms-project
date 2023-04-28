@@ -39,6 +39,7 @@ export const Screens = {
     More: 'Thêm',
     HocLai:'Học lại',
     PhieuDangKy:'Phiếu đăng ký',
+    HocPhan:'Đăng ký học phần',
 };
 
 export const TextButton = {

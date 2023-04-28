@@ -2,16 +2,16 @@ import React from "react";
 import { KeyboardAvoidingView } from "react-native";
 import { View, Text, SafeAreaView } from 'react-native'
 
-import PhieuDangKy from './popup/phieu-dang-ky';
-import ItemMonHocDK from './popup/mon-hoc-dangky';
+import DangKy from './popup/dang-ky';
+import KetQuaDangKy from './popup/ket-qua-dang-ky';
 import { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import HeaderBack from "../../../../common/header";
 import { Screens } from "../../../../common/constant";
 
 const TextButtonTab = {
-    PhieuDangKy: "Đăng ký",
-    ItemMonHocDK: "Kết quả đăng ký",
+    DangKy: "Đăng ký",
+    KetQuaDangKy: "Kết quả đăng ký",
 };
 
 export const TYPE = {
@@ -19,10 +19,10 @@ export const TYPE = {
     KETQUADANGKY: 'KETQUADANGKY'
 }
 
-export default function HocLai() {
+export default function HocPhan() {
     const [tabIndex, setTabIndex] = useState(0);
     return <SafeAreaView>
-        <HeaderBack header={Screens.HocLai} />
+        <HeaderBack header={Screens.HocPhan} />
         <View style={[styles.container]}>
             <View style={{paddingTop:20}}>
                 <Text style={styles.center}>HỌC KỲ I - NĂM HỌC:2022-2023</Text>
@@ -36,7 +36,7 @@ export default function HocLai() {
                         styles.buttonTabText,
                         tabIndex === 0 && styles.buttonTabTextActive,
                     ]}>
-                        {TextButtonTab.PhieuDangKy}
+                        {TextButtonTab.DangKy}
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.buttonTab, tabIndex === 1 && styles.buttonTabActive]}
@@ -47,13 +47,13 @@ export default function HocLai() {
                         styles.buttonTabText,
                         tabIndex === 1 && styles.buttonTabTextActive,
                     ]}>
-                        {TextButtonTab.ItemMonHocDK}
+                        {TextButtonTab.KetQuaDangKy}
                     </Text>
                 </TouchableOpacity>
             </View>
             <View style={[styles.container]}>
-                {tabIndex === 0 && <PhieuDangKy type={TYPE.DANGKY}/>}
-                {tabIndex === 1 && <ItemMonHocDK type={TYPE.KETQUADANGKY}/>}
+                {tabIndex === 0 && <DangKy type={TYPE.DANGKY}/>}
+                {tabIndex === 1 && <KetQuaDangKy type={TYPE.KETQUADANGKY}/>}
             </View>
         </View>
     </SafeAreaView>

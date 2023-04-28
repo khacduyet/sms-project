@@ -5,7 +5,7 @@ import { Screens } from "../../../../../common/constant";
 import { useNavigation } from "@react-navigation/native";
 
 
-export default function Items({ title }) {
+export default function Items({ title, type }) {
     const nav = useNavigation();
     return (
         <View style={styles.flex}>
@@ -30,7 +30,11 @@ export default function Items({ title }) {
             <View style={styles.item_right}>
                 <Text
                     style={{ color: '#fff' }}
-                    onPress={() => { nav.navigate(Screens.PhieuDangKy) }}
+                    onPress={() => {
+                        nav.navigate(Screens.PhieuDangKy, {
+                            type: type
+                        })
+                    }}
                 >
                     {title}</Text>
             </View>
