@@ -51,7 +51,7 @@ const COMPONENTS_WITHPAGES = [
         },
       },
       {
-        label: `Chương trình đào tạo`,
+        label: `Kế hoạch đào tạo`,
         icon: (
           <Image
             source={require("../../../resources/icons/color-book.png")}
@@ -60,7 +60,9 @@ const COMPONENTS_WITHPAGES = [
           />
           // <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />
         ),
-        onPress: (nav) => {},
+        onPress: (nav) => {
+          nav.push(Screens.TrainingPlan);
+        },
       },
       {
         label: `Điểm danh`,

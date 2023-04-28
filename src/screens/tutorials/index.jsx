@@ -1,6 +1,6 @@
 import { TextInput } from "@react-native-material/core";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Swiper from "react-native-swiper";
 import { Screens } from "../../common/constant";
@@ -48,23 +48,28 @@ const Page2 = () => {
   );
 };
 
-export default function TutorialPreview() {
-  return (
-    <View style={[s.container]}>
-      <Swiper loop={false}>
-        <View style={[s.wrapper, s.wrapper1]}>
-          <Text style={[s.text]}>Chào mừng bạn đến với ứng dụng Sinh viên</Text>
-        </View>
-        <Page2 />
-      </Swiper>
-    </View>
-  );
-}
-
 const s = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
+    position: "relative",
+  },
+  buttonSkip: {
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 50,
+    height: 20,
+    zIndex: 1,
+    // backgroundColor: "#fff",
+    top: 10,
+    right: 10,
+  },
+  buttonSkipText: {
+    textDecorationLine: "underline",
+    textDecorationStyle: "solid",
+    textDecorationColor: "#000",
+    color: "#fff",
   },
   wrapper: {
     width: "100%",
@@ -74,6 +79,7 @@ const s = StyleSheet.create({
   },
   wrapper1: {
     backgroundColor: "#FBBE0F",
+    padding: 20,
   },
   wrapper2: {
     backgroundColor: "#2FF0FA",
@@ -103,3 +109,48 @@ const s = StyleSheet.create({
     backgroundColor: "#000",
   },
 });
+
+const slides = [
+  {
+    page: 1,
+    view: (key) => (
+      <View style={[s.wrapper, s.wrapper1]} key={key}>
+        <Text style={[s.text]}>Chào mừng bạn đến với ứng dụng Sinh viên</Text>
+      </View>
+    ),
+  },
+  {
+    page: 2,
+    view: (key) => <Page2 key={key} />,
+  },
+];
+
+export default function TutorialPreview() {
+  const swiper = React.createRef();
+  const [page, setPage] = useState(0);
+  return (
+    <View style={[s.container]}>
+      {page !== slides.length - 1 && (
+        <TouchableOpacity
+          style={[s.buttonSkip]}
+          onPress={() => {
+            swiper.current.scrollTo(slides.length - 1);
+          }}
+        >
+          <Text style={[s.buttonSkipText]}>Bỏ qua</Text>
+        </TouchableOpacity>
+      )}
+      <Swiper
+        ref={swiper}
+        loop={false}
+        onIndexChanged={(index) => {
+          setPage(index);
+        }}
+      >
+        {slides.map((x) => {
+          return x.view(x.page);
+        })}
+      </Swiper>
+    </View>
+  );
+}
