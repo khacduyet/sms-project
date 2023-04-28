@@ -135,7 +135,7 @@ export default function TrainingPlanPage() {
                 {TextButtonTab.KiemTra}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={[tabs.buttonTab, tabIndex === 2 && tabs.buttonTabActive]}
               onPress={() => {
                 setTabIndex(2);
@@ -149,7 +149,7 @@ export default function TrainingPlanPage() {
               >
                 {TextButtonTab.Test}
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <View style={[styles.wrapper]}>
             <View style={[s.header]}>
@@ -186,13 +186,13 @@ export default function TrainingPlanPage() {
                 }}
               />
             )}
-            {tabIndex === 2 && (
+            {/* {tabIndex === 2 && (
               <Test
                 props={{
                   listMon: listMon,
                 }}
               />
-            )}
+            )} */}
           </View>
         </View>
       </KeyboardAvoidingView>

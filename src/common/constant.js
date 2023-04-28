@@ -37,7 +37,9 @@ export const Screens = {
     Attendance: 'Điểm danh',
     Academic: 'KQHT',
     More: 'Thêm',
-    TrainingPlan: 'Kế hoạch đào tạo'
+    TrainingPlan: 'Kế hoạch đào tạo',
+    HocLai: 'Học lại',
+    PhieuDangKy: 'Phiếu đăng ký',
 };
 
 export const TextButton = {

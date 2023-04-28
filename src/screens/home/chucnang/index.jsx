@@ -46,7 +46,9 @@ const COMPONENTS_WITHPAGES = [
           //   color={Colors.Primary}
           // />
         ),
-        onPress: (nav) => {},
+        onPress: (nav) => {
+          nav.navigate(Screens.HocLai);
+        },
       },
       {
         label: `Kế hoạch đào tạo`,

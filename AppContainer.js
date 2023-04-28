@@ -17,6 +17,8 @@ import Infor from './src/screens/more/personal/screen/infor';
 import AttendancePage from './src/screens/attendance';
 import TutorialPreview from './src/screens/tutorials';
 import TrainingPlanPage from './src/screens/traningplan';
+import HocLai from './src/screens/home/chucnang/hoc-lai/hoc-lai'
+import PhieuDangKy from './src/screens/home/chucnang/hoc-lai/popup/item-phieuky'
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +47,8 @@ function StackNavigator() {
     <Stack.Screen name={Screens.Personal} component={Canhan} />
     <Stack.Screen name={Screens.Attendance} component={AttendancePage} />
     <Stack.Screen name={Screens.TrainingPlan} component={TrainingPlanPage} />
+    <Stack.Screen name={Screens.HocLai} component={HocLai} />
+    <Stack.Screen name={Screens.PhieuDangKy} component={PhieuDangKy} />
   </Stack.Navigator>
 }
 
