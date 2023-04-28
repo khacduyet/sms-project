@@ -6,6 +6,7 @@ import { SimpleLineIcons } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
 import { createGuid } from '../../../../../common/common';
 
+
 export default function ItemMonHoc({ item }) {
     const [isDisplay, setDisplay] = useState(false);
     return (

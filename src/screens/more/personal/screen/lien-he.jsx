@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, Pressable, } from "react-native";
 import { TextInput } from "@react-native-material/core";
 import { useState, useEffect } from "react";
 import { Button } from 'react-native-paper';
+import { QuyTrinhServices } from "../../../../services/danhmuc.service";
+import { ToastMessage } from '../../../../common/components';
 
 export default function LienHe() {
   const [syll, setSyll] = useState({
@@ -29,12 +31,24 @@ export default function LienHe() {
       })
     }
   }
+  // ------ Api ------
+  const GetSoYeuLyLichSinhVien = async () => {
+    let res = await QuyTrinhServices.ThongTinCaNhan.GetSoYeuLyLichSinhVien();
+    if (res) {
+      // setItemSYLL(res.itemSYLL)
+      setSyll(res)
+    }
+  };
+  useEffect(() => {
+    GetSoYeuLyLichSinhVien();
+  }, []);
 
   const GhiLai = async () => {
-    // let res = await QuyTrinhServices.ThongTinCaNhan.SetSoYeuLyLichSinhVien(syll)
-    // if (res) {
-    //     ToastMessage(res)
-    // }
+    let res = await QuyTrinhServices.ThongTinCaNhan.SetSoYeuLyLichSinhVien(syll)
+    // console.log(syll);
+    if (res) {
+        ToastMessage(res)
+    }
   }
 
   return (
@@ -62,6 +76,7 @@ export default function LienHe() {
       </View>
       <View style={styles.btn}>
         <Button icon="check" mode="contained"
+          onPress={GhiLai}
           style={{ width: '75%' }}>
           Xác nhận
         </Button>
