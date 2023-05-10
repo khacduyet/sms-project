@@ -28,6 +28,7 @@ import { BASE_URL, Screens, TextButton } from "../../common/constant";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { TextInput } from "@react-native-material/core";
 import { Ionicons } from "@expo/vector-icons";
+import { ToastMessage } from "../../common/components";
 
 export default function LoginPage({ navigation }) {
   const handleGetUrl = async () => {
@@ -175,8 +176,8 @@ function BodyLogin({
 }) {
   const nav = useNavigation();
   const [account, setAccount] = useState({
-    username: "emnk",
-    password: "123456",
+    username: "",
+    password: "",
   });
   const [submitForm, setSubmitForm] = useState(false);
   const [showPass, setShowPass] = useState(false);
@@ -199,12 +200,24 @@ function BodyLogin({
       });
     }
   };
-
   const handleLogin = () => {
     setTimeout(() => {
       setSubmitForm(false);
     }, 2000);
+    if (!account.password) {
+      ToastMessage("Chưa nhập mật khẩu!");
+      return;
+    }
     dispatch(setLoading(true));
+    if (userRemember.hasRemember) {
+      dispatch(
+        loginSubmit({
+          ...account,
+          username: currentUser.UserName,
+        })
+      );
+      return;
+    }
     dispatch(loginSubmit(account));
   };
 
@@ -237,6 +250,10 @@ function BodyLogin({
         navigation.navigate(Screens.Home);
         dispatch(setLoading(false));
         return;
+      } else {
+        if (!account.password) {
+          return;
+        }
       }
       if (submitForm) {
         if (currentUser && currentUser.TenNhanVien) {
@@ -245,7 +262,7 @@ function BodyLogin({
         }
       }
     }
-  }, [tokenReducer, currentUser?.Id, hasBiometric, submitForm]);
+  }, [tokenReducer, currentUser?.Id, hasBiometric]);
 
   useEffect(() => {
     let userRem = {

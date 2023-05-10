@@ -71,7 +71,7 @@ export default function SchedulePage() {
   );
 }
 
-const ListEmptyComponent = (
+export const ListEmptyComponent = (
   <View
     style={{
       alignItems: "center",

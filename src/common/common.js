@@ -143,3 +143,16 @@ export function romanize(num) {
         roman = (key[+digits.pop() + (i * 10)] || "") + roman;
     return Array(+digits.join("") + 1).join("M") + roman;
 }
+
+export function getFirstCharacterByName(name, isFullLastName) {
+    let character = name;
+    if (name && name.length) {
+        let arr = name.split(" ");
+        let lastName = arr[arr.length - 1];
+        if (isFullLastName) {
+            return lastName
+        }
+        character = lastName[0];
+    }
+    return character
+}
