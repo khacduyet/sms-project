@@ -23,6 +23,7 @@ const styles = {
     container: {
         width: "100%",
         height: 50,
+        backgroundColor: `#EDEAEA`
     },
     header: {
         width: "100%",
@@ -34,7 +35,7 @@ const styles = {
     headerArrow: {
         position: 'absolute',
         left: 10,
-        top: 10,
+        top: 5,
     },
     headerText: {
         fontSize: 20,

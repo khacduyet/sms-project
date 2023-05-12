@@ -28,6 +28,7 @@ export const Screens = {
     ChangePassword: 'Đổi mật khẩu',
     ForgotPassword: 'Quên mật khẩu',
     Chat: 'Trò chuyện',
+    ChatPersonalPage: 'Trò chuyện Riêng',
     NotificationGeneral: 'Thông báo chung',
     Personal: 'Thông tin cá nhân',
     InfoSupport: 'Thông tin hỗ trợ',
@@ -40,6 +41,7 @@ export const Screens = {
     TrainingPlan: 'Kế hoạch đào tạo',
     HocLai: 'Học lại',
     PhieuDangKy: 'Phiếu đăng ký',
+    TuyChon: 'Tùy chọn',
 };
 
 export const TextButton = {
