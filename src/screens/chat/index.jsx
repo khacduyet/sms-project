@@ -9,15 +9,17 @@ import {
   TouchableOpacity,
   View,
   TextInput as MyTextInput,
+  RefreshControl,
+  ScrollView,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
 import { FindInput } from "../../common/components";
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ListEmptyComponent } from "../schedules";
 import { Avatar } from "react-native-paper";
 import HeaderBack from "../../common/header";
-import { Screens, width } from "../../common/constant";
+import { Screens, height, width } from "../../common/constant";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Octicons } from "@expo/vector-icons";
@@ -34,18 +36,29 @@ import { QuyTrinhServices } from "../../services/danhmuc.service";
 import { AuthServices } from "../../services/danhmuc.service";
 import { ChatService } from "../../services/chat.service";
 import { useSelector } from "react-redux";
+import { ModalGeneral } from "../../common/modal";
 
 export default function ChatPage() {
+  const nav = useNavigation();
   const [filter, setFilter] = useState({
     keyword: null,
   });
   const currentUser = useSelector((state) => state.currentUser);
-
+  const [refresh, setRefresh] = useState(false);
   const [listRoom, setListRoom] = useState([]);
+  const [listGV, setListGV] = useState([]);
+  const [visible, setVisible] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefresh(true);
+    setTimeout(() => {
+      setRefresh(false);
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     GetListRoom();
-  }, [currentUser]);
+  }, [currentUser, refresh]);
 
   const GetListRoom = async () => {
     let res = await ChatService.ServiceChat.GetDSRoom({
@@ -55,14 +68,66 @@ export default function ChatPage() {
       setListRoom(res.Data);
     }
   };
+  const GetListUserGV = async () => {
+    let res = await QuyTrinhServices.SinhVien.GetDanhSachGiaoVienByIdSinhVien();
+    if (res) {
+      setListGV(res);
+    }
+  };
 
-  useEffect(() => {}, [filter]);
+  const onCancel = () => {
+    setVisible(false);
+  };
+  const onFinish = () => {
+    setVisible(false);
+  };
+
+  const handleCreateNewRoom = async (item, props) => {
+    let obj = {
+      IdChuRoom: currentUser.Id,
+      isGroup: false,
+      isSinhVien: true,
+      listLop: [],
+      listUser: [
+        {
+          IdUser: currentUser.Id,
+          TenUser: currentUser.TenNhanVien,
+        },
+        {
+          IdUser: item.Id,
+          TenUser: item.TenNhanVien,
+        },
+      ],
+    };
+    let res = await ChatService.ServiceChat.SetRoom(obj);
+    if (res) {
+      nav.navigate(Screens.ChatPersonalPage, {
+        props: {
+          ...props,
+          item: {
+            ...props.item,
+            item: res.Data,
+          },
+        },
+      });
+    }
+    GetListRoom();
+    onCancel();
+  };
+
+  useEffect(() => {
+    GetListUserGV();
+  }, [filter]);
+
   return (
     <SafeAreaView>
       <View style={[s.container]}>
         <View style={[s.header]}>
           <Text style={[s.headerText]}>Danh sách trò chuyện</Text>
-          <TouchableOpacity style={[s.headerButton]}>
+          <TouchableOpacity
+            style={[s.headerButton]}
+            onPress={() => setVisible(true)}
+          >
             <MaterialCommunityIcons
               name="chat-plus-outline"
               size={26}
@@ -87,6 +152,8 @@ export default function ChatPage() {
           <FlatList
             data={listRoom}
             showsVerticalScrollIndicator={false}
+            refreshing={refresh}
+            onRefresh={onRefresh}
             renderItem={(item) => (
               <ItemPersonal
                 props={{
@@ -101,14 +168,88 @@ export default function ChatPage() {
           />
         </View>
       </View>
+      <ModalGeneral
+        onClose={onCancel}
+        isVisible={visible}
+        onFinish={onFinish}
+        children={
+          <ModalAddChat
+            props={{
+              listGV: listGV,
+              currentUser: currentUser,
+              handleCreateNewRoom: handleCreateNewRoom,
+            }}
+          />
+        }
+        isShowHeader={false}
+      />
     </SafeAreaView>
   );
 }
+
+const ModalAddChat = ({ props }) => {
+  const [listGV, setListGV] = useState(props.listGV);
+  const [keyword, setKeyword] = useState(null);
+
+  useEffect(() => {
+    if (keyword) {
+      let newLst = props.listGV.filter((x) =>
+        x.TenNhanVien.toLowerCase()
+          .trim()
+          .includes(keyword.toLowerCase().trim())
+      );
+      setListGV(newLst);
+      return;
+    }
+    setListGV(props.listGV);
+  }, [keyword]);
+  return (
+    <View
+      style={[
+        {
+          marginTop: 10,
+          width: "90%",
+        },
+      ]}
+    >
+      <FindInput
+        props={{
+          value: keyword,
+          onChangeText: (e) => {
+            setKeyword(e);
+          },
+        }}
+      />
+      <Text style={{ padding: 3 }}>Gợi ý: </Text>
+      <FlatList
+        style={{ maxHeight: height / 2 }}
+        data={listGV}
+        showsVerticalScrollIndicator={false}
+        renderItem={(item) => (
+          <ItemPersonal
+            props={{
+              item: item,
+              currentUser: props.currentUser,
+              hasShowName: true,
+              handleCreateNewRoom: props.handleCreateNewRoom,
+            }}
+          />
+        )}
+        keyExtractor={(item, index) => index}
+        ListEmptyComponent={ListEmptyComponent}
+        ListFooterComponent={<View></View>}
+      />
+    </View>
+  );
+};
 
 const ItemPersonal = ({ props }) => {
   const nav = useNavigation();
 
   const _thisBox = useMemo(() => {
+    if (props.hasShowName) {
+      return props.item.item.TenNhanVien;
+    }
     let _this = props.item.item.listUser.filter(
       (x) => x.IdUser !== props.currentUser.Id
     );
@@ -122,33 +263,39 @@ const ItemPersonal = ({ props }) => {
     );
   }, [props.currentUser, props.item]);
 
+  const handleOnClick = () => {
+    if (props.hasShowName) {
+      props.handleCreateNewRoom(props.item.item, props);
+      return;
+    }
+    nav.navigate(Screens.ChatPersonalPage, {
+      props: props,
+    });
+  };
+
   return (
-    <TouchableOpacity
-      style={[ip.container]}
-      onPress={() => {
-        nav.navigate(Screens.ChatPersonalPage, {
-          props: props,
-        });
-      }}
-    >
+    <TouchableOpacity style={[ip.container]} onPress={handleOnClick}>
       <ThisAvatar url={"/"} size={80} name={_thisBox} />
       <View style={[ip.infomation]}>
         <View style={[ip.infomationTop]}>
           <Text style={[ip.infomationText]} numberOfLines={1}>
-            {_thisBox} (5)
+            {_thisBox}
           </Text>
+          {/* <Text style={[ip.infomationText, { color: "red" }]}> (5)</Text> */}
         </View>
-        <View style={[ip.infomationBottom]}>
-          <Text
-            style={[ip.infomationText, ip.infomationTextMessage]}
-            numberOfLines={1}
-          >
-            Em chú ý ôn tập để chuẩn bị thi Em chú ý ôn tập để chuẩn bị thi
-          </Text>
-          <Text style={[ip.infomationText, ip.infomationTextDate]}>
-            26/12/2023
-          </Text>
-        </View>
+        {!props.hasShowName && (
+          <View style={[ip.infomationBottom]}>
+            <Text
+              style={[ip.infomationText, ip.infomationTextMessage]}
+              numberOfLines={1}
+            >
+              Em chú ý ôn tập để chuẩn bị thi Em chú ý ôn tập để chuẩn bị thi
+            </Text>
+            <Text style={[ip.infomationText, ip.infomationTextDate]}>
+              26/12/2023
+            </Text>
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -160,18 +307,22 @@ export const ChatPersonalPage = ({ route }) => {
   const currentUser = useSelector((state) => state.currentUser);
   const [currentRoom, setCurrentRoom] = useState({});
   const [listUserOnline, setListUserOnline] = useState([]);
-  const [listUserCanChat, setListUserCanChat] = useState([]);
   const [listMessage, setListMessage] = useState([]);
-  const [listGiaoVien, setListGiaoVien] = useState([]);
   const [currentMess, setCurrentMess] = useState({ Message: "", listFile: [] });
+  const [loadMore, setLoadMore] = useState(false);
+
   const socketRef = useRef();
 
   useEffect(() => {
     Keyboard.addListener("keyboardDidShow", () => {
-      refFlatlist.current?.scrollToEnd();
+      scrollToEnd();
     });
     setCurrentRoom(props.item.item);
   }, []);
+
+  const scrollToEnd = () => {
+    refFlatlist.current?.scrollToEnd();
+  };
 
   //#region handle
   const JoinRoom = async (room) => {
@@ -180,6 +331,9 @@ export const ChatPersonalPage = ({ route }) => {
     let _listMessage = await ChatService.ServiceChat.GetMessagesOfRoom(payload);
     if (_listMessage?.Data) {
       setListMessage(_listMessage?.Data);
+      setTimeout(() => {
+        scrollToEnd();
+      }, 100);
     }
     socketRef.current.emit("joinRoom", {
       userid: currentUser.Id,
@@ -194,12 +348,12 @@ export const ChatPersonalPage = ({ route }) => {
     if (!currentMess.Message) return;
     socketRef.current.emit("chatMessage", currentMess);
     setCurrentMess({ Message: "", listFile: [] });
+    refFlatlist.current.scrollToEnd();
   };
 
   useEffect(() => {
     socketRef.current = socket;
 
-    getAllOptions();
     function onConnect() {
       // setIsConnected(true);
     }
@@ -238,30 +392,18 @@ export const ChatPersonalPage = ({ route }) => {
   }, []);
 
   const getMoreMessages = async () => {
-    // let position = messagesStart?.current.scrollTop;
-    // if (position === 0) {
-    //   let payload = {
-    //     IdRoom: currentRoom.Id,
-    //     IdMessageFirst: listMessage[0]?.Id,
-    //   };
-    //   let res = await ChatService.ServiceChat.GetMessagesOfRoom(payload);
-    //   if (res?.Data.length) {
-    //     setLoadMore(true);
-    //     scrollToPrev();
-    //     setListMessage([...res?.Data, ...listMessage]);
-    //   }
-    // }
-    // setTimeout(() => {
-    //   setLoadMore(false);
-    // }, 2000);
-  };
-
-  const getAllOptions = async () => {
-    // let personChats =
-    //   await QuyTrinhService.PhanCongGiaoVien.GetLopAndSinhVienByGiaoVien();
-    // if (personChats) {
-    //   setListUserCanChat(personChats);
-    // }
+    let payload = {
+      IdRoom: currentRoom.Id,
+      IdMessageFirst: listMessage[0]?.Id,
+    };
+    let res = await ChatService.ServiceChat.GetMessagesOfRoom(payload);
+    if (res?.Data.length) {
+      setLoadMore(true);
+      setListMessage([...res?.Data, ...listMessage]);
+    }
+    setTimeout(() => {
+      setLoadMore(false);
+    }, 2000);
   };
 
   useEffect(() => {
@@ -281,55 +423,113 @@ export const ChatPersonalPage = ({ route }) => {
           justifyContent: "space-between",
         }}
       >
+        {loadMore && (
+          <View
+            style={{
+              position: "absolute",
+              top: 10,
+              left: 0,
+              width: "100%",
+              zIndex: 1,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "#fff",
+                width: 100,
+                height: 30,
+                borderRadius: 50,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                Đang tải ...
+              </Text>
+            </View>
+          </View>
+        )}
         <View style={[cpp.body]}>
-          <FlatList
-            ref={refFlatlist}
-            data={listMessage}
-            renderItem={(item) => {
-              let _TYPE = getTypeToDate(item.item.Created);
-              let _OBJDATE = {
-                type: _TYPE,
-                isAnotherDate: item.item.Created ? true : false,
-              };
-              if (item.index === 0) {
-                if (item.item.IdUser !== currentUser.Id) {
-                  return (
-                    <AnotherBoxChat props={{ item: item, type: _OBJDATE }} />
-                  );
+          {listMessage.length === 0 && (
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                height: height / 2,
+              }}
+            >
+              <Text>Bắt đầu cuộc trò chuyện với 1 tin nhắn...</Text>
+            </View>
+          )}
+          {listMessage.length > 0 && (
+            <FlatList
+              ref={refFlatlist}
+              data={listMessage}
+              // refreshing={refresh}
+              // onRefresh={onRefresh}
+              onScroll={(e) => {
+                let posY = e.nativeEvent.contentOffset.y;
+                if (posY === 0) {
+                  getMoreMessages();
+                }
+              }}
+              renderItem={(item) => {
+                let _TYPE = getTypeToDate(item.item.Created);
+                let _OBJDATE = {
+                  type: _TYPE,
+                  isAnotherDate: item.item.Created ? true : false,
+                };
+                if (item.index === 0) {
+                  if (item.item.IdUser !== currentUser.Id) {
+                    return (
+                      <AnotherBoxChat props={{ item: item, type: _OBJDATE }} />
+                    );
+                  }
+                  return <MyBoxChat props={{ item: item, type: _OBJDATE }} />;
+                }
+                let prevMess = listMessage[item.index - 1];
+                let _TYPE_PREV = getTypeToDate(prevMess.Created);
+                if (_TYPE === _TYPE_PREV) {
+                  _OBJDATE = {
+                    ..._OBJDATE,
+                    isAnotherDate: false,
+                  };
+                }
+                if (item.item.IdUser === prevMess.IdUser) {
+                  if (item.item.IdUser !== currentUser.Id) {
+                    return (
+                      <AnotherBoxChat
+                        props={{
+                          item: item,
+                          isOnePerson: true,
+                          type: _OBJDATE,
+                        }}
+                      />
+                    );
+                  }
+                } else {
+                  if (item.item.IdUser !== currentUser.Id) {
+                    return (
+                      <AnotherBoxChat props={{ item: item, type: _OBJDATE }} />
+                    );
+                  }
                 }
                 return <MyBoxChat props={{ item: item, type: _OBJDATE }} />;
+              }}
+              keyExtractor={(item, index) => index}
+              ListEmptyComponent={ListEmptyComponent}
+              ListFooterComponent={
+                <View style={{ width: "100%", height: 10 }}></View>
               }
-              let prevMess = listMessage[item.index - 1];
-              let _TYPE_PREV = getTypeToDate(prevMess.Created);
-              if (_TYPE === _TYPE_PREV) {
-                _OBJDATE = {
-                  ..._OBJDATE,
-                  isAnotherDate: false,
-                };
-              }
-              if (item.item.IdUser === prevMess.IdUser) {
-                if (item.item.IdUser !== currentUser.Id) {
-                  return (
-                    <AnotherBoxChat
-                      props={{ item: item, isOnePerson: true, type: _OBJDATE }}
-                    />
-                  );
-                }
-              } else {
-                if (item.item.IdUser !== currentUser.Id) {
-                  return (
-                    <AnotherBoxChat props={{ item: item, type: _OBJDATE }} />
-                  );
-                }
-              }
-              return <MyBoxChat props={{ item: item, type: _OBJDATE }} />;
-            }}
-            keyExtractor={(item, index) => index}
-            ListEmptyComponent={ListEmptyComponent}
-            ListFooterComponent={
-              <View style={{ width: "100%", height: 10 }}></View>
-            }
-          />
+            />
+          )}
         </View>
         <View style={[cpp.footer]}>
           <MyCustomTextInput
@@ -475,9 +675,16 @@ const HeaderTitle = ({ props }) => {
         <View style={[cpp.ht.container]}>
           <View style={[cpp.ht.wrap]}>
             <ThisAvatar size={50} name={_thisRoom.TenRoom ?? ``} />
-            <Text style={[cpp.ht.text]} numberOfLines={1}>
-              {_thisRoom?.TenRoom}
-            </Text>
+            <View>
+              <Text style={[cpp.ht.text]} numberOfLines={1}>
+                {_thisRoom?.TenRoom}
+              </Text>
+              {_thisRoom?.isGroup && (
+                <Text style={[cpp.ht.text, { fontSize: 13, color: "blue" }]}>
+                  {props.currentRoom.listUser.length} thành viên
+                </Text>
+              )}
+            </View>
           </View>
           <View style={[cpp.ht.wrap]}>
             <TouchableOpacity>
@@ -652,7 +859,9 @@ const ip = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-  infomationTop: {},
+  infomationTop: {
+    flexDirection: "row",
+  },
   infomationText: {
     fontSize: 18,
   },
@@ -727,14 +936,16 @@ export const ChatCustomPage = ({ route }) => {
           {props._thisRoom.TenRoom}
         </Text>
       </View>
-      <View style={[tc.bodyArea]}>
-        <TouchableOpacity style={[tc.bodyArea.button]}>
-          <EvilIcons name="pencil" size={30} color="black" />
-          <Text style={[tc.bodyArea.text]} numberOfLines={1}>
-            Đổi tên gợi nhớ
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {!props._thisRoom.isGroup && (
+        <View style={[tc.bodyArea]}>
+          <TouchableOpacity style={[tc.bodyArea.button]}>
+            <EvilIcons name="pencil" size={30} color="black" />
+            <Text style={[tc.bodyArea.text]} numberOfLines={1}>
+              Đổi tên gợi nhớ
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
       <View style={[tc.bodyArea]}>
         <TouchableOpacity style={[tc.bodyArea.button]}>
           <EvilIcons name="image" size={30} color="black" />
@@ -743,6 +954,16 @@ export const ChatCustomPage = ({ route }) => {
           </Text>
         </TouchableOpacity>
       </View>
+      {props._thisRoom.isGroup && (
+        <View style={[tc.bodyArea]}>
+          <TouchableOpacity style={[tc.bodyArea.button]}>
+            <EvilIcons name="pencil" size={30} color="black" />
+            <Text style={[tc.bodyArea.text]} numberOfLines={1}>
+              Thành viên nhóm
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 };

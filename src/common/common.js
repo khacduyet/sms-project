@@ -103,7 +103,7 @@ export function formatDateStringGMT(datestring, type) {
             _return = datestring ? (mm + "/" + yyyy) : ''
             break;
         case "hh:mm":
-            _return = datestring ? (hour + ":" + minute) : ''
+            _return = datestring ? (hour + ":" + (minute < 10 ? `0` + minute : minute)) : ''
             break;
         case "dd/mm/yyyy hh:mm":
             _return = datestring ? (dd + "/" + mm + "/" + yyyy + " " + hour + ":" + minute) : ''
