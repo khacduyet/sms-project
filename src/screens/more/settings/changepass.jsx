@@ -78,11 +78,20 @@ export default function ChangePassword() {
 
   const handleChangePassword = async () => {
     try {
+      if (!formValue.password) {
+        setIsValids({
+          passwordOld: true,
+          password: false,
+          repassword: true,
+        });
+        setInvalid("Chưa nhập mật khẩu hiện tại!");
+        return;
+      }
       // Check mật khẩu mới khớp nhau không?
       if (formValue.password != formValue.repassword) {
         setIsValids({
-          ...isValids,
-          password: false,
+          passwordOld: true,
+          password: true,
           repassword: false,
         });
         setInvalid("Mật khẩu không khớp!");
@@ -94,7 +103,8 @@ export default function ChangePassword() {
         NewPassword: formValue.password,
       });
       if (res) {
-        if (res.Error === 0) {
+        console.log("res", res);
+        if (res.StatusCode !== 4) {
           setIsValids({
             passwordOld: false,
             password: true,
@@ -224,7 +234,9 @@ const styles = {
     // padding: 10,
     // marginTop: 20,
   },
-  inputValid: {},
+  inputValid: {
+    marginTop: 15,
+  },
   inputValidText: {
     color: "red",
   },

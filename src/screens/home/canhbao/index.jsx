@@ -80,6 +80,7 @@ const Item = ({ item }) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginBottom: 10,
     width: "100%",
     // height: height / 7,
     alignItems: "center",

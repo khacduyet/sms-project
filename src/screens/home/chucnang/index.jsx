@@ -244,7 +244,9 @@ const Component_Page = ({ lstData }) => {
             >
               <View style={[components.itemView]}>
                 {x.icon}
-                <Text style={[components.itemViewText]}>{x.label}</Text>
+                <Text style={[components.itemViewText]} numberOfLines={2}>
+                  {x.label}
+                </Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -256,8 +258,8 @@ const Component_Page = ({ lstData }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
-    height: 250,
+    marginTop: 10,
+    height: 260,
     marginLeft: 10,
     marginRight: 10,
   },

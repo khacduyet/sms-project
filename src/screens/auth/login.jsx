@@ -24,7 +24,7 @@ import Loading from "../loading";
 import * as LocalAuthentication from "expo-local-authentication";
 import { setLoading } from "../../redux/actions/loadingAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BASE_URL, Screens, TextButton } from "../../common/constant";
+import { BASE_URL, Colors, Screens, TextButton } from "../../common/constant";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { TextInput } from "@react-native-material/core";
 import { Ionicons } from "@expo/vector-icons";
@@ -343,6 +343,7 @@ function BodyLogin({
             <TextInput
               secureTextEntry={showPass ? false : true}
               style={[styles.inputPassword]}
+              color={Colors.Primary}
               onChangeText={(e) => onChangeText(e, "password")}
               value={account.password}
               label="Mật khẩu"
@@ -368,7 +369,9 @@ function BodyLogin({
           <View style={[{ width: "100%" }, styles.wrapViewInput]}>
             {/* <Text style={styles.label}>Tên tài khoản</Text> */}
             <TextInput
-              style={styles.input}
+              style={[styles.input]}
+              color={Colors.Primary}
+              labelColor="#ccc"
               onChangeText={(e) => onChangeText(e, "username")}
               value={account.username}
               label="Tên tài khoản"
@@ -381,7 +384,8 @@ function BodyLogin({
             {/* <Text style={styles.label}>Mật khẩu</Text> */}
             <TextInput
               secureTextEntry={showPass ? false : true}
-              style={styles.input}
+              style={[styles.input]}
+              color={Colors.Primary}
               onChangeText={(e) => onChangeText(e, "password")}
               value={account.password}
               label="Mật khẩu"
@@ -405,10 +409,10 @@ function BodyLogin({
       )}
 
       <View style={{ height: 50 }}>
-        <View style={{ marginTop: 20 }}>
-          <View style={{}}>
+        <View style={{ marginTop: 0 }}>
+          <View style={[{ alignItems: "center", justifyContent: "center" }]}>
             <TouchableOpacity
-              style={{ width: "100%", height: "100%" }}
+              style={{ width: "80%", height: "100%", paddingLeft: 10 }}
               onPress={handleForgotPassword}
             >
               <Text
@@ -417,7 +421,7 @@ function BodyLogin({
                     width: "100%",
                     fontSize: 14,
                     color: "#223ffa",
-                    textAlign: "center",
+                    // textAlign: "center",
                   },
                 ]}
               >
@@ -496,17 +500,19 @@ function BodyLogin({
           </TouchableOpacity>
         )}
       </View>
-      <Text
-        style={{
-          position: "absolute",
-          bottom: 0,
-          right: 10,
-          fontSize: 16,
-          color: "#939191",
-        }}
-      >
-        @HarmonyES
-      </Text>
+      {!keyboardShow && (
+        <Text
+          style={{
+            position: "absolute",
+            bottom: 0,
+            right: 10,
+            fontSize: 16,
+            color: "#939191",
+          }}
+        >
+          @HarmonyES
+        </Text>
+      )}
     </View>
   );
 }
@@ -581,10 +587,10 @@ const styles = {
   input: {
     width: "80%",
     height: 50,
-    // borderBottomWidth: 1,
     borderColor: "grey",
     fontSize: 18,
     padding: 10,
+    color: "#ccc",
     // textAlign: "center",
   },
   checkbox: {

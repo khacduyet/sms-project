@@ -19,6 +19,7 @@ import { QuyTrinhServices } from "../../services/danhmuc.service";
 import { createGuid, romanize } from "../../common/common";
 import { Image } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { Platform } from "react-native";
 
 const sizeWidthColumn = {
   TT: 0.7,
@@ -381,10 +382,19 @@ const TabMonHoc = ({ props }) => {
         {props.isLoading && <Loading />}
         {!props.isLoading && (
           <FlatList
+            // style={{ flex: 1 }}
             data={props.listMon}
             renderItem={(item) => <RowContainer _item={item} props={props} />}
             keyExtractor={(item) => item.index}
-            ListFooterComponent={<View style={{ height: 300 }}></View>}
+            ListFooterComponent={
+              <View
+                style={{
+                  marginTop: 200,
+                  width: "100%",
+                  height: Platform.OS === "ios" ? 120 : 150,
+                }}
+              ></View>
+            }
           />
         )}
       </DataTable>

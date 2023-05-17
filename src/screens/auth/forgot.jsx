@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Button, ToastMessage } from "../../common/components";
-import { Screens, TextButton } from "../../common/constant";
+import { Colors, Screens, TextButton } from "../../common/constant";
 import OTPTextInput from "react-native-otp-textinput";
 import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
 import HeaderBack from "../../common/header";
@@ -37,6 +37,7 @@ const StepOne = ({ value, setValue, handleNext }) => {
         {/* <Text style={styles.formText}>Vui lòng nhập tên tài khoản</Text> */}
         <TextInput
           style={styles.formInput}
+          color={Colors.Primary}
           value={value}
           onChangeText={setValue}
           // placeholder={`Tên tài khoản`}
@@ -101,7 +102,7 @@ const StepTwo = ({ current, setCurrent, handleNext, user, next }) => {
             label={
               <Text style={{ marginBottom: 10, marginLeft: 10 }}>
                 Xác minh qua email đã đăng ký{" "}
-                {hideMaskEmailOrPhone(user.Email, TYPE.email)}
+                {user?.Email && hideMaskEmailOrPhone(user.Email, TYPE.email)}
               </Text>
             }
           />
@@ -110,7 +111,8 @@ const StepTwo = ({ current, setCurrent, handleNext, user, next }) => {
             label={
               <Text style={{ marginBottom: 10, marginLeft: 10 }}>
                 Xác minh qua số điện thoại đã đăng ký{" "}
-                {hideMaskEmailOrPhone(user.DienThoai, TYPE.phone)}
+                {user?.DienThoai &&
+                  hideMaskEmailOrPhone(user.DienThoai, TYPE.phone)}
               </Text>
             }
           />
@@ -120,6 +122,7 @@ const StepTwo = ({ current, setCurrent, handleNext, user, next }) => {
         <TextInput
           style={styles.formInput}
           value={value}
+          color={Colors.Primary}
           onChangeText={(e) => {
             if (error.isShow) {
               setError({
@@ -291,6 +294,7 @@ const StepFour = ({ user }) => {
           <TextInput
             secureTextEntry={isShow}
             style={styles.formInput}
+            color={Colors.Primary}
             value={passwords.password}
             onChangeText={(e) => setForm(e, `password`)}
             label="Mật khẩu mới"
@@ -305,6 +309,7 @@ const StepFour = ({ user }) => {
         </Text> */}
         <TextInput
           secureTextEntry={isShow}
+          color={Colors.Primary}
           style={styles.formInput}
           value={passwords.repassword}
           onChangeText={(e) => setForm(e, `repassword`)}
@@ -336,9 +341,14 @@ export default function ForgotPassword({ route }) {
     dispatch(setLoading(true));
     let res = await DanhMucAccountServices.GetUserByUserName(value);
     if (res) {
+      if (!res.Data) {
+        dispatch(setLoading(false));
+        ToastMessage(res.Message);
+        return;
+      }
       setUser(res.Data);
+      next();
     }
-    next();
   };
 
   const handleNextStepTwo = async () => {

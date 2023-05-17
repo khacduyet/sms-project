@@ -75,7 +75,7 @@ const s = {
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#2f7bff",
-    borderRadius: 10,
+    borderRadius: 50,
   },
   wrapperMiddle: {
     flexDirection: "row",
