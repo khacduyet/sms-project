@@ -11,13 +11,15 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
         "NSFaceIDUsageDescription": "Cho phép $(PRODUCT_NAME) để dùng Face ID."
       },
-      "bundleIdentifier": "com.khacduyet.smsproject"
+      "bundleIdentifier": "com.haihoaes.smsproject"
     },
     "plugins": [
       [
@@ -35,7 +37,8 @@
       "permissions": [
         "android.permission.USE_BIOMETRIC",
         "android.permission.USE_FINGERPRINT"
-      ]
+      ],
+      "package": "com.haihoaes.smsproject"
     },
     "web": {
       "favicon": "./assets/favicon.png"
