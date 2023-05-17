@@ -29,7 +29,7 @@ const COMPONENTS_WITHPAGES = [
           // />
         ),
         onPress: (nav) => {
-          // nav.navigate(Screens.Setting);
+          nav.navigate(Screens.HocPhan);
         },
       },
       {

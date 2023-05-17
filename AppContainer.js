@@ -17,7 +17,8 @@ import Infor from './src/screens/more/personal/screen/infor';
 import AttendancePage from './src/screens/attendance';
 import TutorialPreview from './src/screens/tutorials';
 import TrainingPlanPage from './src/screens/traningplan';
-import HocLai from './src/screens/home/chucnang/hoc-lai/hoc-lai'
+import HocLai from './src/screens/home/chucnang/hoc-lai/hoc-lai';
+import HocPhan from './src/screens/home/chucnang/hoc-phan/hoc-phan'
 import PhieuDangKy from './src/screens/home/chucnang/hoc-lai/popup/item-phieuky'
 import { ChatCustomPage, ChatPersonalPage } from './src/screens/chat';
 
@@ -51,6 +52,7 @@ function StackNavigator() {
     <Stack.Screen name={Screens.TrainingPlan} component={TrainingPlanPage} />
     <Stack.Screen name={Screens.HocLai} component={HocLai} />
     <Stack.Screen name={Screens.PhieuDangKy} component={PhieuDangKy} />
+    <Stack.Screen name={Screens.HocPhan} component={HocPhan} />
     <Stack.Screen name={Screens.TuyChon} component={ChatCustomPage} />
   </Stack.Navigator>
 }

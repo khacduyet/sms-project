@@ -41,6 +41,7 @@ export const Screens = {
     TrainingPlan: 'Kế hoạch đào tạo',
     HocLai: 'Học lại',
     PhieuDangKy: 'Phiếu đăng ký',
+    HocPhan:'Đăng ký học phần',
     TuyChon: 'Tùy chọn',
 };
 

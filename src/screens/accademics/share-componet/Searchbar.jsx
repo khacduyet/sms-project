@@ -7,7 +7,7 @@ export default function SearchBar({input,setInput}) {
     return (
         <View style={styles.searchbar}>
             <Feather name="search" size={23} style={styles.icon} color="black" />
-            <TextInput style={styles.input} placeholder='Search'
+            <TextInput style={styles.input} placeholder='Tìm kiếm'
             value={input}
             onChangeText={(text) => setInput(text)}
             />

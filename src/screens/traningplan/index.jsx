@@ -11,7 +11,6 @@ import {
 import HeaderBack from "../../common/header";
 import { Screens } from "../../common/constant";
 import { Checkbox, DataTable, TextInput } from "react-native-paper";
-import { faker } from "@faker-js/faker";
 import { ModalMonHoc } from "../../common/modal";
 import { useEffect, useState } from "react";
 import { tabs } from "../schedules";
@@ -36,7 +35,7 @@ const TextButtonTab = {
   Test: "Box",
 };
 
-const Loading = () => {
+export const Loading = () => {
   return (
     <View
       style={{

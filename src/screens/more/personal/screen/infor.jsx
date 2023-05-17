@@ -58,7 +58,6 @@ export default function Infor() {
   const GetSoYeuLyLichSinhVien = async () => {
     let res = await QuyTrinhServices.ThongTinCaNhan.GetSoYeuLyLichSinhVien();
     if (res) {
-      console.log('res', res);
       res = {
         ...res,
         NgaySinh: new Date(res.NgaySinh),
@@ -75,7 +74,7 @@ export default function Infor() {
     let res = await QuyTrinhServices.ThongTinCaNhan.SetSoYeuLyLichSinhVien(
       syll
     );
-    console.log('gui len', syll);
+    // console.log('gui len', syll);
     if (res) {
       ToastMessage(res);
     }
@@ -122,11 +121,11 @@ export default function Infor() {
               color="red"
             >
               <View style={styles.flex}>
-                <View style={styles.flex}>
+                <View style={[styles.flex,styles.mr]}>
                   <RadioButton.Android value={0} />
                   <Text>Nam</Text>
                 </View>
-                <View style={styles.flex}>
+                <View style={[styles.flex,styles.ml]}>
                   <RadioButton.Android value={1} />
                   <Text>Nữ</Text>
                 </View>
@@ -272,11 +271,17 @@ const styles = StyleSheet.create({
   },
   flex: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
   },
   RadioButton: {
     backgroundColor: "red",
     borderColor: "#fff",
   },
+  ml: {
+    marginLeft:20
+  },
+  mr: {
+    marginRight:20
+  }
 });

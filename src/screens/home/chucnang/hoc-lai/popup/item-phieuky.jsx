@@ -1,17 +1,32 @@
 import React from "react";
 import { SafeAreaView } from "react-native";
-import { Text, StyleSheet, useColorScheme, View, ScrollView } from 'react-native';
+import { Text, StyleSheet, useColorScheme, View, ScrollView, Alert } from 'react-native';
 import HeaderBack from "../../../../../common/header";
-import { Screens } from "../../../../../common/constant";
+import { Colors, Screens } from "../../../../../common/constant";
 import { TextInput } from "@react-native-material/core";
 import { Button } from 'react-native-paper';
+import { TYPE } from "../hoc-lai";
 
 const data = {
-    HoTen:'Nguyễn Học Lại',
-    MSV:'19008198'
+    HoTen: 'Nguyễn Học Lại',
+    MSV: '19008198'
 }
 
-export default function ItemPhieuKy() {
+function ChuyenTiep() {
+    Alert.alert('Bạn có chắc chắn muốn đăng ký môn học?', '', [
+        { text: 'Xác nhận', onPress: () => console.log('OK Pressed') },
+        {
+            text: 'Đóng',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+        },
+    ]);
+}
+
+
+export default function ItemPhieuKy({ route }) {
+    const { type } = route.params;
+    console.log("type", type);
     return (
         <SafeAreaView>
             <HeaderBack header={Screens.PhieuDangKy} />
@@ -81,11 +96,15 @@ export default function ItemPhieuKy() {
                             variant="standard" />
                     </View>
                     <View style={styles.btn}>
-                        <Button mode="contained"
+                        {type === TYPE.DANGKY ? <Button mode="contained"
                             onPress={ChuyenTiep}
                             style={{ width: '75%' }}>
                             Chuyển Tiếp
-                        </Button>
+                        </Button> : <Button mode="contained"
+                            onPress={ChuyenTiep}
+                            style={{ width: '75%', backgroundColor: Colors.Danger }}>
+                            Hủy đăng ký
+                        </Button>}
                     </View>
                 </ScrollView>
             </View>

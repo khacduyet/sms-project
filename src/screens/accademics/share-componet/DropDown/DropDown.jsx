@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Dropdown } from 'react-native-element-dropdown';
 
-
 export default function DropDown({ data, object, setObject, header, setKyByNam }) {
     return (
         <View>
