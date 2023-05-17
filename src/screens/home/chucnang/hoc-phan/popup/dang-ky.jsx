@@ -2,9 +2,12 @@ import React from "react";
 import { View, Text } from 'react-native'
 import DropDown from "../../../../accademics/share-componet/DropDown/DropDown";
 import { useState } from "react";
-import { Button, Checkbox } from "react-native-paper";
+import { Button, Checkbox, DataTable } from "react-native-paper";
 
-import { Table, Row, Rows, TableWrapper } from 'react-native-table-component';
+// import { Table, Row, Rows, TableWrapper } from 'react-native-table-component';
+import { StyleSheet } from "react-native";
+// import { FlatList } from "react-native";
+// import { Loading } from "../../../../traningplan";
 
 const dataMonHoc = [
     {
@@ -16,14 +19,16 @@ const dataMonHoc = [
 export default function () {
     const [object, setObject] = useState({});
     const [checked, setChecked] = React.useState(false);
+    const [isLoading, setIsLoading] = React.useState(true);
 
-    const state = {
-        tableHead: ['', 'Lớp học phần', 'Lịch học', 'Còn trống'],
-        tableData: [
-            ['1', 'KTVN2023_01', 'Tuần 2 - Tuấn 13', '4'],
-            ['1', 'KTVN2023_02', 'Tuần 2 - Tuấn 13', '456\n789'],
-        ]
-    };
+    const [listMon, setLlistMon] = React.useState([
+        { STT: 1, MaMonHoc: 'OPP', isHoanThanh: true },
+        { STT: 2, MaMonHoc: 'OPP', isHoanThanh: false }
+    ]);
+    const data = [
+        { Ma: 'MQ_001', DonVi: 'CTTN Hài Hòa' },
+        { Ma: 'MQ_002', DonVi: 'CTTN Hài Hòa' },
+    ];
 
     return (
         <View style={styles.container}>
@@ -65,10 +70,36 @@ export default function () {
                     <Text style={[styles.font_medium, styles.textCenter]}>Danh sách các lớp học phần có thể đăng ký</Text>
                 </View>
                 <View>
-                    <Table borderStyle={{ borderWidth: 1, borderColor: '#c8e1ff' }}>
-                        <Row data={state.tableHead} style={styles.head} textStyle={styles.text} />
-                        <Rows data={state.tableData} textStyle={styles.text} />
-                    </Table>
+                    <View style={styles.table_header}>
+                        <View style={{ width: '15%' }}><Text style={styles.table_caption}>STT</Text></View>
+                        <View style={{ width: '30%' }}><Text style={styles.table_caption}>Lớp học phần</Text></View>
+                        <View style={{ width: '25%' }}><Text style={styles.table_caption}>Lịch học</Text></View>
+                        <View style={{ width: '15%' }}><Text style={styles.table_caption}>Còn trống</Text></View>
+                        <View style={{ width: '15%' }}><Text style={styles.table_caption}>Chi tiết</Text></View>
+                    </View>
+                    {
+                        data.map((x, index) => {
+                            return (
+                                <View style={styles.table_body}>
+                                    <View style={{ width: '15%' }}>
+                                        <View>
+                                            <Checkbox.Android
+                                                status={checked ? "checked" : "unchecked"}
+                                                onPress={() => {
+                                                    setChecked(!checked);
+                                                }}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View style={{ width: '30%' }}><Text style={[styles.table_data,styles.ptop]}>{x.Ma}</Text></View>
+                                    <View style={{ width: '25%' }}><Text style={[styles.table_data,styles.ptop]}>{x.DonVi}</Text></View>
+                                    <View style={{ width: '15%' }}><Text style={[styles.table_data,styles.ptop]}></Text></View>
+                                    <View style={{ width: '15%' }}><Text style={[styles.table_data,styles.ptop]}></Text></View>
+                                </View>
+                            )
+                        })
+                    }
+
                 </View>
             </View>
         </View>
@@ -111,6 +142,30 @@ const styles = {
         textAlign: 'center'
     },
     head: { height: 'auto', backgroundColor: '#f1f8ff' },
-    text: { margin: 6, textAlign: 'center' }
+    text: { margin: 6, textAlign: 'center' },
+    table_header: {
+        flexDirection: "row",
+        backgroundColor: 'blue',
+        padding: 10
+    },
+    table_body: {
+        flexDirection: "row",
+        padding: 10,
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderBottomWidth: 1,
+        borderColor: 'blue'
+    },
+    table_caption: {
+        color: '#fff',
+        fontWeight: 'bold'
+    },
+    table_data: {
+        fontSize: 11,
+
+    },
+    ptop: {
+        paddingTop:10
+    }
 
 }
