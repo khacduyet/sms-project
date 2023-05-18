@@ -426,7 +426,6 @@ function TabLichHoc() {
       };
       let tkb = await QuyTrinhServices.ThoiKhoaBieu.GetThoiKhoaBieuSV(data);
       if (tkb) {
-        console.log("tkb", tkb);
         setSchedules(tkb);
         setLoading(false);
       }
@@ -691,7 +690,7 @@ export const items = {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#cfe2ff",
+    backgroundColor: Colors.HeaderTitle,
     borderBottomWidth: 1,
     padding: 2,
     borderTopLeftRadius: 5,
@@ -703,7 +702,7 @@ export const items = {
     alignItems: "center",
   },
   headerleftTime: {
-    fontWeight: 600,
+    fontWeight: 800,
     paddingLeft: 8,
     fontSize: 12,
   },

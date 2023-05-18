@@ -111,7 +111,12 @@ const styles = StyleSheet.create({
     right: 5,
     top: 3,
   },
-  body: { padding: 5 },
+  body: {
+    padding: 5,
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    paddingBottom: 3,
+  },
   bodyWrap: {
     flexDirection: "row",
     alignItems: "center",

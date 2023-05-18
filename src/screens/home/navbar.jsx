@@ -262,7 +262,7 @@ const ItemNotification = ({ item, seenNotification }) => {
             <Entypo
               name="dot-single"
               size={45}
-              color="red"
+              color="#3399FF"
               style={[notifies.dots]}
             />
           )}
@@ -280,7 +280,7 @@ const styles = {
   container: {
     width: "100%",
     height: 50,
-    backgroundColor: "#cfe2ff",
+    backgroundColor: Colors.HeaderTitle,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -351,7 +351,7 @@ const notifies = {
     width: "95%",
     borderRadius: 5,
     // height: 100,
-    backgroundColor: "#E2EAF6",
+    backgroundColor: "#fff",
     marginTop: 5,
     marginBottom: 5,
     marginLeft: 10,

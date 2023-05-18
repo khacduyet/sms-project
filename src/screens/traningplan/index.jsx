@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import HeaderBack from "../../common/header";
-import { Screens } from "../../common/constant";
+import { Colors, Screens } from "../../common/constant";
 import { Checkbox, DataTable, TextInput } from "react-native-paper";
 import { ModalMonHoc } from "../../common/modal";
 import { useEffect, useState } from "react";
@@ -53,16 +53,20 @@ export const Loading = () => {
 
 export default function TrainingPlanPage() {
   const [visible, setVisible] = useState(false);
+  const [show, setShow] = useState(false);
   const [title, setTitle] = useState(``);
   const [item, setItem] = useState(null);
   const [tabIndex, setTabIndex] = useState(0);
   const [listMon, setListMon] = useState([]);
   const [listKiemTra, setListKiemTra] = useState([]);
+  const [listNgoaiHoc, setListNgoaiHoc] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [ctdt, setCtdt] = useState(null);
 
   const getMonHoc = async () => {
     let _MonHoc = await QuyTrinhServices.SinhVien.GetChuongTrinhDaoTaoSV();
+    let _NgoaiHoc =
+      await QuyTrinhServices.SinhVien.GetChiTietThoiGianNgoaiHoc();
     if (_MonHoc) {
       setCtdt(_MonHoc.TenChuongTrinhDaoTao);
       let data = _MonHoc.listLoaiMon.map((x, index) => {
@@ -79,6 +83,10 @@ export default function TrainingPlanPage() {
       });
       setListMon(data);
       setIsLoading(false);
+    }
+    if (_NgoaiHoc) {
+      console.log("_NgoaiHoc", _NgoaiHoc);
+      setListNgoaiHoc(_NgoaiHoc);
     }
   };
   const getKiemTra = async () => {
@@ -173,8 +181,11 @@ export default function TrainingPlanPage() {
                   setTitle: setTitle,
                   setVisible: setVisible,
                   visible: visible,
+                  show: show,
+                  setShow: setShow,
                   listMon: listMon,
                   isLoading: isLoading,
+                  listNgoaiHoc: listNgoaiHoc,
                 }}
               />
             )}
@@ -202,179 +213,89 @@ export default function TrainingPlanPage() {
         children={<ItemModal item={item} />}
         title={title}
       />
+      <ModalMonHoc
+        isVisible={show}
+        onClose={() => {
+          setShow(false);
+        }}
+        children={<ThoiGianNgoaiHoc item={listNgoaiHoc} />}
+        title={`Chi tiết thời gian ngoài học`}
+      />
     </SafeAreaView>
   );
 }
 
-const _data = [
-  {
-    MaMonHoc: `MH01`,
-    TenMonHoc: `Pháp luật`,
-    HocKy: `I`,
-    TinChi: 2,
-    ThoiGian: 100,
-    isPass: false,
-  },
-  {
-    MaMonHoc: `MH02`,
-    TenMonHoc: `Tiếng anh`,
-    HocKy: `I`,
-    TinChi: 2,
-    ThoiGian: 100,
-    isPass: false,
-  },
-  {
-    MaMonHoc: `MH04`,
-    TenMonHoc: `Giáo dục quốc phòng`,
-    HocKy: `II`,
-    TinChi: 1,
-    ThoiGian: 75,
-    isPass: false,
-  },
-];
+const ColorTitle = `#000`;
 
-const Test = ({ props }) => {
-  return (
-    <View style={[styles.wrapper]}>
-      <FlatList
-        data={[{}]}
-        renderItem={(item) => (
-          <View>
-            {props?.listMon.map((x, idx) => {
-              return (
-                <View>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      fontWeight: "bold",
-                      marginLeft: 10,
-                      marginBottom: 10,
-                    }}
-                  >
-                    {x.TenLoaiMon}
-                  </Text>
-                  {x.listMonHoc.map((item) => {
-                    return <Box item={item} />;
-                  })}
-                </View>
-              );
-            })}
-          </View>
-        )}
-        keyExtractor={(item) => item.index}
-        ListFooterComponent={<View style={{ height: 100 }}></View>}
-      />
-    </View>
-  );
-};
-
-const Box = ({ item }) => {
-  return (
-    <Card style={[t.box, item.isHoanThanh ? t.isPass : {}]}>
-      {/* <Image
-        source={require("../../resources/tickgreen.png")}
-        style={[t.image]}
-      /> */}
-      {item.isHoanThanh && (
-        <AntDesign
-          name="checkcircle"
-          size={35}
-          color="#46CD5A"
-          style={[t.image]}
-        />
-      )}
-      <Card.Title
-        title={`${item.MaMonHoc} - ${item.TenMonHoc} (${item.TongSoGio} giờ)`}
-        titleStyle={[t.title]}
-      />
-      <Card.Content>
-        <View style={[t.flexBox]}>
-          <Text style={[t.text]}>Học kỳ: {item.HocKy}</Text>
-          <Text style={[t.text]}>Tín chỉ: {item.TinChi}</Text>
-          <Text style={[t.text, t.textPrio]}>
-            Điểm tổng kết: {item.DiemTongKet ?? `__`}
-          </Text>
-        </View>
-        <View style={[t.flexBox]}>
-          <Text style={[t.text]}>LT: {item.LT}</Text>
-          <Text style={[t.text]}>TH: {item.TH}</Text>
-          <Text style={[t.text, t.textPrio]}>KT: {item.KT}</Text>
-        </View>
-      </Card.Content>
-    </Card>
-  );
-};
-
-const t = StyleSheet.create({
-  box: {
-    marginBottom: 15,
-  },
-  title: {
-    fontWeight: "bold",
-  },
-  flexBox: {
-    flexDirection: "row",
-  },
-  text: {
-    flex: 1,
-    fontSize: 15,
+const mh = StyleSheet.create({
+  button: {
+    height: 30,
+    backgroundColor: Colors.Primary,
+    width: 150,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 5,
+    margin: 5,
+    marginTop: 0,
     marginBottom: 5,
   },
-  textPrio: {
-    flex: 2,
-  },
-  isPass: {
-    backgroundColor: "#ccc",
-  },
-  image: {
-    position: "absolute",
-    top: -10,
-    right: 0,
-    zIndex: 3,
+  buttonText: {
+    color: "#fff",
+    fontWeight: 400,
   },
 });
 
 const TabMonHoc = ({ props }) => {
   return (
     <View>
+      <TouchableOpacity
+        style={[mh.button]}
+        onPress={() => {
+          props.setShow(true);
+        }}
+      >
+        <Text style={[mh.buttonText]}>Thời gian ngoài học</Text>
+      </TouchableOpacity>
       <DataTable>
         <DataTable.Header style={[tbl.header]}>
-          <DataTable.Title style={[tbl.title, { flex: sizeWidthColumn.TT }]}>
-            TT
-          </DataTable.Title>
           <DataTable.Title
-            style={[tbl.title, { flex: sizeWidthColumn.Ma }]}
-            numberOfLines={2}
+            style={[tbl.title, { flex: sizeWidthColumn.TT }]}
+            textStyle={{ color: ColorTitle }}
           >
-            Mã học phần
+            TT
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
+            textStyle={{ color: ColorTitle }}
           >
-            Tên học phần
+            Môn học/Modul
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.HK }]}
             numberOfLines={2}
+            textStyle={{ color: ColorTitle }}
           >
             Học kỳ
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.TC }]}
             numberOfLines={2}
+            textStyle={{ color: ColorTitle }}
           >
             Tín chỉ
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.TG }]}
             numberOfLines={3}
+            textStyle={{ color: ColorTitle }}
           >
-            Thời gian (giờ)
+            TG (giờ)
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.HT }]}
             numberOfLines={2}
+            textStyle={{ color: ColorTitle }}
           >
             Hoàn thành
           </DataTable.Title>
@@ -391,7 +312,7 @@ const TabMonHoc = ({ props }) => {
                 style={{
                   marginTop: 200,
                   width: "100%",
-                  height: Platform.OS === "ios" ? 120 : 150,
+                  height: Platform.OS === "ios" ? 150 : 180,
                 }}
               ></View>
             }
@@ -432,17 +353,11 @@ const RowContainer = ({ _item, props }) => {
               {x.STT}
             </DataTable.Cell>
             <DataTable.Cell
-              style={[
-                tbl.cell,
-                { justifyContent: "center", flex: sizeWidthColumn.Ma },
-              ]}
+              style={[tbl.cell, { flex: sizeWidthColumn.Ten }]}
+              textStyle={{ paddingLeft: 5 }}
             >
-              {x.MaMonHoc}
-            </DataTable.Cell>
-            <DataTable.Cell
-              style={[tbl.cell, { flex: sizeWidthColumn.Ten, paddingLeft: 5 }]}
-            >
-              {x.TenMonHoc}
+              <Text style={{ fontWeight: "bold" }}>{`${x.MaMonHoc}\n`}</Text>
+              <Text>{x.TenMonHoc}</Text>
             </DataTable.Cell>
             <DataTable.Cell
               style={[
@@ -495,24 +410,30 @@ const TabKiemTra = ({ props }) => {
       </Text>
       <DataTable>
         <DataTable.Header style={[tbl.header]}>
-          <DataTable.Title style={[tbl.title, { flex: sizeWidthColumn.TT }]}>
+          <DataTable.Title
+            style={[tbl.title, { flex: sizeWidthColumn.TT }]}
+            textStyle={{ color: ColorTitle }}
+          >
             TT
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
+            textStyle={{ color: ColorTitle }}
           >
-            Môn học
+            Tên MH/MĐ
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
+            textStyle={{ color: ColorTitle }}
           >
             Điều kiện kiểm tra
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
+            textStyle={{ color: ColorTitle }}
           >
             Phương pháp đánh giá
           </DataTable.Title>
@@ -567,6 +488,96 @@ const TabKiemTra = ({ props }) => {
   );
 };
 
+const ThoiGianNgoaiHoc = ({ item }) => {
+  return (
+    <View style={[{ width: "100%" }]}>
+      <View>
+        <DataTable>
+          <DataTable.Header style={[tbl.header]}>
+            <DataTable.Title
+              style={[tbl.title, { flex: 0.3 }]}
+              textStyle={{ color: ColorTitle }}
+            >
+              TT
+            </DataTable.Title>
+            <DataTable.Title
+              style={[tbl.title, { flex: sizeWidthColumn.Ma }]}
+              numberOfLines={2}
+              textStyle={{ color: ColorTitle }}
+            >
+              Nội dung
+            </DataTable.Title>
+            <DataTable.Title
+              style={[tbl.title, { flex: sizeWidthColumn.TT }]}
+              numberOfLines={2}
+              textStyle={{ color: ColorTitle }}
+            >
+              Học kỳ
+            </DataTable.Title>
+            <DataTable.Title
+              style={[tbl.title, { flex: sizeWidthColumn.Ma }]}
+              numberOfLines={2}
+              textStyle={{ color: ColorTitle }}
+            >
+              Từ ngày
+            </DataTable.Title>
+            <DataTable.Title
+              style={[tbl.title, { flex: sizeWidthColumn.Ma }]}
+              numberOfLines={2}
+              textStyle={{ color: ColorTitle }}
+            >
+              Đến ngày
+            </DataTable.Title>
+          </DataTable.Header>
+          <FlatList
+            style={{ maxHeight: 500 }}
+            data={item}
+            renderItem={(x) => (
+              <DataTable.Row style={[tbl.row]}>
+                <DataTable.Cell
+                  style={[tbl.cell, { justifyContent: "center", flex: 0.3 }]}
+                >
+                  {x.index + 1}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  style={[tbl.cell, { flex: sizeWidthColumn.Ma }]}
+                  textStyle={{ paddingLeft: 5 }}
+                >
+                  {x.item.NoiDung}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  style={[
+                    tbl.cell,
+                    { justifyContent: "center", flex: sizeWidthColumn.TT },
+                  ]}
+                >
+                  {x.item.HocKy}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  style={[
+                    tbl.cell,
+                    { justifyContent: "center", flex: sizeWidthColumn.Ma },
+                  ]}
+                >
+                  {x.item.TuNgay}
+                </DataTable.Cell>
+                <DataTable.Cell
+                  style={[
+                    tbl.cell,
+                    { justifyContent: "center", flex: sizeWidthColumn.Ma },
+                  ]}
+                >
+                  {x.item.DenNgay}
+                </DataTable.Cell>
+              </DataTable.Row>
+            )}
+            keyExtractor={(item) => item.index}
+          />
+        </DataTable>
+      </View>
+    </View>
+  );
+};
 const ItemModal = ({ item }) => {
   return (
     <View style={[i.container]}>
@@ -618,7 +629,7 @@ const tbl = StyleSheet.create({
   header: {},
   title: {
     borderWidth: 0.2,
-    backgroundColor: "#cfe2ff",
+    backgroundColor: Colors.HeaderTitle,
     alignItems: "center",
     justifyContent: "center",
   },

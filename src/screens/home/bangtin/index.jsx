@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 
 const SIZE_ICON = 24;
 
-export default function BangTinComponent() {
+export default function BangTinComponent({ props }) {
   const [fakeData, setFakeData] = useState([]);
 
   const getFakeDate = async () => {
@@ -22,13 +22,14 @@ export default function BangTinComponent() {
       "http://thcsnguyendu.krongnang.daklak.edu.vn/Api/Notification"
     ).then((response) => response.json());
     if (res) {
-      setFakeData(res.filter((x, idx) => idx < 3));
+      let a = res.filter((x, idx) => idx < 3);
+      setFakeData(a);
     }
   };
 
   useEffect(() => {
     getFakeDate();
-  }, []);
+  }, [props.refreshing.refreshing]);
 
   return (
     <View style={[styles.container]}>
@@ -43,10 +44,10 @@ export default function BangTinComponent() {
           <Feather name="arrow-right-circle" size={24} color="blue" />
         </Pressable>
       </View>
-      <Swiper autoplay loop autoplayTimeout={5}>
+      <Swiper autoplay autoplayTimeout={5}>
         {fakeData.map((x, index) => {
           return (
-            <TouchableOpacity key={index}>
+            <TouchableOpacity key={x.Title}>
               <Card>
                 <Card.Cover borderRadius={0} source={{ uri: x.Images }} />
                 <Card.Content>

@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { StyleSheet, Text, View, Pressable, } from "react-native";
+import * as React from "react";
+import { StyleSheet, Text, View, Pressable } from "react-native";
 import { TextInput } from "@react-native-material/core";
 import { useState, useEffect } from "react";
-import { Button } from 'react-native-paper';
+import { Button } from "react-native-paper";
 import { QuyTrinhServices } from "../../../../services/danhmuc.service";
-import { ToastMessage } from '../../../../common/components';
+import { ToastMessage } from "../../../../common/components";
 
 export default function LienHe() {
   const [syll, setSyll] = useState({
-    TenGhep: '',
+    TenGhep: "",
     GioiTinh: 0,
     NgaySinh: null,
     itemSYLL: {},
-  })
+  });
   const setForm = (value, prop, propObj) => {
     if (value !== undefined) {
       if (propObj) {
@@ -21,22 +21,22 @@ export default function LienHe() {
           [propObj]: {
             ...syll[propObj],
             [prop]: value,
-          }
-        })
+          },
+        });
         return;
       }
       setSyll({
         ...syll,
         [prop]: value,
-      })
+      });
     }
-  }
+  };
   // ------ Api ------
   const GetSoYeuLyLichSinhVien = async () => {
     let res = await QuyTrinhServices.ThongTinCaNhan.GetSoYeuLyLichSinhVien();
     if (res) {
       // setItemSYLL(res.itemSYLL)
-      setSyll(res)
+      setSyll(res);
     }
   };
   useEffect(() => {
@@ -44,40 +44,48 @@ export default function LienHe() {
   }, []);
 
   const GhiLai = async () => {
-    let res = await QuyTrinhServices.ThongTinCaNhan.SetSoYeuLyLichSinhVien(syll)
+    let res = await QuyTrinhServices.ThongTinCaNhan.SetSoYeuLyLichSinhVien(
+      syll
+    );
     // console.log(syll);
     if (res) {
-        ToastMessage(res)
+      ToastMessage(res);
     }
-  }
+  };
 
   return (
     <View>
       <View style={styles.items}>
         <TextInput
-          onChangeText={(e) => setForm(e, 'DienThoai', 'itemSYLL')}
+          onChangeText={(e) => setForm(e, "DienThoai", "itemSYLL")}
           value={syll.itemSYLL?.DienThoai}
-          label={'Số diện thoại'}
-          variant="standard" />
+          label={"Số điện thoại"}
+          variant="standard"
+        />
       </View>
       <View style={styles.items}>
         <TextInput
-          onChangeText={(e) => setForm(e, 'Email', 'itemSYLL')}
+          onChangeText={(e) => setForm(e, "Email", "itemSYLL")}
           value={syll.itemSYLL?.Email}
-          label={'Email'}
-          variant="standard" />
+          label={"Email"}
+          variant="standard"
+        />
       </View>
       <View style={styles.items}>
         <TextInput
-          onChangeText={(e) => setForm(e, 'ChoOHienNayDiaChi', 'itemSYLL')}
+          onChangeText={(e) => setForm(e, "ChoOHienNayDiaChi", "itemSYLL")}
           value={syll.itemSYLL?.ChoOHienNayDiaChi}
-          label={'Nơi ở hiện nay'}
-          variant="standard" />
+          label={"Nơi ở hiện nay"}
+          variant="standard"
+        />
       </View>
       <View style={styles.btn}>
-        <Button icon="check" mode="contained"
+        <Button
+          icon="check"
+          mode="contained"
           onPress={GhiLai}
-          style={{ width: '75%' }}>
+          style={{ width: "75%" }}
+        >
           Xác nhận
         </Button>
       </View>
@@ -89,7 +97,7 @@ const styles = StyleSheet.create({
   btn: {
     marginTop: 30,
     flexDirection: "row",
-    justifyContent: 'center'
+    justifyContent: "center",
   },
   items: {
     padding: 10,
@@ -117,4 +125,4 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     borderColor: "#fff",
   },
-})
+});

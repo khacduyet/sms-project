@@ -124,22 +124,6 @@ const COMPONENTS_WITHPAGES = [
     page: 2,
     components: [
       {
-        label: `Đăng ký học phần`,
-        icon: (
-          <Image
-            source={require("../../../resources/icons/color-calendar.png")}
-            style={{ width: SIZE_ICON, height: SIZE_ICON }}
-            resizeMode="stretch"
-          />
-          // <MaterialCommunityIcons
-          //   name="calendar-edit"
-          //   size={SIZE_ICON}
-          //   color={Colors.Primary}
-          // />
-        ),
-        onPress: (nav) => {},
-      },
-      {
         label: `Đóng học phí`,
         icon: (
           <Image
@@ -155,18 +139,7 @@ const COMPONENTS_WITHPAGES = [
         ),
         onPress: (nav) => {},
       },
-      {
-        label: `Chương trình đào tạo`,
-        icon: (
-          <Image
-            source={require("../../../resources/icons/color-book.png")}
-            style={{ width: SIZE_ICON, height: SIZE_ICON }}
-            resizeMode="stretch"
-          />
-          // <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />
-        ),
-        onPress: (nav) => {},
-      },
+
       {
         label: `Xin bảo lưu`,
         icon: (
@@ -224,7 +197,7 @@ export default function ChucNangComponent() {
     <View style={[styles.container]}>
       <Swiper>
         {COMPONENTS_WITHPAGES.map((x, index) => {
-          return <Component_Page key={index} lstData={x.components} {...x} />;
+          return <Component_Page key={x.label} lstData={x.components} {...x} />;
         })}
       </Swiper>
     </View>
@@ -289,7 +262,7 @@ const components = StyleSheet.create({
   item: {
     flex: 1,
     borderRadius: 5,
-    backgroundColor: "#cfe2ff",
+    backgroundColor: "#fff",
     justifyContent: "center",
   },
   itemView: {

@@ -14,7 +14,7 @@ import { Colors, height, Screens, width } from "../../../common/constant";
 import { QuyTrinhServices } from "../../../services/danhmuc.service";
 import { ItemChildSchedule, ItemSchedule } from "../../schedules";
 
-export default function LichHocHomNayComponent() {
+export default function LichHocHomNayComponent({ props }) {
   const nav = useNavigation();
   const [today, setToday] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +29,7 @@ export default function LichHocHomNayComponent() {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [props.refreshing.refreshing]);
 
   return (
     <View style={[styles.container]}>
@@ -54,7 +54,7 @@ export default function LichHocHomNayComponent() {
           </TouchableOpacity>
         </View>
         <View style={[styles.body]}>
-          {loading && (
+          {(loading || props.refreshing.refreshing) && (
             <View
               style={{
                 alignItems: "center",
@@ -76,23 +76,25 @@ export default function LichHocHomNayComponent() {
               <Text style={{ color: "#fff" }}>Không có lịch học hôm nay!</Text>
             </View>
           )}
-          <ScrollView
-            style={styles.scrollView}
-            horizontal
-            scrollEventThrottle={16}
-            //   pagingEnabled
-          >
-            {today.map((x, index) => {
-              return (
-                <ItemChildSchedule
-                  key={index}
-                  data={x}
-                  maLop={``}
-                  style={items}
-                />
-              );
-            })}
-          </ScrollView>
+          {!props.refreshing.refreshing && (
+            <ScrollView
+              style={styles.scrollView}
+              horizontal
+              scrollEventThrottle={16}
+              //   pagingEnabled
+            >
+              {today.map((x, index) => {
+                return (
+                  <ItemChildSchedule
+                    key={index}
+                    data={x}
+                    maLop={``}
+                    style={items}
+                  />
+                );
+              })}
+            </ScrollView>
+          )}
         </View>
       </ImageBackground>
     </View>
@@ -150,7 +152,7 @@ const items = {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#cfe2ff",
+    backgroundColor: Colors.HeaderTitle,
     borderBottomWidth: 1,
     padding: 2,
     borderTopLeftRadius: 5,
@@ -162,7 +164,7 @@ const items = {
     alignItems: "center",
   },
   headerleftTime: {
-    fontWeight: 600,
+    fontWeight: 800,
     paddingLeft: 8,
   },
   headerRight: {

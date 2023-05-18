@@ -64,11 +64,6 @@ export default function AttendancePage() {
     let res = await QuyTrinhServices.SinhVien.GetDiemDanhOfSinhVien(object);
     if (res) {
       // console.log("res", res);
-      // fake dữ liệu
-      if (res.length === 0) {
-        res = [...Array(5)];
-      }
-      // end fake dữ liệu
       setListDiemDanh(res);
     }
   };
@@ -228,7 +223,8 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   header: {
-    margin: 16,
+    margin: 5,
+    marginBottom: 0,
   },
   flex: {
     flexDirection: "row",
@@ -236,9 +232,7 @@ const styles = StyleSheet.create({
   justify_content_between: {
     flex: 1,
   },
-  dropdown: {
-    marginBottom: 16,
-  },
+  dropdown: {},
   left: {
     marginRight: 8,
   },
@@ -259,7 +253,6 @@ export const items = {
     width: "95%",
     borderWidth: 1,
     borderRadius: 5,
-    marginTop: 5,
     marginLeft: 10,
     marginRight: 10,
     marginBottom: 5,
@@ -268,7 +261,7 @@ export const items = {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#cfe2ff",
+    backgroundColor: Colors.HeaderTitle,
     borderBottomWidth: 1,
     padding: 2,
     borderTopLeftRadius: 5,

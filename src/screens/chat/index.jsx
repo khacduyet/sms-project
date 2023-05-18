@@ -245,8 +245,10 @@ const ModalAddChat = ({ props }) => {
 
 const ItemPersonal = ({ props }) => {
   const nav = useNavigation();
-
   const _thisBox = useMemo(() => {
+    if (props.item.item.isGroup) {
+      return props.item.item.Ten;
+    }
     if (props.hasShowName) {
       return props.item.item.TenNhanVien;
     }

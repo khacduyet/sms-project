@@ -1,7 +1,14 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, Text, FlatList, View, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  FlatList,
+  View,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { getCurrentUser } from "../../redux/actions/loginAction";
 import { setLoading } from "../../redux/actions/loadingAction";
 import HomeNavBar from "./navbar";
@@ -32,13 +39,55 @@ export default function HomePage({ navigation }) {
     dispatch(setLoading(false));
   }, []);
 
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   return (
-    <ScrollView scrollEventThrottle={16}>
+    <ScrollView
+      scrollEventThrottle={16}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={[styles.container]}>
-        <LichHocHomNayComponent />
-        <ChucNangComponent />
-        <MonHocCanhBaoComponent />
-        <BangTinComponent />
+        <LichHocHomNayComponent
+          props={{
+            refreshing: {
+              refreshing: refreshing,
+              setRefreshing: setRefreshing,
+            },
+          }}
+        />
+        <ChucNangComponent
+          props={{
+            refreshing: {
+              refreshing: refreshing,
+              setRefreshing: setRefreshing,
+            },
+          }}
+        />
+        <MonHocCanhBaoComponent
+          props={{
+            refreshing: {
+              refreshing: refreshing,
+              setRefreshing: setRefreshing,
+            },
+          }}
+        />
+        <BangTinComponent
+          props={{
+            refreshing: {
+              refreshing: refreshing,
+              setRefreshing: setRefreshing,
+            },
+          }}
+        />
         {/* <Footer /> */}
       </View>
     </ScrollView>
