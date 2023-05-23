@@ -111,7 +111,28 @@ export const QuyTrinhServices = {
             let _header = await getHeaders();
             return get(qlsv + `/QuanLySinhVien/GetSoYeuLyLichSinhVien`, _header)
         },
+        GetDangKyHocLaiByIdDSMonHoc: async (data) => {
+            let _header = await getHeaders();
+            return post(qlsv + `/QuyTrinhDangKyHocLai/GetDangKyHocLaiByIdDSMonHoc`, data, _header)
+        },
+        GetDanhSachQuyTrinhDangKyHocLaiCuaSinhVien: async (data) => {
+            let _header = await getHeaders();
+            return post(qlsv + `/QuyTrinhDangKyHocLai/GetDanhSachQuyTrinhDangKyHocLaiCuaSinhVien`, data, _header)
+        },
+        GetDanhSachMonHocLaiCuaSinhVien: async (data) => {
+            let _header = await getHeaders();
+            return post(qlsv + `/QuyTrinhDangKyHocLai/GetDanhSachMonHocLaiCuaSinhVien`, data, _header)
+        },
+        SetQuyTrinhDangKyHocLai: async (data) => {
+            let _header = await getHeaders();
+            return post(qlsv + `/QuyTrinhDangKyHocLai/SetQuyTrinhDangKyHocLai`, data, _header)
+        },
+        DeleteQuyTrinhDangKyHocLai: async (data) => {
+            let _header = await getHeaders();
+            return post(qlsv + `/QuyTrinhDangKyHocLai/DeleteQuyTrinhDangKyHocLai`, data, _header)
+        },
     }
+
 }
 
 export const AuthServices = {
