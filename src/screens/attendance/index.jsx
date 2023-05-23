@@ -12,10 +12,11 @@ import { Button } from "../../common/components";
 import { Colors, Screens, height } from "../../common/constant";
 import { StyleSheet } from "react-native";
 import DropDown from "../accademics/share-componet/DropDown/DropDown";
-import { listKy, listNam } from "../accademics/tab/bang-diem";
-import { useEffect, useState } from "react";
+import { LISTNAM, listKy, listNam } from "../accademics/tab/bang-diem";
+import { useEffect, useMemo, useState } from "react";
 import { _Modalize, DesistArea } from "../schedules/testSchedule";
 import { QuyTrinhServices } from "../../services/danhmuc.service";
+import { useSelector } from "react-redux";
 
 const SIZE_ICON = 24;
 
@@ -49,6 +50,7 @@ export default function AttendancePage() {
     Nam: null,
     Ky: listKy[0].value,
   });
+  const currentUser = useSelector((state) => state.currentUser);
 
   const [visible, setVisible] = useState(false);
 
@@ -63,12 +65,11 @@ export default function AttendancePage() {
   const getListDiemDanh = async () => {
     let res = await QuyTrinhServices.SinhVien.GetDiemDanhOfSinhVien(object);
     if (res) {
-      // console.log("res", res);
-      // fake dữ liệu
-      if (res.length === 0) {
-        res = [...Array(5)];
-      }
-      // end fake dữ liệu
+      console.log("currentUser", currentUser.Id);
+      console.log("====================================");
+      console.log("object", object);
+      console.log("====================================");
+      console.log("res", res);
       setListDiemDanh(res);
     }
   };
@@ -76,6 +77,10 @@ export default function AttendancePage() {
   useEffect(() => {
     getListDiemDanh();
   }, [object]);
+
+  const getListNam = useMemo(() => {
+    return LISTNAM();
+  }, []);
 
   return (
     <SafeAreaView style={[styles.container]}>
@@ -91,7 +96,7 @@ export default function AttendancePage() {
                 <TouchableOpacity style={styles.justify_content_between}>
                   <View style={styles.left}>
                     <DropDown
-                      data={listNam}
+                      data={getListNam}
                       object={object}
                       setObject={setObject}
                       header={"Nam"}
@@ -228,7 +233,8 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   header: {
-    margin: 16,
+    margin: 5,
+    marginBottom: 0,
   },
   flex: {
     flexDirection: "row",
@@ -236,9 +242,7 @@ const styles = StyleSheet.create({
   justify_content_between: {
     flex: 1,
   },
-  dropdown: {
-    marginBottom: 16,
-  },
+  dropdown: {},
   left: {
     marginRight: 8,
   },
@@ -259,7 +263,6 @@ export const items = {
     width: "95%",
     borderWidth: 1,
     borderRadius: 5,
-    marginTop: 5,
     marginLeft: 10,
     marginRight: 10,
     marginBottom: 5,
@@ -268,7 +271,7 @@ export const items = {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#cfe2ff",
+    backgroundColor: Colors.HeaderTitle,
     borderBottomWidth: 1,
     padding: 2,
     borderTopLeftRadius: 5,

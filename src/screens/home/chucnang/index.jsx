@@ -15,56 +15,6 @@ const COMPONENTS_WITHPAGES = [
     page: 1,
     components: [
       {
-        label: `Đăng ký học phần`,
-        icon: (
-          <Image
-            source={require("../../../resources/icons/color-calendar.png")}
-            style={{ width: SIZE_ICON, height: SIZE_ICON }}
-            resizeMode="stretch"
-          />
-          // <MaterialCommunityIcons
-          //   name="calendar-edit"
-          //   size={SIZE_ICON}
-          //   color={Colors.Primary}
-          // />
-        ),
-        onPress: (nav) => {
-          nav.navigate(Screens.HocPhan);
-        },
-      },
-      {
-        label: `Đăng ký học lại`,
-        icon: (
-          <Image
-            source={require("../../../resources/icons/color-register.png")}
-            style={{ width: SIZE_ICON, height: SIZE_ICON }}
-            resizeMode="stretch"
-          />
-          // <FontAwesome5
-          //   name="dollar-sign"
-          //   size={SIZE_ICON}
-          //   color={Colors.Primary}
-          // />
-        ),
-        onPress: (nav) => {
-          nav.navigate(Screens.HocLai);
-        },
-      },
-      {
-        label: `Kế hoạch đào tạo`,
-        icon: (
-          <Image
-            source={require("../../../resources/icons/color-book.png")}
-            style={{ width: SIZE_ICON, height: SIZE_ICON }}
-            resizeMode="stretch"
-          />
-          // <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />
-        ),
-        onPress: (nav) => {
-          nav.push(Screens.TrainingPlan);
-        },
-      },
-      {
         label: `Điểm danh`,
         icon: (
           <Image
@@ -101,6 +51,20 @@ const COMPONENTS_WITHPAGES = [
         },
       },
       {
+        label: `Kế hoạch đào tạo`,
+        icon: (
+          <Image
+            source={require("../../../resources/icons/color-book.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
+          />
+          // <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />
+        ),
+        onPress: (nav) => {
+          nav.push(Screens.TrainingPlan);
+        },
+      },
+      {
         label: `Hồ sơ cá nhân`,
         icon: (
           <Image
@@ -118,11 +82,6 @@ const COMPONENTS_WITHPAGES = [
           nav.navigate(Screens.Personal);
         },
       },
-    ],
-  },
-  {
-    page: 2,
-    components: [
       {
         label: `Đăng ký học phần`,
         icon: (
@@ -137,8 +96,33 @@ const COMPONENTS_WITHPAGES = [
           //   color={Colors.Primary}
           // />
         ),
-        onPress: (nav) => {},
+        onPress: (nav) => {
+          nav.navigate(Screens.HocPhan);
+        },
       },
+      {
+        label: `Đăng ký học lại`,
+        icon: (
+          <Image
+            source={require("../../../resources/icons/color-register.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
+          />
+          // <FontAwesome5
+          //   name="dollar-sign"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
+        ),
+        onPress: (nav) => {
+          nav.navigate(Screens.HocLai);
+        },
+      },
+    ],
+  },
+  {
+    page: 2,
+    components: [
       {
         label: `Đóng học phí`,
         icon: (
@@ -155,18 +139,7 @@ const COMPONENTS_WITHPAGES = [
         ),
         onPress: (nav) => {},
       },
-      {
-        label: `Chương trình đào tạo`,
-        icon: (
-          <Image
-            source={require("../../../resources/icons/color-book.png")}
-            style={{ width: SIZE_ICON, height: SIZE_ICON }}
-            resizeMode="stretch"
-          />
-          // <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />
-        ),
-        onPress: (nav) => {},
-      },
+
       {
         label: `Xin bảo lưu`,
         icon: (
@@ -224,7 +197,7 @@ export default function ChucNangComponent() {
     <View style={[styles.container]}>
       <Swiper>
         {COMPONENTS_WITHPAGES.map((x, index) => {
-          return <Component_Page key={index} lstData={x.components} {...x} />;
+          return <Component_Page key={x.label} lstData={x.components} {...x} />;
         })}
       </Swiper>
     </View>
@@ -244,7 +217,9 @@ const Component_Page = ({ lstData }) => {
             >
               <View style={[components.itemView]}>
                 {x.icon}
-                <Text style={[components.itemViewText]}>{x.label}</Text>
+                <Text style={[components.itemViewText]} numberOfLines={2}>
+                  {x.label}
+                </Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -256,8 +231,8 @@ const Component_Page = ({ lstData }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
-    height: 250,
+    marginTop: 10,
+    height: 260,
     marginLeft: 10,
     marginRight: 10,
   },
@@ -287,7 +262,7 @@ const components = StyleSheet.create({
   item: {
     flex: 1,
     borderRadius: 5,
-    backgroundColor: "#cfe2ff",
+    backgroundColor: "#fff",
     justifyContent: "center",
   },
   itemView: {

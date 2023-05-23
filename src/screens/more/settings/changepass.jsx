@@ -8,10 +8,10 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import HeaderBack from "../../../common/header";
-import { Screens, TextButton } from "../../../common/constant";
+import { Regexs, Screens, TextButton } from "../../../common/constant";
 import { Button, ToastMessage } from "../../../common/components";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AuthServices } from "../../../services/auth.service";
 import Toast from "react-native-root-toast";
 import { useDispatch } from "react-redux";
@@ -41,6 +41,13 @@ export default function ChangePassword() {
       });
     }
   };
+
+  const checkIsNull = useMemo(() => {
+    if (formValue.passwordOld && formValue.password && formValue.repassword) {
+      return false;
+    }
+    return true;
+  }, [formValue]);
 
   const ListData = [
     {
@@ -78,23 +85,23 @@ export default function ChangePassword() {
 
   const handleChangePassword = async () => {
     try {
-      // Check mật khẩu mới khớp nhau không?
-      if (formValue.password != formValue.repassword) {
+      if (!formValue.password) {
         setIsValids({
-          ...isValids,
+          passwordOld: true,
           password: false,
-          repassword: false,
+          repassword: true,
         });
-        setInvalid("Mật khẩu không khớp!");
+        setInvalid("Chưa nhập mật khẩu hiện tại!");
         return;
       }
+
       // Gọi api đổi mk
       let res = await AuthServices.changePassword({
         OldPassword: formValue.passwordOld,
         NewPassword: formValue.password,
       });
       if (res) {
-        if (res.Error === 0) {
+        if (res.Error !== 4) {
           setIsValids({
             passwordOld: false,
             password: true,
@@ -103,6 +110,32 @@ export default function ChangePassword() {
           setInvalid(res.Detail);
           return;
         }
+
+        const found = formValue.password.match(Regexs.password);
+        if (!found) {
+          setIsValids({
+            passwordOld: true,
+            password: false,
+            repassword: true,
+          });
+          setInvalid("Chưa đúng định dạng!");
+          return;
+        }
+        // Check mật khẩu mới khớp nhau không?
+        if (formValue.password != formValue.repassword) {
+          setIsValids({
+            passwordOld: true,
+            password: true,
+            repassword: false,
+          });
+          setInvalid("Mật khẩu không khớp!");
+          return;
+        }
+        setIsValids({
+          passwordOld: true,
+          password: true,
+          repassword: true,
+        });
         // Thành công => thông báo
         ToastMessage("Thay đổi mật khẩu thành công!");
         dispatch(logoutSubmit());
@@ -123,8 +156,15 @@ export default function ChangePassword() {
           {ListData.map((x, index) => {
             return <FormItem {...x} key={index} />;
           })}
+          <Text style={[styles.formItem, { color: "#8E8D8D" }]}>
+            Lưu ý: Mật khẩu phải có tối thiểu 9 ký tự bao gồm cả chữ và số
+          </Text>
           <View style={styles.buttonWrap}>
-            <Button text={TextButton.Accept} onPress={handleChangePassword} />
+            <Button
+              text={TextButton.Accept}
+              onPress={handleChangePassword}
+              disabled={checkIsNull}
+            />
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -160,7 +200,7 @@ const FormItem = ({
                 },
               ]}
             >
-              HIỆN
+              {isShow ? `HIỆN` : `ẨN`}
             </Text>
           </TouchableOpacity>
         )}
@@ -224,7 +264,9 @@ const styles = {
     // padding: 10,
     // marginTop: 20,
   },
-  inputValid: {},
+  inputValid: {
+    marginTop: 15,
+  },
   inputValidText: {
     color: "red",
   },

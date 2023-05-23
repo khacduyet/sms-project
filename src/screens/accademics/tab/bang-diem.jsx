@@ -42,18 +42,20 @@ export default function BangDiem() {
       setLstMonHoc(res.listMonHoc);
     }
   };
-  const [listNam, setlistNam] = useState([
-    { label: 'Tất cả', value: 0 },
-  ]);
+  const [listNam, setlistNam] = useState([{ label: "Tất cả", value: 0 }]);
   const getListNam = () => {
-    for (let i = new Date().getFullYear() - 10; i <= (new Date().getFullYear() + 20); i++) {
+    for (
+      let i = new Date().getFullYear() - 10;
+      i <= new Date().getFullYear() + 20;
+      i++
+    ) {
       listNam.push({ value: i, label: `${i}-${i + 1}` });
     }
     setlistNam(listNam);
-  }
+  };
   useEffect(() => {
-    getListNam()
-  }, [])
+    getListNam();
+  }, []);
   useEffect(() => {
     getData();
   }, [object]);

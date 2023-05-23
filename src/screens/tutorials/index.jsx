@@ -3,8 +3,9 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Swiper from "react-native-swiper";
-import { Screens } from "../../common/constant";
+import { Colors, Screens, TextButton } from "../../common/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Button } from "../../common/components";
 
 const Page2 = () => {
   const nav = useNavigation();
@@ -40,9 +41,14 @@ const Page2 = () => {
         />
       </View>
       <View style={[s.wrapperView]}>
-        <TouchableOpacity style={[s.button]} onPress={handleSetUrl}>
-          <Text style={[s.text]}>Tiếp theo</Text>
-        </TouchableOpacity>
+        <Button
+          text={TextButton.Next}
+          onPress={handleSetUrl}
+          style={{
+            button: s.button,
+            buttonText: s.text,
+          }}
+        />
       </View>
     </View>
   );
@@ -106,7 +112,7 @@ const s = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     textAlign: "center",
-    backgroundColor: "#000",
+    backgroundColor: Colors.Primary,
   },
 });
 

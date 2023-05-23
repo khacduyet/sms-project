@@ -41,8 +41,9 @@ export const Screens = {
     TrainingPlan: 'Kế hoạch đào tạo',
     HocLai: 'Học lại',
     PhieuDangKy: 'Phiếu đăng ký',
-    HocPhan:'Đăng ký học phần',
+    HocPhan: 'Đăng ký học phần',
     TuyChon: 'Tùy chọn',
+    ChatBot: 'Thư viện câu hỏi',
 };
 
 export const TextButton = {
@@ -64,4 +65,10 @@ export const Colors = {
     Info: '#17a2b8',
     Light: '#f8f9fa',
     Dark: '#343a40',
+    HeaderTitle: `#C9F4FD`
+}
+
+
+export const Regexs = {
+    password: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{9,}$/,
 }

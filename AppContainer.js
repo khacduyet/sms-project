@@ -21,6 +21,7 @@ import HocLai from './src/screens/home/chucnang/hoc-lai/hoc-lai';
 import HocPhan from './src/screens/home/chucnang/hoc-phan/hoc-phan'
 import PhieuDangKy from './src/screens/home/chucnang/hoc-lai/popup/item-phieuky'
 import { ChatCustomPage, ChatPersonalPage } from './src/screens/chat';
+import ChatBotPage from './src/screens/chatbot/ChatBotPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +55,7 @@ function StackNavigator() {
     <Stack.Screen name={Screens.PhieuDangKy} component={PhieuDangKy} />
     <Stack.Screen name={Screens.HocPhan} component={HocPhan} />
     <Stack.Screen name={Screens.TuyChon} component={ChatCustomPage} />
+    <Stack.Screen name={Screens.ChatBot} component={ChatBotPage} />
   </Stack.Navigator>
 }
 

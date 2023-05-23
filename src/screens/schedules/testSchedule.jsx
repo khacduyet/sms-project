@@ -84,11 +84,13 @@ const PointArea = () => {
 
 const p = StyleSheet.create({
   container: {
+    borderTopWidth: 1,
     width: "100%",
-    height: 120,
-    padding: 10,
+    height: 90,
+    paddingRight: 10,
+    paddingLeft: 10,
   },
-  wrap: { marginBottom: 10 },
+  wrap: { marginBottom: 5 },
   title: {
     fontStyle: "italic",
   },
@@ -114,6 +116,7 @@ export const DesistArea = ({ item }) => {
         <Text style={[d.topWrapText]}>Có phép: 5</Text>
         <Text style={[d.topWrapText]}>Không phép: 21</Text>
       </View>
+      {/* <Divider /> */}
       {/* <View style={[d.midWrap]}>
         <FlatList
           data={arr}
@@ -159,6 +162,7 @@ const d = StyleSheet.create({
     justifyContent: "space-between",
     padding: 10,
     paddingBottom: 0,
+    paddingTop: 5,
   },
   midWrap: {
     padding: 10,

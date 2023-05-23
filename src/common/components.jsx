@@ -4,7 +4,7 @@ import { Octicons } from "@expo/vector-icons";
 
 export function Button({ icon, text, onPress, style, disabled }) {
   return (
-    <View style={[s.container]}>
+    <View style={[s.container, style?.container]}>
       <TouchableOpacity
         style={[
           s.button,
@@ -75,7 +75,7 @@ const s = {
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#2f7bff",
-    borderRadius: 10,
+    borderRadius: 50,
   },
   wrapperMiddle: {
     flexDirection: "row",
