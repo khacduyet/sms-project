@@ -15,56 +15,6 @@ const COMPONENTS_WITHPAGES = [
     page: 1,
     components: [
       {
-        label: `Đăng ký học phần`,
-        icon: (
-          <Image
-            source={require("../../../resources/icons/color-calendar.png")}
-            style={{ width: SIZE_ICON, height: SIZE_ICON }}
-            resizeMode="stretch"
-          />
-          // <MaterialCommunityIcons
-          //   name="calendar-edit"
-          //   size={SIZE_ICON}
-          //   color={Colors.Primary}
-          // />
-        ),
-        onPress: (nav) => {
-          nav.navigate(Screens.HocPhan);
-        },
-      },
-      {
-        label: `Đăng ký học lại`,
-        icon: (
-          <Image
-            source={require("../../../resources/icons/color-register.png")}
-            style={{ width: SIZE_ICON, height: SIZE_ICON }}
-            resizeMode="stretch"
-          />
-          // <FontAwesome5
-          //   name="dollar-sign"
-          //   size={SIZE_ICON}
-          //   color={Colors.Primary}
-          // />
-        ),
-        onPress: (nav) => {
-          nav.navigate(Screens.HocLai);
-        },
-      },
-      {
-        label: `Kế hoạch đào tạo`,
-        icon: (
-          <Image
-            source={require("../../../resources/icons/color-book.png")}
-            style={{ width: SIZE_ICON, height: SIZE_ICON }}
-            resizeMode="stretch"
-          />
-          // <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />
-        ),
-        onPress: (nav) => {
-          nav.push(Screens.TrainingPlan);
-        },
-      },
-      {
         label: `Điểm danh`,
         icon: (
           <Image
@@ -101,6 +51,20 @@ const COMPONENTS_WITHPAGES = [
         },
       },
       {
+        label: `Kế hoạch đào tạo`,
+        icon: (
+          <Image
+            source={require("../../../resources/icons/color-book.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
+          />
+          // <AntDesign name="book" size={SIZE_ICON} color={Colors.Primary} />
+        ),
+        onPress: (nav) => {
+          nav.push(Screens.TrainingPlan);
+        },
+      },
+      {
         label: `Hồ sơ cá nhân`,
         icon: (
           <Image
@@ -116,6 +80,42 @@ const COMPONENTS_WITHPAGES = [
         ),
         onPress: (nav) => {
           nav.navigate(Screens.Personal);
+        },
+      },
+      {
+        label: `Đăng ký học phần`,
+        icon: (
+          <Image
+            source={require("../../../resources/icons/color-calendar.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
+          />
+          // <MaterialCommunityIcons
+          //   name="calendar-edit"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
+        ),
+        onPress: (nav) => {
+          nav.navigate(Screens.HocPhan);
+        },
+      },
+      {
+        label: `Đăng ký học lại`,
+        icon: (
+          <Image
+            source={require("../../../resources/icons/color-register.png")}
+            style={{ width: SIZE_ICON, height: SIZE_ICON }}
+            resizeMode="stretch"
+          />
+          // <FontAwesome5
+          //   name="dollar-sign"
+          //   size={SIZE_ICON}
+          //   color={Colors.Primary}
+          // />
+        ),
+        onPress: (nav) => {
+          nav.navigate(Screens.HocLai);
         },
       },
     ],

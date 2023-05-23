@@ -117,7 +117,7 @@ export default function LoginPage({ navigation }) {
       Platform.OS === "ios"
         ? await LocalAuthentication.authenticateAsync()
         : await LocalAuthentication.authenticateAsync({
-            promptMessage: "HarmonyES",
+            promptMessage: "Ứng dụng quản lý sinh viên",
             cancelLabel: "cancel",
             disableDeviceFallback: true,
           });
@@ -166,6 +166,11 @@ const alertComponent = (title, mess, btnTxt, btnFunc) => {
   ]);
 };
 
+const initialAccount = {
+  username: "",
+  password: "",
+};
+
 function BodyLogin({
   keyboardShow,
   navigation,
@@ -175,10 +180,7 @@ function BodyLogin({
   setFingerPrint,
 }) {
   const nav = useNavigation();
-  const [account, setAccount] = useState({
-    username: "",
-    password: "",
-  });
+  const [account, setAccount] = useState(initialAccount);
   const [submitForm, setSubmitForm] = useState(false);
   const [showPass, setShowPass] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -237,6 +239,7 @@ function BodyLogin({
         text: TextButton.Accept,
         onPress: () => {
           dispatch(logoutSubmit());
+          setAccount(initialAccount);
           setRefresh(!refresh);
         },
       },
@@ -408,7 +411,7 @@ function BodyLogin({
         </>
       )}
 
-      <View style={{ height: 50 }}>
+      <View style={{ height: 40 }}>
         <View style={{ marginTop: 0 }}>
           <View style={[{ alignItems: "center", justifyContent: "center" }]}>
             <TouchableOpacity

@@ -7,6 +7,7 @@ import { verticalSafeBottomMargin } from "../utils/render-util";
 import { TouchableHighlight } from "react-native";
 import { useState } from "react";
 import { Picker } from '@react-native-picker/picker';
+import { FontAwesome } from '@expo/vector-icons';
 
 
 export function ModalGeneral({ isVisible, onClose, onFinish, children, isShowHeader }) {
@@ -41,7 +42,8 @@ export function ModalMonHoc({ isVisible, title, onClose, children }) {
             <View style={styles.header}>
                 <Text style={styles.headerBtnText}>{title}</Text>
                 <TouchableOpacity style={styles.headerBtn} onPress={onClose}>
-                    <Text style={styles.headerBtnText}>{TextButton.Close}</Text>
+                    <FontAwesome name="times" size={20} color="blue" />
+                    {/* <Text style={styles.headerBtnText}>{TextButton.Close}</Text> */}
                 </TouchableOpacity>
             </View>
             {children}

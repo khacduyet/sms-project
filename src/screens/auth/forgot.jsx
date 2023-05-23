@@ -5,9 +5,10 @@ import {
   Text,
   View,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import { Button, ToastMessage } from "../../common/components";
-import { Colors, Screens, TextButton } from "../../common/constant";
+import { Colors, Regexs, Screens, TextButton } from "../../common/constant";
 import OTPTextInput from "react-native-otp-textinput";
 import RadioButtonGroup, { RadioButtonItem } from "expo-radio-button";
 import HeaderBack from "../../common/header";
@@ -84,77 +85,89 @@ const StepTwo = ({ current, setCurrent, handleNext, user, next }) => {
     dispatch(setLoading(false));
   }, []);
   return (
-    <View>
-      <View style={styles.formWrapInput}>
-        <RadioButtonGroup
-          containerStyle={{ marginBottom: 0 }}
-          radioStyle={{
-            marginBottom: 10,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          selected={current}
-          onSelected={(value) => setCurrent(value)}
-          radioBackground="green"
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <View style={{ flexDirection: "column" }}>
+        <View style={[styles.formWrapInput]}>
+          <RadioButtonGroup
+            containerStyle={{ marginBottom: 0 }}
+            radioStyle={{
+              marginBottom: 10,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            selected={current}
+            onSelected={(value) => setCurrent(value)}
+            radioBackground="green"
+          >
+            <RadioButtonItem
+              value={TYPE.email}
+              label={
+                <Text style={{ marginBottom: 10, marginLeft: 10 }}>
+                  Xác minh qua email đã đăng ký{" "}
+                  {user?.Email && hideMaskEmailOrPhone(user.Email, TYPE.email)}
+                </Text>
+              }
+            />
+            <RadioButtonItem
+              value={TYPE.phone}
+              label={
+                <Text style={{ marginBottom: 10, marginLeft: 10 }}>
+                  Xác minh qua số điện thoại đã đăng ký{" "}
+                  {user?.DienThoai &&
+                    hideMaskEmailOrPhone(user.DienThoai, TYPE.phone)}
+                </Text>
+              }
+            />
+          </RadioButtonGroup>
+        </View>
+        <View
+          style={[
+            styles.formWrapInput,
+            {
+              // flex: 1,
+            },
+          ]}
         >
-          <RadioButtonItem
-            value={TYPE.email}
+          <TextInput
+            style={styles.formInput}
+            value={value}
+            color={Colors.Primary}
+            onChangeText={(e) => {
+              if (error.isShow) {
+                setError({
+                  ...error,
+                  isShow: false,
+                });
+              }
+              setValue(e);
+            }}
             label={
-              <Text style={{ marginBottom: 10, marginLeft: 10 }}>
-                Xác minh qua email đã đăng ký{" "}
-                {user?.Email && hideMaskEmailOrPhone(user.Email, TYPE.email)}
-              </Text>
+              current === TYPE.phone
+                ? `Vui lòng nhập lại SĐT đã đăng ký`
+                : `Vui lòng nhập lại Email đã đăng ký`
             }
+            variant="standard"
           />
-          <RadioButtonItem
-            value={TYPE.phone}
-            label={
-              <Text style={{ marginBottom: 10, marginLeft: 10 }}>
-                Xác minh qua số điện thoại đã đăng ký{" "}
-                {user?.DienThoai &&
-                  hideMaskEmailOrPhone(user.DienThoai, TYPE.phone)}
-              </Text>
-            }
-          />
-        </RadioButtonGroup>
-      </View>
-      <View style={styles.formWrapInput}>
-        <TextInput
-          style={styles.formInput}
-          value={value}
-          color={Colors.Primary}
-          onChangeText={(e) => {
-            if (error.isShow) {
-              setError({
-                ...error,
-                isShow: false,
-              });
-            }
-            setValue(e);
-          }}
-          label={
-            current === TYPE.phone
-              ? `Vui lòng nhập lại SĐT đã đăng ký`
-              : `Vui lòng nhập lại Email đã đăng ký`
-          }
-          variant="standard"
+          {error.isShow && (
+            <Text style={{ color: "red", marginTop: 20 }}>{error.message}</Text>
+          )}
+        </View>
+        <Button
+          text={TextButton.Next}
+          onPress={handleNextStep}
+          disabled={value.length === 0}
         />
-        {error.isShow && (
-          <Text style={{ color: "red", marginTop: 20 }}>{error.message}</Text>
-        )}
       </View>
-      <Button
-        text={TextButton.Next}
-        onPress={handleNextStep}
-        disabled={value.length === 0}
-      />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const StepThree = ({ type, user, handleNextStepTwo, next }) => {
   const otpInput = useRef(null);
-  const [seconds, setSeconds] = useState(SECONDS_OTP);
+  // const [seconds, setSeconds] = useState(SECONDS_OTP);
   const [title, setTitle] = useState(`Mã OTP có hiệu lực trong vòng `);
 
   const dispatch = useDispatch();
@@ -162,17 +175,17 @@ const StepThree = ({ type, user, handleNextStepTwo, next }) => {
     dispatch(setLoading(false));
   }, []);
 
-  useEffect(() => {
-    if (seconds === 0) {
-      setTitle(`Mã OTP đã hết hạn`);
-    }
-    const interval = setInterval(() => {
-      if (seconds > 0) {
-        setSeconds((seconds) => seconds - 1);
-      }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [seconds]);
+  // useEffect(() => {
+  //   if (seconds === 0) {
+  //     setTitle(`Mã OTP đã hết hạn`);
+  //   }
+  //   const interval = setInterval(() => {
+  //     if (seconds > 0) {
+  //       setSeconds((seconds) => seconds - 1);
+  //     }
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, [seconds]);
 
   const pushOTPServer = async (otp) => {
     let _otp = "";
@@ -217,19 +230,15 @@ const StepThree = ({ type, user, handleNextStepTwo, next }) => {
           }}
         />
         <Text style={[styles.formText]}>
-          <Text
-            style={{ color: seconds > 0 ? "#000" : "red", fontWeight: 400 }}
-          >
-            {title}
-          </Text>
-
-          {seconds > 0 && <Text style={styles.formTextNote}>{seconds}s</Text>}
+          <Text style={{ fontWeight: 400 }}>{title}</Text>
+          <Text style={styles.formTextNote}>{SECONDS_OTP}s</Text>
         </Text>
         <TouchableOpacity
           onPress={() => {
             handleNextStepTwo();
             setTitle(`Mã OTP có hiệu lực trong vòng `);
-            setSeconds(SECONDS_OTP);
+            ToastMessage("Đã gửi lại mã OTP");
+            dispatch(setLoading(false));
           }}
         >
           <Text style={[styles.formText, styles.formTextNote]}>Gửi lại mã</Text>
@@ -253,6 +262,7 @@ const StepFour = ({ user }) => {
   const nav = useNavigation();
   const [isShow, setIsShow] = useState(true);
   const [isMatch, setIsMatch] = useState(true);
+  const [textValid, setTextValid] = useState(null);
   const [passwords, setPasswords] = useState({
     password: "",
     repassword: "",
@@ -266,18 +276,27 @@ const StepFour = ({ user }) => {
     }
   };
   const handleSubmit = async () => {
-    if (passwords.password != passwords.repassword) {
+    const found = passwords.password.match(Regexs.password);
+    if (!found) {
+      setTextValid(`Chưa đúng định dạng`);
       setIsMatch(false);
       return;
     }
-    let res = await AuthServices.ResetForgotPasswordNoLogin({
-      IdUser: user.IdUser,
-      NewPassword: passwords.password,
-    });
-    if (res.Error === 4) {
-      ToastMessage(returnMessage(StatusCode.UPDATE_PASSWORD));
-      nav.navigate("Login");
+
+    if (passwords.password != passwords.repassword) {
+      setTextValid(`Mật khẩu không khớp!`);
+      setIsMatch(false);
+      return;
     }
+
+    // let res = await AuthServices.ResetForgotPasswordNoLogin({
+    //   IdUser: user.IdUser,
+    //   NewPassword: passwords.password,
+    // });
+    // if (res.Error === 4) {
+    //   ToastMessage(returnMessage(StatusCode.UPDATE_PASSWORD));
+    //   nav.navigate("Login");
+    // }
   };
   return (
     <View>
@@ -288,7 +307,7 @@ const StepFour = ({ user }) => {
           </Text> */}
           <TouchableOpacity onPress={() => setIsShow(!isShow)}>
             <Text style={[styles.isShow, { color: isShow ? "#000" : "blue" }]}>
-              Hiện
+              {isShow ? `Hiện` : `Ẩn`}
             </Text>
           </TouchableOpacity>
           <TextInput
@@ -316,9 +335,10 @@ const StepFour = ({ user }) => {
           label=" Nhập lại mật khẩu mới"
           variant="standard"
         />
-        {!isMatch && (
-          <Text style={[{ color: "red" }]}>Mật khẩu không khớp!</Text>
-        )}
+        {!isMatch && <Text style={[{ color: "red" }]}>{textValid}</Text>}
+        <Text style={[{ color: "#8E8D8D", marginTop: 15 }]}>
+          Lưu ý: Mật khẩu phải có tối thiểu 9 ký tự bao gồm cả chữ và số
+        </Text>
       </View>
       <Button
         text={TextButton.Accept}
@@ -421,15 +441,15 @@ const styles = StyleSheet.create({
   },
   formWrapInput: {
     padding: 20,
-    marginTop: 30,
-    marginBottom: 30,
+    // marginTop: 30,
+    // marginBottom: 30,
   },
   formText: {
     fontSize: 18,
     fontWeight: 600,
   },
   formTextNote: {
-    color: "#223ffa",
+    // color: "#223ffa",
   },
   formTextLabel: {
     fontSize: 18,

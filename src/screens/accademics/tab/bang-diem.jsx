@@ -21,9 +21,20 @@ import SearchBar from "../share-componet/Searchbar";
 import CheckBox from "../share-componet/check";
 
 export const listNam = [
-  { label: "2022-2023", value: "1" },
-  { label: "2023-2024", value: "2" },
+  { label: "2022-2023", value: 2022 },
+  { label: "2023-2024", value: 2023 },
 ];
+
+const _YEAR = 2020;
+export const LISTNAM = () => {
+  let year = new Date().getFullYear();
+  return [...Array(year - _YEAR + 10)].map((_, index) => {
+    return {
+      label: `${_YEAR + index}-${_YEAR + index + 1}`,
+      value: _YEAR + index,
+    };
+  });
+};
 export const listKy = [
   { label: "Kỳ I", value: "I" },
   { label: "Kỳ II", value: "II" },

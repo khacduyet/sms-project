@@ -18,6 +18,7 @@ import LichHocHomNayComponent from "./lichhochomnay";
 import ChucNangComponent from "./chucnang";
 import MonHocCanhBaoComponent from "./canhbao";
 import BangTinComponent from "./bangtin";
+import ChatBotNav from "../../common/footer";
 
 export default function HomePage({ navigation }) {
   const currentUser = useSelector((state) => state.currentUser);
@@ -49,48 +50,51 @@ export default function HomePage({ navigation }) {
   }, []);
 
   return (
-    <ScrollView
-      scrollEventThrottle={16}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <View style={[styles.container]}>
-        <LichHocHomNayComponent
-          props={{
-            refreshing: {
-              refreshing: refreshing,
-              setRefreshing: setRefreshing,
-            },
-          }}
-        />
-        <ChucNangComponent
-          props={{
-            refreshing: {
-              refreshing: refreshing,
-              setRefreshing: setRefreshing,
-            },
-          }}
-        />
-        <MonHocCanhBaoComponent
-          props={{
-            refreshing: {
-              refreshing: refreshing,
-              setRefreshing: setRefreshing,
-            },
-          }}
-        />
-        <BangTinComponent
-          props={{
-            refreshing: {
-              refreshing: refreshing,
-              setRefreshing: setRefreshing,
-            },
-          }}
-        />
-        {/* <Footer /> */}
-      </View>
-    </ScrollView>
+    <>
+      <ScrollView
+        scrollEventThrottle={16}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <View style={[styles.container]}>
+          <LichHocHomNayComponent
+            props={{
+              refreshing: {
+                refreshing: refreshing,
+                setRefreshing: setRefreshing,
+              },
+            }}
+          />
+          <ChucNangComponent
+            props={{
+              refreshing: {
+                refreshing: refreshing,
+                setRefreshing: setRefreshing,
+              },
+            }}
+          />
+          <MonHocCanhBaoComponent
+            props={{
+              refreshing: {
+                refreshing: refreshing,
+                setRefreshing: setRefreshing,
+              },
+            }}
+          />
+          <BangTinComponent
+            props={{
+              refreshing: {
+                refreshing: refreshing,
+                setRefreshing: setRefreshing,
+              },
+            }}
+          />
+          {/* <Footer /> */}
+        </View>
+      </ScrollView>
+      <ChatBotNav />
+    </>
   );
 }
 

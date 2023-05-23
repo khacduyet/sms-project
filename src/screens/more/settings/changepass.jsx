@@ -94,33 +94,14 @@ export default function ChangePassword() {
         setInvalid("Chưa nhập mật khẩu hiện tại!");
         return;
       }
-      const found = formValue.password.match(Regexs.password);
-      if (!found) {
-        setIsValids({
-          passwordOld: true,
-          password: false,
-          repassword: true,
-        });
-        setInvalid("Chưa đúng định dạng!");
-        return;
-      }
-      // Check mật khẩu mới khớp nhau không?
-      if (formValue.password != formValue.repassword) {
-        setIsValids({
-          passwordOld: true,
-          password: true,
-          repassword: false,
-        });
-        setInvalid("Mật khẩu không khớp!");
-        return;
-      }
+
       // Gọi api đổi mk
       let res = await AuthServices.changePassword({
         OldPassword: formValue.passwordOld,
         NewPassword: formValue.password,
       });
       if (res) {
-        if (res.StatusCode !== 4) {
+        if (res.Error !== 4) {
           setIsValids({
             passwordOld: false,
             password: true,
@@ -129,6 +110,32 @@ export default function ChangePassword() {
           setInvalid(res.Detail);
           return;
         }
+
+        const found = formValue.password.match(Regexs.password);
+        if (!found) {
+          setIsValids({
+            passwordOld: true,
+            password: false,
+            repassword: true,
+          });
+          setInvalid("Chưa đúng định dạng!");
+          return;
+        }
+        // Check mật khẩu mới khớp nhau không?
+        if (formValue.password != formValue.repassword) {
+          setIsValids({
+            passwordOld: true,
+            password: true,
+            repassword: false,
+          });
+          setInvalid("Mật khẩu không khớp!");
+          return;
+        }
+        setIsValids({
+          passwordOld: true,
+          password: true,
+          repassword: true,
+        });
         // Thành công => thông báo
         ToastMessage("Thay đổi mật khẩu thành công!");
         dispatch(logoutSubmit());

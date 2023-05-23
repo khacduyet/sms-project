@@ -43,6 +43,7 @@ export const Screens = {
     PhieuDangKy: 'Phiếu đăng ký',
     HocPhan: 'Đăng ký học phần',
     TuyChon: 'Tùy chọn',
+    ChatBot: 'Thư viện câu hỏi',
 };
 
 export const TextButton = {

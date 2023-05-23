@@ -16,7 +16,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
 import { FindInput } from "../../common/components";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { ListEmptyComponent } from "../schedules";
 import { Avatar } from "react-native-paper";
 import HeaderBack from "../../common/header";
 import { Screens, height, width } from "../../common/constant";
@@ -37,6 +36,18 @@ import { AuthServices } from "../../services/danhmuc.service";
 import { ChatService } from "../../services/chat.service";
 import { useSelector } from "react-redux";
 import { ModalGeneral } from "../../common/modal";
+
+const ListEmptyComponent = (
+  <View
+    style={{
+      alignItems: "center",
+      justifyContent: "center",
+      height: height / 2,
+    }}
+  >
+    <Text>Chưa có tin nhắn...</Text>
+  </View>
+);
 
 export default function ChatPage() {
   const nav = useNavigation();
@@ -238,6 +249,7 @@ const ModalAddChat = ({ props }) => {
         keyExtractor={(item, index) => index}
         ListEmptyComponent={ListEmptyComponent}
         ListFooterComponent={<View></View>}
+        ß
       />
     </View>
   );
@@ -350,7 +362,7 @@ export const ChatPersonalPage = ({ route }) => {
     if (!currentMess.Message) return;
     socketRef.current.emit("chatMessage", currentMess);
     setCurrentMess({ Message: "", listFile: [] });
-    refFlatlist.current.scrollToEnd();
+    if (listMessage.length) refFlatlist.current.scrollToEnd();
   };
 
   useEffect(() => {
@@ -695,7 +707,10 @@ const HeaderTitle = ({ props }) => {
             <TouchableOpacity
               onPress={() => {
                 nav.navigate(Screens.TuyChon, {
-                  props: { ...props, _thisRoom: _thisRoom },
+                  props: {
+                    ...props,
+                    _thisRoom: _thisRoom,
+                  },
                 });
               }}
             >
@@ -929,6 +944,13 @@ const ThisAvatar = ({ url, size, name }) => {
 
 export const ChatCustomPage = ({ route }) => {
   const { props } = route.params;
+  const [visible, setVisible] = useState(false);
+
+  console.log("props", props);
+
+  const onClose = () => {
+    setVisible(false);
+  };
   return (
     <SafeAreaView style={tc.container}>
       <HeaderBack header={Screens.TuyChon} />
@@ -958,7 +980,10 @@ export const ChatCustomPage = ({ route }) => {
       </View>
       {props._thisRoom.isGroup && (
         <View style={[tc.bodyArea]}>
-          <TouchableOpacity style={[tc.bodyArea.button]}>
+          <TouchableOpacity
+            style={[tc.bodyArea.button]}
+            onPress={() => setVisible(true)}
+          >
             <EvilIcons name="pencil" size={30} color="black" />
             <Text style={[tc.bodyArea.text]} numberOfLines={1}>
               Thành viên nhóm
@@ -966,6 +991,44 @@ export const ChatCustomPage = ({ route }) => {
           </TouchableOpacity>
         </View>
       )}
+      <ModalGeneral
+        isVisible={visible}
+        onClose={onClose}
+        children={
+          <>
+            <View style={{ width: "100%" }}>
+              <FlatList
+                style={{
+                  maxHeight: 500,
+                }}
+                data={props.currentRoom.listUser}
+                showsVerticalScrollIndicator={false}
+                renderItem={(item) => (
+                  <>
+                    <View style={[ip.container]}>
+                      <ThisAvatar
+                        url={"/"}
+                        size={80}
+                        name={item.item.TenUser}
+                      />
+                      <View style={[ip.infomation]}>
+                        <View style={[ip.infomationTop]}>
+                          <Text style={[ip.infomationText]} numberOfLines={1}>
+                            {item.item.TenUser}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  </>
+                )}
+                keyExtractor={(item, index) => index}
+                ListFooterComponent={<View></View>}
+              />
+            </View>
+          </>
+        }
+        isShowHeader={false}
+      />
     </SafeAreaView>
   );
 };

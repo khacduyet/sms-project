@@ -12,10 +12,11 @@ import { Button } from "../../common/components";
 import { Colors, Screens, height } from "../../common/constant";
 import { StyleSheet } from "react-native";
 import DropDown from "../accademics/share-componet/DropDown/DropDown";
-import { listKy, listNam } from "../accademics/tab/bang-diem";
-import { useEffect, useState } from "react";
+import { LISTNAM, listKy, listNam } from "../accademics/tab/bang-diem";
+import { useEffect, useMemo, useState } from "react";
 import { _Modalize, DesistArea } from "../schedules/testSchedule";
 import { QuyTrinhServices } from "../../services/danhmuc.service";
+import { useSelector } from "react-redux";
 
 const SIZE_ICON = 24;
 
@@ -49,6 +50,7 @@ export default function AttendancePage() {
     Nam: null,
     Ky: listKy[0].value,
   });
+  const currentUser = useSelector((state) => state.currentUser);
 
   const [visible, setVisible] = useState(false);
 
@@ -63,7 +65,11 @@ export default function AttendancePage() {
   const getListDiemDanh = async () => {
     let res = await QuyTrinhServices.SinhVien.GetDiemDanhOfSinhVien(object);
     if (res) {
-      // console.log("res", res);
+      console.log("currentUser", currentUser.Id);
+      console.log("====================================");
+      console.log("object", object);
+      console.log("====================================");
+      console.log("res", res);
       setListDiemDanh(res);
     }
   };
@@ -71,6 +77,10 @@ export default function AttendancePage() {
   useEffect(() => {
     getListDiemDanh();
   }, [object]);
+
+  const getListNam = useMemo(() => {
+    return LISTNAM();
+  }, []);
 
   return (
     <SafeAreaView style={[styles.container]}>
@@ -86,7 +96,7 @@ export default function AttendancePage() {
                 <TouchableOpacity style={styles.justify_content_between}>
                   <View style={styles.left}>
                     <DropDown
-                      data={listNam}
+                      data={getListNam}
                       object={object}
                       setObject={setObject}
                       header={"Nam"}

@@ -79,7 +79,7 @@ export const ListEmptyComponent = (
       height: height / 2,
     }}
   >
-    <Text>Chưa có tin nhắn...</Text>
+    <Text>Không có dữ liệu...</Text>
   </View>
 );
 const ListFooterComponent = (
