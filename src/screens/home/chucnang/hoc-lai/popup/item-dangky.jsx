@@ -1,11 +1,45 @@
 import React from "react";
-import { Text, StyleSheet, View } from 'react-native';
+import { Text, StyleSheet, View, Image } from 'react-native';
 import { Entypo } from "@expo/vector-icons";
 import { Screens } from "../../../../../common/constant";
 import { useNavigation } from "@react-navigation/native";
+import { QuyTrinhServices } from "../../../../../services/danhmuc.service";
+import { useEffect } from "react";
+import { useState } from "react";
 
 
 export default function Items({ title, type }) {
+    const [item, setitem] = useState({
+        TenMonHoc: 'MH - Đại số tuyến tính',
+        DiemTongKet: 4.5,
+        SoTinChi: 3,
+        IdSinhVien: '',
+        IddmMonHoc: ''
+    })
+    const GetDanhSachMonHocLaiCuaSinhVien = async () => {
+        console.log(1);
+        let data = {
+            "IdSinhVien": "",
+            "IddmMonHoc": "",
+            "IdDSMonHoc": ""
+        }
+        if (type === 'DANGKY') {
+            let res = await QuyTrinhServices.ThongTinCaNhan.GetDanhSachMonHocLaiCuaSinhVien(data);
+            if (res) {
+                // setitem(res)
+            }
+        } else {
+            let res = await QuyTrinhServices.ThongTinCaNhan.GetDanhSachQuyTrinhDangKyHocLaiCuaSinhVien(data);
+            if (res) {
+                // setitem(res)
+            }
+        }
+    }
+
+    useEffect(() => {
+        GetDanhSachMonHocLaiCuaSinhVien();
+    }, []);
+
     const nav = useNavigation();
     return (
         <View style={styles.flex}>
@@ -13,18 +47,30 @@ export default function Items({ title, type }) {
                 <View style={styles.header}>
                     <View style={styles.flex}>
                         <Entypo name="open-book" size={24} color="black" />
-                        <Text style={styles.item_title_header}>MH - Đại số tuyến tính </Text>
+                        <Text style={styles.item_title_header}> {item.TenMonHoc}</Text>
                     </View>
                 </View>
                 <View style={styles.item_content}>
                     <View style={styles.flex}>
                         <Entypo name="layers" size={22} color="black" />
-                        <Text style={styles.item_diem}>Điểm tổng kết</Text>
+                        <Text style={styles.item_diem}>Điểm tổng kết: {item.DiemTongKet}</Text>
                     </View>
                     <View style={styles.flex}>
                         <Entypo name="pencil" size={22} color="black" />
-                        <Text style={styles.item_diem}>Tín chỉ</Text>
+                        <Text style={styles.item_diem}>Tín chỉ : {item.SoTinChi}</Text>
                     </View>
+                    {
+                        item.TenTrangThai ?
+                            <View style={styles.flex}>
+                                <Image
+                                    source={require("../../../../../resources/trang-thai.png")}
+                                    style={{ width: 20, height: 20, }}
+                                    resizeMode="stretch"
+                                />
+                                <Text style={styles.item_diem}>{item.TenTrangThai} </Text>
+                            </View>
+                            : null
+                    }
                 </View>
             </View>
             <View style={styles.item_right}>
@@ -32,7 +78,8 @@ export default function Items({ title, type }) {
                     style={{ color: '#fff' }}
                     onPress={() => {
                         nav.navigate(Screens.PhieuDangKy, {
-                            type: type
+                            type: type,
+                            item: item,
                         })
                     }}
                 >
