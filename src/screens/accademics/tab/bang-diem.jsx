@@ -19,11 +19,6 @@ import { FlatList } from "react-native";
 import { createGuid } from "../../../common/common";
 import SearchBar from "../share-componet/Searchbar";
 import CheckBox from "../share-componet/check";
-
-export const listNam = [
-  { label: "2022-2023", value: "1" },
-  { label: "2023-2024", value: "2" },
-];
 export const listKy = [
   { label: "Kỳ I", value: "I" },
   { label: "Kỳ II", value: "II" },
@@ -47,7 +42,18 @@ export default function BangDiem() {
       setLstMonHoc(res.listMonHoc);
     }
   };
-
+  const [listNam, setlistNam] = useState([
+    { label: 'Tất cả', value: 0 },
+  ]);
+  const getListNam = () => {
+    for (let i = new Date().getFullYear() - 10; i <= (new Date().getFullYear() + 20); i++) {
+      listNam.push({ value: i, label: `${i}-${i + 1}` });
+    }
+    setlistNam(listNam);
+  }
+  useEffect(() => {
+    getListNam()
+  }, [])
   useEffect(() => {
     getData();
   }, [object]);

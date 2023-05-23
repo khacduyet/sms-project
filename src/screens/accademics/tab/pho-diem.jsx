@@ -10,11 +10,6 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { QuyTrinhServices } from '../../../services/danhmuc.service';
 
-const listNam = [
-  { label: 'Tất cả', value: '0' },
-  { label: '2022-2023', value: '1' },
-  { label: '2023-2024', value: '2' },
-];
 const listKy = [
   { label: 'Kỳ I', value: 'I' },
   { label: 'Kỳ II', value: 'II' },
@@ -25,11 +20,6 @@ const listChiTiet = [
   { TenLabel: 'Khá', SoLuong: 42, isCheck: true, },
   { TenLabel: 'Giỏi', SoLuong: 19, isCheck: false, },
   { TenLabel: 'Xuất sắc', SoLuong: 19, isCheck: false, },
-];
-
-const dataMonHoc = [
-  { label: 'Kỳ I', value: '123' },
-  { label: 'Kỳ II', value: '22' },
 ];
 
 export default function PhoDiem() {
@@ -75,6 +65,18 @@ export default function PhoDiem() {
       Ky: null,
     })
   }
+  const [listNam, setlistNam] = useState([
+    { label: 'Tất cả', value: 0 },
+  ]);
+  const getListNam = () => {
+    for (let i = new Date().getFullYear() - 10; i <= (new Date().getFullYear() + 20); i++) {
+      listNam.push({ value: i, label: `${i}-${i + 1}` });
+    }
+    setlistNam(listNam);
+  }
+  useEffect(() => {
+    getListNam()
+  }, [])
 
   useEffect(() => {
     getData()
@@ -119,19 +121,26 @@ export default function PhoDiem() {
             <Radio _objCtx={_objCtx} />
           </View>
           <View>
-            <ItemPhoDiem data={data} title={'Điểm trung bình tích lũy'} />
+            {
+              data.length ? <ItemPhoDiem data={listChiTiet} title={'Điểm trung bình tích lũy'} />
+                : <ItemData />
+            }
+            {/* <ItemPhoDiem data={listChiTiet} title={'Điểm trung bình tích lũy'} /> */}
           </View>
         </View>
         <View style={styles.marginBottom_16}>
           <DropDown data={dataMonHocByKy} object={object} setObject={setObject} header={'IdDsMonhoc'} />
         </View>
         {/* ---- View điểm môn học ----- */}
-        <View style={{paddingBottom:210}}>
+        <View style={{ paddingBottom: 210 }}>
           <View style={styles.flex}>
             <Radio _objCtx={_objCtxMonHoc} />
           </View>
           <View>
-            <ItemPhoDiem data={data} title={'Điểm tổng kết môn học'} />
+          {
+              data.length ? <ItemPhoDiem data={listChiTiet} title={'Điểm tổng kết môn học'} />
+                : <ItemData />
+            }
           </View>
         </View>
       </ScrollView>
@@ -172,5 +181,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   }
 });
+
+const ItemData = () => {
+  return (
+    <View style={{flexDirection:'row', alignItems:'center', justifyContent:'center', padding:20}}>
+      <Text>Chưa có dữ liệu!</Text>
+    </View>
+  )
+}
 
 
