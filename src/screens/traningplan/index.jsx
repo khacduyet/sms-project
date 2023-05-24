@@ -163,7 +163,7 @@ export default function TrainingPlanPage() {
             <View style={[s.header]}>
               <Text style={[s.text]}>Kế hoạch đào tạo:</Text>
               <TextInput
-                disabled
+                editable={false}
                 value={ctdt}
                 style={{
                   fontWeight: "bold",
@@ -356,7 +356,7 @@ const RowContainer = ({ _item, props }) => {
               style={[tbl.cell, { flex: sizeWidthColumn.Ten }]}
               textStyle={{ paddingLeft: 5 }}
             >
-              <Text style={{ fontWeight: "bold" }}>{`${x.MaMonHoc}\n`}</Text>
+              <Text style={{}}>{`${x.MaMonHoc}\n`}</Text>
               <Text>{x.TenMonHoc}</Text>
             </DataTable.Cell>
             <DataTable.Cell
@@ -392,6 +392,7 @@ const RowContainer = ({ _item, props }) => {
             >
               <Checkbox.Android
                 value={true}
+                color={Colors.Primary}
                 status={x.isHoanThanh ? "checked" : "unchecked"}
               />
             </DataTable.Cell>
@@ -645,5 +646,6 @@ const s = StyleSheet.create({
   },
   text: {
     fontSize: 16,
+    fontWeight: 600,
   },
 });

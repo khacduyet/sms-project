@@ -627,7 +627,7 @@ const AnotherBoxChat = ({ props }) => {
       <View style={[b.container]}>
         <View style={[b.wrap]}>
           <View style={{ width: 40 }}>
-            {!props.isOnePerson && (
+            {(!props.isOnePerson || props.type.isAnotherDate) && (
               <ThisAvatar
                 // url={"/"}
                 size={40}

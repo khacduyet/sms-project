@@ -8,8 +8,8 @@ export function Button({ icon, text, onPress, style, disabled }) {
       <TouchableOpacity
         style={[
           s.button,
-          style?.button,
           {
+            ...style?.button,
             opacity: disabled ? 0.7 : 1,
           },
         ]}
