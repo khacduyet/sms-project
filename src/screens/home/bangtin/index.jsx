@@ -48,7 +48,7 @@ export default function BangTinComponent({ props }) {
         {fakeData.map((x, index) => {
           return (
             <TouchableOpacity key={x.Title}>
-              <Card>
+              <Card mode="outlined">
                 <Card.Cover borderRadius={0} source={{ uri: x.Images }} />
                 <Card.Content>
                   <Text

@@ -27,6 +27,7 @@ import {
   width,
 } from "../../common/constant";
 import { Avatar } from "react-native-paper";
+import { Button } from "../../common/components";
 
 export default function HomeMore() {
   const currentUser = useSelector((state) => state.currentUser);
@@ -189,7 +190,18 @@ function BodySetting() {
         })}
 
         <View style={[bodys.wrapper, { marginTop: 40, marginBottom: 40 }]}>
-          <TouchableOpacity
+          <Button
+            icon={
+              <MaterialCommunityIcons name="logout" size={35} color="red" />
+            }
+            text={`Đăng xuất`}
+            style={{
+              button: bodys.buttonComponentLogout,
+              buttonText: bodys.wrapperTextLogout,
+            }}
+            onPress={handleLogout}
+          />
+          {/* <TouchableOpacity
             style={[bodys.buttonComponent, bodys.buttonComponentLogout]}
             onPress={handleLogout}
           >
@@ -199,7 +211,7 @@ function BodySetting() {
                 Đăng xuất
               </Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </View>

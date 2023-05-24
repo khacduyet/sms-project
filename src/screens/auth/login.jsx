@@ -415,7 +415,7 @@ function BodyLogin({
         <View style={{ marginTop: 0 }}>
           <View style={[{ alignItems: "center", justifyContent: "center" }]}>
             <TouchableOpacity
-              style={{ width: "80%", height: "100%", paddingLeft: 10 }}
+              style={{ width: "80%", height: "100%" }}
               onPress={handleForgotPassword}
             >
               <Text

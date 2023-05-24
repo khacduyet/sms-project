@@ -157,7 +157,7 @@ const COMPONENTS_WITHPAGES = [
         onPress: (nav) => {},
       },
       {
-        label: `Chuyển lớp/chuyển ngành`,
+        label: `Chuyển lớp/ngành`,
         icon: (
           <Image
             source={require("../../../resources/icons/color-change.png")}
@@ -195,7 +195,11 @@ const COMPONENTS_WITHPAGES = [
 export default function ChucNangComponent() {
   return (
     <View style={[styles.container]}>
-      <Swiper>
+      <Swiper
+        style={{
+          height: 240,
+        }}
+      >
         {COMPONENTS_WITHPAGES.map((x, index) => {
           return <Component_Page key={x.label} lstData={x.components} {...x} />;
         })}
@@ -229,12 +233,14 @@ const Component_Page = ({ lstData }) => {
   );
 };
 
+const height_container = 260;
 const styles = StyleSheet.create({
   container: {
-    marginTop: 10,
-    height: 260,
+    marginTop: 15,
+    height: height_container,
     marginLeft: 10,
     marginRight: 10,
+    marginBottom: 0,
   },
   wrapper: {},
   shadow: {
