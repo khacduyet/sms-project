@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
+import { initialAccount } from "../screens/auth/login";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -56,7 +57,9 @@ export function TabNavigatior() {
 
   useEffect(() => {
     if (currentUser && currentUser?.Error === 0) {
-      nav.navigate(Screens.Login);
+      nav.navigate(Screens.Login, {
+        _account: initialAccount,
+      });
     }
   }, [currentUser]);
 

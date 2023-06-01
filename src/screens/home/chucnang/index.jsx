@@ -199,6 +199,7 @@ export default function ChucNangComponent() {
         style={{
           height: 240,
         }}
+        paginationStyle={{ bottom: 5 }}
       >
         {COMPONENTS_WITHPAGES.map((x, index) => {
           return <Component_Page key={x.label} lstData={x.components} {...x} />;
@@ -233,7 +234,7 @@ const Component_Page = ({ lstData }) => {
   );
 };
 
-const height_container = 260;
+const height_container = 235;
 const styles = StyleSheet.create({
   container: {
     marginTop: 15,

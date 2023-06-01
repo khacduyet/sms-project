@@ -34,9 +34,10 @@ const Page2 = () => {
       </View>
       <View style={[s.wrapperView]}>
         <TextInput
-          variant="standard"
+          // variant="standard"
           style={[s.textInput]}
           value={url}
+          color="#000"
           onChangeText={setUrl}
         />
       </View>
@@ -88,7 +89,7 @@ const s = StyleSheet.create({
     padding: 20,
   },
   wrapper2: {
-    backgroundColor: "#2FF0FA",
+    backgroundColor: "#4891ff",
     flexDirection: "column",
   },
   wrapperView: {
@@ -98,7 +99,7 @@ const s = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    fontSize: 30,
+    fontSize: 25,
     color: "#fff",
     fontWeight: 700,
     textAlign: "center",
@@ -117,14 +118,14 @@ const s = StyleSheet.create({
 });
 
 const slides = [
-  {
-    page: 1,
-    view: (key) => (
-      <View style={[s.wrapper, s.wrapper1]} key={key}>
-        <Text style={[s.text]}>Chào mừng bạn đến với ứng dụng Sinh viên</Text>
-      </View>
-    ),
-  },
+  // {
+  //   page: 1,
+  //   view: (key) => (
+  //     <View style={[s.wrapper, s.wrapper1]} key={key}>
+  //       <Text style={[s.text]}>Chào mừng bạn đến với ứng dụng Sinh viên</Text>
+  //     </View>
+  //   ),
+  // },
   {
     page: 2,
     view: (key) => <Page2 key={key} />,

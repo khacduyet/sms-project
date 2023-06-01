@@ -48,6 +48,12 @@ export default function LoginPage({ navigation }) {
   const loading = useSelector((state) => state.loading);
   const [fingerPrint, setFingerPrint] = useState(false);
   const currentUser = useSelector((state) => state.currentUser);
+  const [firstLoading, setFirstLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setFirstLoading(false);
+    }, 2000);
+  }, []);
   const dispatch = useDispatch();
 
   //#region Đăng nhập bằng vân tay
@@ -75,7 +81,7 @@ export default function LoginPage({ navigation }) {
 
   useEffect(() => {
     getFinger();
-  }, []);
+  }, [firstLoading]);
 
   useEffect(() => {
     async () => {
@@ -89,6 +95,9 @@ export default function LoginPage({ navigation }) {
   };
 
   const handleBiometricAuth = async () => {
+    if (firstLoading) {
+      return;
+    }
     const isBiometricAvail = await LocalAuthentication.hasHardwareAsync();
 
     if (!isBiometricAvail)
@@ -135,6 +144,14 @@ export default function LoginPage({ navigation }) {
   };
   //#endregion Đăng nhập bằng vân tay
 
+  if (firstLoading) {
+    return (
+      <>
+        <Loading />
+      </>
+    );
+  }
+
   return (
     <View style={{ position: "relative" }}>
       {loading.loading && <Loading />}
@@ -166,7 +183,7 @@ const alertComponent = (title, mess, btnTxt, btnFunc) => {
   ]);
 };
 
-const initialAccount = {
+export const initialAccount = {
   username: "",
   password: "",
 };
@@ -179,6 +196,7 @@ function BodyLogin({
   fingerPrint,
   setFingerPrint,
 }) {
+  const route = useRoute();
   const nav = useNavigation();
   const [account, setAccount] = useState(initialAccount);
   const [submitForm, setSubmitForm] = useState(false);
@@ -192,7 +210,6 @@ function BodyLogin({
     info: currentUser && currentUser?.Id ? currentUser : null,
   });
   const dispatch = useDispatch();
-  const route = useRoute();
 
   const onChangeText = (value, prop) => {
     if (value !== undefined && value !== null) {
@@ -260,6 +277,7 @@ function BodyLogin({
       }
       if (submitForm) {
         if (currentUser && currentUser.TenNhanVien) {
+          setAccount(initialAccount);
           navigation.navigate(Screens.Home);
           dispatch(setLoading(false));
         }
@@ -414,6 +432,11 @@ function BodyLogin({
       <View style={{ height: 40 }}>
         <View style={{ marginTop: 0 }}>
           <View style={[{ alignItems: "center", justifyContent: "center" }]}>
+            {/* <View style={{ width: "80%", height: "40%" }}>
+              <Text style={{ color: "red" }}>
+                Sai tên tài khoản hoặc mật khẩu
+              </Text>
+            </View> */}
             <TouchableOpacity
               style={{ width: "80%", height: "100%" }}
               onPress={handleForgotPassword}
@@ -592,7 +615,8 @@ const styles = {
     height: 50,
     borderColor: "grey",
     fontSize: 18,
-    padding: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
     color: "#ccc",
     // textAlign: "center",
   },
