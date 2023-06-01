@@ -35,7 +35,7 @@ export default function LichHocHomNayComponent({ props }) {
     <View style={[styles.container]}>
       <ImageBackground
         style={{ width: "100%", height: "100%", borderRadius: 0 }}
-        source={require("../../../resources/bg-lichhoc.png")}
+        source={require("../../../resources/bg-lichhoc-1.png")}
         resizeMode="stretch"
       >
         <View style={[styles.header]}>
