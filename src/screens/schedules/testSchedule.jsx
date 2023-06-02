@@ -12,7 +12,7 @@ import HeaderBack from "../../common/header";
 import { Modalize } from "react-native-modalize";
 import { useRef, useState } from "react";
 import { items } from "./index";
-import { createGuid } from "../../common/common";
+import { _stl, createGuid } from "../../common/common";
 import { FontAwesome } from "@expo/vector-icons";
 import { Divider } from "react-native-paper";
 import { Backdrop } from "react-native-backdrop";
@@ -212,7 +212,7 @@ export default function TestSchedule({ route }) {
   };
 
   return (
-    <SafeAreaView style={[styles.container]}>
+    <SafeAreaView style={[styles.container, _stl._container]}>
       <View>
         <HeaderBack header={`ĐIỀU KIỆN THI KẾT THÚC MÔN\n` + title} />
         {data.map((x, index) => {

@@ -17,6 +17,7 @@ import Toast from "react-native-root-toast";
 import { useDispatch } from "react-redux";
 import { logoutSubmit } from "../../../redux/actions/loginAction";
 import { TextInput } from "@react-native-material/core";
+import { _stl } from "../../../common/common";
 
 export default function ChangePassword() {
   const [isShow, setIsShow] = useState(true);
@@ -146,7 +147,7 @@ export default function ChangePassword() {
   };
 
   return (
-    <SafeAreaView style={[styles.container]}>
+    <SafeAreaView style={[styles.container, _stl._container]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}

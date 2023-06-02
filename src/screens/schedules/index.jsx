@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { FlatList, Image, StyleSheet } from "react-native";
 import { SafeAreaView, Text, View, TouchableOpacity } from "react-native";
-import { createGuid, DateToFirstLastDateInMonth } from "../../common/common";
+import {
+  _stl,
+  createGuid,
+  DateToFirstLastDateInMonth,
+} from "../../common/common";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -28,7 +32,7 @@ const SIZE_ICON = 25;
 export default function SchedulePage() {
   const [tabIndex, setTabIndex] = useState(0);
   return (
-    <SafeAreaView>
+    <SafeAreaView style={[_stl._container]}>
       <View style={[tabs.container]}>
         <View style={[tabs.tab]}>
           <TouchableOpacity

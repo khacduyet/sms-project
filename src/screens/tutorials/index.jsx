@@ -6,6 +6,7 @@ import Swiper from "react-native-swiper";
 import { Colors, Screens, TextButton } from "../../common/constant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "../../common/components";
+import { _stl } from "../../common/common";
 
 const Page2 = () => {
   const nav = useNavigation();
@@ -136,7 +137,7 @@ export default function TutorialPreview() {
   const swiper = React.createRef();
   const [page, setPage] = useState(0);
   return (
-    <View style={[s.container]}>
+    <View style={[s.container, _stl._container]}>
       {page !== slides.length - 1 && (
         <TouchableOpacity
           style={[s.buttonSkip]}

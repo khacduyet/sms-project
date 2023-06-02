@@ -24,6 +24,19 @@ export const listKy = [
   { label: "Kỳ II", value: "II" },
 ];
 
+export const LISTNAM = () => {
+  const currentDate = new Date();
+  const _YEAR = currentDate.getFullYear();
+  let arr = [...Array(_YEAR - 2020 + 10)].map((x, index) => {
+    let _time = 2020 + index;
+    return {
+      label: `${_time}-${_time + 1}`,
+      value: _time,
+    };
+  });
+  return arr;
+};
+
 export default function BangDiem() {
   const [object, setObject] = useState({
     Nam: null,

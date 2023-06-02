@@ -26,6 +26,7 @@ import { Entypo } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import {
+  _stl,
   formatDateStringGMT,
   getFirstCharacterByName,
   getTypeToDate,
@@ -131,7 +132,7 @@ export default function ChatPage() {
   }, [filter]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={[_stl._container]}>
       <View style={[s.container]}>
         <View style={[s.header]}>
           <Text style={[s.headerText]}>Danh sách trò chuyện</Text>
@@ -426,7 +427,7 @@ export const ChatPersonalPage = ({ route }) => {
   //#endregion API
 
   return (
-    <SafeAreaView style={[cpp.container]}>
+    <SafeAreaView style={[cpp.container, _stl._container]}>
       <HeaderTitle
         props={{ currentRoom: currentRoom, currentUser: currentUser }}
       />
@@ -952,7 +953,7 @@ export const ChatCustomPage = ({ route }) => {
     setVisible(false);
   };
   return (
-    <SafeAreaView style={tc.container}>
+    <SafeAreaView style={[tc.container, _stl._container]}>
       <HeaderBack header={Screens.TuyChon} />
       <View style={[tc.infoArea]}>
         <ThisAvatar size={80} name={props._thisRoom.TenRoom} />

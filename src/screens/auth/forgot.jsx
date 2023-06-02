@@ -20,6 +20,7 @@ import {
 import { current } from "@reduxjs/toolkit";
 import { useNavigation } from "@react-navigation/native";
 import {
+  _stl,
   hideMaskEmailOrPhone,
   returnMessage,
   StatusCode,
@@ -413,7 +414,7 @@ export default function ForgotPassword({ route }) {
 
   return (
     <>
-      <SafeAreaView style={[styles.container]}>
+      <SafeAreaView style={[styles.container, _stl._container]}>
         <HeaderBack header={Screens.ForgotPassword} />
         <View style={[styles.wrapper]}>
           {/* <Stepper
