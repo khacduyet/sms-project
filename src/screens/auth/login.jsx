@@ -29,6 +29,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { TextInput } from "@react-native-material/core";
 import { Ionicons } from "@expo/vector-icons";
 import { ToastMessage } from "../../common/components";
+import { _stl } from "../../common/common";
 
 export default function LoginPage({ navigation }) {
   const handleGetUrl = async () => {
@@ -47,7 +48,9 @@ export default function LoginPage({ navigation }) {
   const [hasBiometric, setHasBiometric] = useState(null);
   const loading = useSelector((state) => state.loading);
   const [fingerPrint, setFingerPrint] = useState(false);
-  const currentUser = useSelector((state) => state.currentUser);
+  const [account, setAccount] = useState(initialAccount);
+  const [refresh, setRefresh] = useState(false);
+
   const [firstLoading, setFirstLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -153,12 +156,19 @@ export default function LoginPage({ navigation }) {
   }
 
   return (
-    <View style={{ position: "relative" }}>
+    <View style={[{ position: "relative" }, _stl._container]}>
       {loading.loading && <Loading />}
       <SafeAreaView style={[{ margin: 10 }]}>
         <KeyboardAvoidingView>
-          <View style={[styles.container, {}]}>
-            <HeaderLogin keyboardShow={keyboardShow} navigation={navigation} />
+          <View style={[styles.container]}>
+            <HeaderLogin
+              keyboardShow={keyboardShow}
+              navigation={navigation}
+              account={account}
+              setAccount={setAccount}
+              refresh={refresh}
+              setRefresh={setRefresh}
+            />
             <BodyLogin
               keyboardShow={keyboardShow}
               navigation={navigation}
@@ -166,6 +176,10 @@ export default function LoginPage({ navigation }) {
               handleBiometricAuth={handleBiometricAuth}
               fingerPrint={fingerPrint}
               setFingerPrint={setFingerPrint}
+              account={account}
+              setAccount={setAccount}
+              refresh={refresh}
+              setRefresh={setRefresh}
             />
           </View>
         </KeyboardAvoidingView>
@@ -195,13 +209,17 @@ function BodyLogin({
   handleBiometricAuth,
   fingerPrint,
   setFingerPrint,
+  account,
+  setAccount,
+  refresh,
+  setRefresh,
 }) {
   const route = useRoute();
   const nav = useNavigation();
-  const [account, setAccount] = useState(initialAccount);
+  // const [account, setAccount] = useState(initialAccount);
   const [submitForm, setSubmitForm] = useState(false);
   const [showPass, setShowPass] = useState(false);
-  const [refresh, setRefresh] = useState(false);
+  // const [refresh, setRefresh] = useState(false);
 
   const tokenReducer = useSelector((state) => state.tokenReducer);
   const currentUser = useSelector((state) => state.currentUser);
@@ -322,11 +340,11 @@ function BodyLogin({
     <View
       style={[
         {
-          height: keyboardShow ? "50%" : "20%",
+          height: keyboardShow ? "30%" : "20%",
+          flex: keyboardShow ? 3 : 4,
           width: "100%",
           flexDirection: "column",
         },
-        styles.body,
       ]}
     >
       {userRemember.hasRemember ? (
@@ -342,17 +360,17 @@ function BodyLogin({
                 }
                 resizeMode="stretch"
               />
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={[styles.buttonLogout]}
                 onPress={handleLogout}
               >
                 <SimpleLineIcons name="logout" size={24} color="red" />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
             <Text
               style={[
                 {
-                  paddingTop: 10,
+                  paddingTop: 5,
                   fontSize: 16,
                 },
               ]}
@@ -544,23 +562,72 @@ function BodyLogin({
 }
 
 // #region
-function HeaderLogin({ keyboardShow, navigation }) {
+function HeaderLogin({
+  keyboardShow,
+  navigation,
+  account,
+  setAccount,
+  refresh,
+  setRefresh,
+}) {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.currentUser);
+  const [userRemember, setUserRemember] = useState({
+    hasRemember: currentUser && currentUser?.Id ? true : false,
+    info: currentUser && currentUser?.Id ? currentUser : null,
+  });
   const handleChangeServer = async () => {
     // await AsyncStorage.removeItem("BASE_URL");
     navigation.navigate(Screens.Tutorials);
   };
+
+  const handleLogout = () => {
+    Alert.alert("Thông báo", "Bạn có chắc muốn đổi tài khoản?", [
+      {
+        text: TextButton.Cancel,
+        onPress: () => {},
+      },
+      {
+        text: TextButton.Accept,
+        onPress: () => {
+          dispatch(logoutSubmit());
+          setAccount(initialAccount);
+          setRefresh(!refresh);
+        },
+      },
+    ]);
+  };
+  useEffect(() => {
+    let userRem = {
+      hasRemember: currentUser && currentUser?.Id ? true : false,
+      info: currentUser && currentUser?.Id ? currentUser : null,
+    };
+    setUserRemember(userRem);
+  }, [currentUser?.Id]);
+
   return (
     <View
       style={[
         {
           width: "100%",
           height: keyboardShow ? "40%" : "20%",
+          flex: keyboardShow ? 1.5 : 1,
           justifyContent: "center",
           alignItems: "center",
         },
-        styles.header,
       ]}
     >
+      {userRemember.hasRemember && (
+        <>
+          <TouchableOpacity
+            style={[styles.buttonLogout]}
+            onPress={handleLogout}
+          >
+            <SimpleLineIcons name="logout" size={20} color="red" />
+            <Text style={{ paddingLeft: 4 }}>Đăng xuất</Text>
+          </TouchableOpacity>
+        </>
+      )}
       <TouchableOpacity
         style={{ position: "absolute", right: 10, top: 10 }}
         onPress={() => {
@@ -658,8 +725,11 @@ const styles = {
   },
   buttonLogout: {
     position: "absolute",
-    left: 0,
-    bottom: 0,
-    backgroundColor: "#fff",
+    left: 10,
+    top: 10,
+    // backgroundColor: "#fff",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
 };

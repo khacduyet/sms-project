@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FontAwesome } from "@expo/vector-icons";
 import { Badge } from "react-native-paper";
 import { getBadgeNotify } from "../../redux/actions/notifyAction";
-import { formatDateStringGMT } from "../../common/common";
+import { _stl, formatDateStringGMT } from "../../common/common";
 import { DMGeneralServices } from "../../services/danhmuc.service";
 import { ToastMessage } from "../../common/components";
 
@@ -212,7 +212,7 @@ export function NotificationPage() {
   };
 
   return (
-    <SafeAreaView style={[]}>
+    <SafeAreaView style={[_stl._container]}>
       <HeaderBack
         header={`${Screens.Notification} ${
           notify?.Count > 0 ? `(${notify?.Count})` : ``
@@ -246,33 +246,35 @@ const EmptyNotification = () => {
 
 const ItemNotification = ({ item, seenNotification }) => {
   return (
-    <TouchableOpacity
-      onPress={() => {
-        if (item.TrangThai !== 2) {
-          seenNotification(item);
-        }
-      }}
-    >
-      <View style={[notifies.itemNoti]}>
-        <View style={[notifies.header]}>
-          <Text style={[notifies.headerText]}>
-            {formatDateStringGMT(item.Created, "dd/mm/yyyy hh:mm")}
-          </Text>
-          {item.TrangThai !== 2 && (
-            <Entypo
-              name="dot-single"
-              size={45}
-              color="#3399FF"
-              style={[notifies.dots]}
-            />
-          )}
+    <View>
+      <TouchableOpacity
+        onPress={() => {
+          if (item.TrangThai !== 2) {
+            seenNotification(item);
+          }
+        }}
+      >
+        <View style={[notifies.itemNoti]}>
+          <View style={[notifies.header]}>
+            <Text style={[notifies.headerText]}>
+              {formatDateStringGMT(item.Created, "dd/mm/yyyy hh:mm")}
+            </Text>
+            {item.TrangThai !== 2 && (
+              <Entypo
+                name="dot-single"
+                size={45}
+                color="#3399FF"
+                style={[notifies.dots]}
+              />
+            )}
+          </View>
+          <View style={[notifies.body]}>
+            <Text style={[notifies.title]}>{item.TieuDe}</Text>
+            <Text style={[notifies.text]}>{item.NoiDung}</Text>
+          </View>
         </View>
-        <View style={[notifies.body]}>
-          <Text style={[notifies.title]}>{item.TieuDe}</Text>
-          <Text style={[notifies.text]}>{item.NoiDung}</Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -351,7 +353,7 @@ const notifies = {
     width: "95%",
     borderRadius: 5,
     // height: 100,
-    backgroundColor: "#fff",
+    backgroundColor: "#f5f5f5",
     marginTop: 5,
     marginBottom: 5,
     marginLeft: 10,

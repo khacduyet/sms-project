@@ -5,10 +5,11 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import HeaderBack from "../../../common/header";
 import { Screens } from "../../../common/constant";
 import TabThongTin from "../personal/screen/tab-thong-tin";
+import { _stl } from "../../../common/common";
 
 export default function Canhan({ navigation }) {
   return (
-    <SafeAreaView style={[styles.container]}>
+    <SafeAreaView style={[styles.container, _stl._container]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}

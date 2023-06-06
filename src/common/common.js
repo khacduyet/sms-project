@@ -183,3 +183,9 @@ export function getTypeToDate(datestring) {
     }
     return formatDateStringGMT(date, 'dd/mm/yyyy')
 }
+
+export const _stl = {
+    _container: {
+        backgroundColor: "#fff"
+    }
+}

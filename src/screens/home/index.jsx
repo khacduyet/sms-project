@@ -19,6 +19,7 @@ import ChucNangComponent from "./chucnang";
 import MonHocCanhBaoComponent from "./canhbao";
 import BangTinComponent from "./bangtin";
 import ChatBotNav from "../../common/footer";
+import { _stl } from "../../common/common";
 
 export default function HomePage({ navigation }) {
   const currentUser = useSelector((state) => state.currentUser);
@@ -57,7 +58,7 @@ export default function HomePage({ navigation }) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <View style={[styles.container]}>
+        <View style={[styles.container, _stl._container]}>
           <LichHocHomNayComponent
             props={{
               refreshing: {

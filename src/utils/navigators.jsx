@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { initialAccount } from "../screens/auth/login";
+import { _stl } from "../common/common";
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -65,7 +66,11 @@ export function TabNavigatior() {
 
   return (
     <SafeAreaView
-      style={{ width: "100%", height: Platform.OS === "ios" ? "105%" : "100%" }}
+      style={{
+        width: "100%",
+        height: Platform.OS === "ios" ? "105%" : "100%",
+        ..._stl._container,
+      }}
     >
       <Tab.Navigator
         initialRouteName="HomeIndex"

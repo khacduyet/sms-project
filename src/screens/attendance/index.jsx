@@ -17,6 +17,7 @@ import { useEffect, useMemo, useState } from "react";
 import { _Modalize, DesistArea } from "../schedules/testSchedule";
 import { QuyTrinhServices } from "../../services/danhmuc.service";
 import { useSelector } from "react-redux";
+import { _stl } from "../../common/common";
 
 const SIZE_ICON = 24;
 
@@ -65,11 +66,6 @@ export default function AttendancePage() {
   const getListDiemDanh = async () => {
     let res = await QuyTrinhServices.SinhVien.GetDiemDanhOfSinhVien(object);
     if (res) {
-      console.log("currentUser", currentUser.Id);
-      console.log("====================================");
-      console.log("object", object);
-      console.log("====================================");
-      console.log("res", res);
       setListDiemDanh(res);
     }
   };
@@ -83,7 +79,7 @@ export default function AttendancePage() {
   }, []);
 
   return (
-    <SafeAreaView style={[styles.container]}>
+    <SafeAreaView style={[styles.container, _stl._container]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.container}

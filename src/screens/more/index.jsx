@@ -28,6 +28,7 @@ import {
 } from "../../common/constant";
 import { Avatar } from "react-native-paper";
 import { Button } from "../../common/components";
+import { _stl } from "../../common/common";
 
 export default function HomeMore() {
   const currentUser = useSelector((state) => state.currentUser);
@@ -54,7 +55,7 @@ export default function HomeMore() {
   }, [currentUser.LinkAnhDaiDien]);
 
   return (
-    <SafeAreaView style={[styles.container]}>
+    <SafeAreaView style={[styles.container, _stl._container]}>
       <View style={[styles.wrapper]}>
         <View style={[styles.navTop]}>
           <ImageBackground
@@ -177,7 +178,7 @@ function BodySetting() {
   };
 
   return (
-    <View style={[bodys.container]}>
+    <View style={[bodys.container, _stl._container]}>
       <ScrollView
         style={[
           {
@@ -290,7 +291,7 @@ const bodys = {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#F3F3F3",
     borderRadius: 10,
   },
   buttonComponentLogout: {

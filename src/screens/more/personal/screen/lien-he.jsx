@@ -35,7 +35,6 @@ export default function LienHe() {
   const GetSoYeuLyLichSinhVien = async () => {
     let res = await QuyTrinhServices.ThongTinCaNhan.GetSoYeuLyLichSinhVien();
     if (res) {
-      console.log("res", res);
       // setItemSYLL(res.itemSYLL)
       setSyll(res);
     }

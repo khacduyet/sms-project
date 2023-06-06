@@ -215,9 +215,9 @@ const Component_Page = ({ lstData }) => {
     <View style={[components.container]}>
       {lstData.map((x, idx) => {
         return (
-          <View style={[components.box, { ...styles.shadow }]} key={idx}>
+          <View style={[components.box]} key={idx}>
             <TouchableOpacity
-              style={[components.item]}
+              style={[components.item, { ...styles.shadow }]}
               onPress={() => x.onPress(nav)}
             >
               <View style={[components.itemView]}>
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     shadowOffset: { height: 2, width: 1 }, // IOS
     shadowOpacity: 2, // IOS
     shadowRadius: 2, //IOS
-    elevation: 20, // Android
+    elevation: 10, // Android
   },
 });
 const components = StyleSheet.create({
