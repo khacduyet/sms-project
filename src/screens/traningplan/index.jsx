@@ -85,7 +85,6 @@ export default function TrainingPlanPage() {
       setIsLoading(false);
     }
     if (_NgoaiHoc) {
-      console.log("_NgoaiHoc", _NgoaiHoc);
       setListNgoaiHoc(_NgoaiHoc);
     }
   };
@@ -245,6 +244,8 @@ const mh = StyleSheet.create({
   },
 });
 
+const _PADDINGLEFT_CELL = 5;
+
 const TabMonHoc = ({ props }) => {
   return (
     <View>
@@ -352,13 +353,14 @@ const RowContainer = ({ _item, props }) => {
             >
               {x.STT}
             </DataTable.Cell>
-            <DataTable.Cell
-              style={[tbl.cell, { flex: sizeWidthColumn.Ten }]}
-              textStyle={{ paddingLeft: 5 }}
-            >
-              <Text style={{}}>{`${x.MaMonHoc}\n`}</Text>
-              <Text>{x.TenMonHoc}</Text>
-            </DataTable.Cell>
+            <View style={[tbl.cell, { flex: sizeWidthColumn.Ten }]}>
+              <Text
+                style={{ paddingLeft: _PADDINGLEFT_CELL }}
+              >{`${x.MaMonHoc}`}</Text>
+              <Text style={{ paddingLeft: _PADDINGLEFT_CELL }}>
+                {x.TenMonHoc}
+              </Text>
+            </View>
             <DataTable.Cell
               style={[
                 tbl.cell,
@@ -453,7 +455,7 @@ const TabKiemTra = ({ props }) => {
                 >
                   {item.index + 1}
                 </DataTable.Cell>
-                <DataTable.Cell
+                <View
                   style={[
                     tbl.cell,
                     { justifyContent: "center", flex: sizeWidthColumn.Ten },
@@ -461,24 +463,32 @@ const TabKiemTra = ({ props }) => {
                   numberOfLines={3}
                 >
                   {item.item.listMon.map((x) => {
-                    return <Text>- {x}</Text>;
+                    return (
+                      <Text style={{ paddingLeft: _PADDINGLEFT_CELL }}>
+                        - {x}
+                      </Text>
+                    );
                   })}
-                </DataTable.Cell>
-                <DataTable.Cell
-                  style={[tbl.cell, { flex: sizeWidthColumn.Ten }]}
-                >
-                  {item.item.DieuKienKiemTra}
-                </DataTable.Cell>
-                <DataTable.Cell
+                </View>
+                <View style={[tbl.cell, { flex: sizeWidthColumn.Ten }]}>
+                  <Text style={{ paddingLeft: _PADDINGLEFT_CELL }}>
+                    {item.item.DieuKienKiemTra}
+                  </Text>
+                </View>
+                <View
                   style={[
                     tbl.cell,
                     { justifyContent: "center", flex: sizeWidthColumn.Ten },
                   ]}
                 >
                   {item.item.listPhuongPhapDanhGia.map((x) => {
-                    return <Text>- {x}</Text>;
+                    return (
+                      <Text style={{ paddingLeft: _PADDINGLEFT_CELL }}>
+                        - {x}
+                      </Text>
+                    );
                   })}
-                </DataTable.Cell>
+                </View>
               </DataTable.Row>
             )}
             ListFooterComponent={<View style={{ height: 200 }}></View>}

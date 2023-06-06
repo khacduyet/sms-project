@@ -290,14 +290,14 @@ const StepFour = ({ user }) => {
       return;
     }
 
-    // let res = await AuthServices.ResetForgotPasswordNoLogin({
-    //   IdUser: user.IdUser,
-    //   NewPassword: passwords.password,
-    // });
-    // if (res.Error === 4) {
-    //   ToastMessage(returnMessage(StatusCode.UPDATE_PASSWORD));
-    //   nav.navigate("Login");
-    // }
+    let res = await AuthServices.ResetForgotPasswordNoLogin({
+      IdUser: user.IdUser,
+      NewPassword: passwords.password,
+    });
+    if (res.Error === 4) {
+      ToastMessage(returnMessage(StatusCode.UPDATE_PASSWORD));
+      nav.navigate("Login");
+    }
   };
   return (
     <View>
