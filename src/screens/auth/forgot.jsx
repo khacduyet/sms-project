@@ -100,7 +100,10 @@ const StepTwo = ({ current, setCurrent, handleNext, user, next }) => {
               justifyContent: "center",
             }}
             selected={current}
-            onSelected={(value) => setCurrent(value)}
+            onSelected={(value) => {
+              setValue("");
+              setCurrent(value);
+            }}
             radioBackground="green"
           >
             <RadioButtonItem
@@ -232,7 +235,7 @@ const StepThree = ({ type, user, handleNextStepTwo, next }) => {
         />
         <Text style={[styles.formText]}>
           <Text style={{ fontWeight: 400 }}>{title}</Text>
-          <Text style={styles.formTextNote}>{SECONDS_OTP}s</Text>
+          <Text style={styles.formTextNote}>{/* {SECONDS_OTP}s  */}2 phút</Text>
         </Text>
         <TouchableOpacity
           onPress={() => {
@@ -242,7 +245,11 @@ const StepThree = ({ type, user, handleNextStepTwo, next }) => {
             dispatch(setLoading(false));
           }}
         >
-          <Text style={[styles.formText, styles.formTextNote]}>Gửi lại mã</Text>
+          <Text
+            style={[styles.formText, styles.formTextNote, { color: "#223ffa" }]}
+          >
+            Gửi lại mã
+          </Text>
         </TouchableOpacity>
       </View>
       {/* <Button
@@ -307,8 +314,16 @@ const StepFour = ({ user }) => {
             Mật khẩu mới:
           </Text> */}
           <TouchableOpacity onPress={() => setIsShow(!isShow)}>
-            <Text style={[styles.isShow, { color: isShow ? "#000" : "blue" }]}>
-              {isShow ? `Hiện` : `Ẩn`}
+            <Text
+              style={[
+                styles.isShow,
+                {
+                  color: isShow ? "#000" : "blue",
+                  textDecorationLine: "underline",
+                },
+              ]}
+            >
+              {isShow ? `HIỆN` : `ẨN`}
             </Text>
           </TouchableOpacity>
           <TextInput

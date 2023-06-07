@@ -67,6 +67,7 @@ export default function TrainingPlanPage() {
     let _MonHoc = await QuyTrinhServices.SinhVien.GetChuongTrinhDaoTaoSV();
     let _NgoaiHoc =
       await QuyTrinhServices.SinhVien.GetChiTietThoiGianNgoaiHoc();
+    console.log("_MonHoc", _MonHoc);
     if (_MonHoc) {
       setCtdt(_MonHoc.TenChuongTrinhDaoTao);
       let data = _MonHoc.listLoaiMon.map((x, index) => {
@@ -261,42 +262,42 @@ const TabMonHoc = ({ props }) => {
         <DataTable.Header style={[tbl.header]}>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.TT }]}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             TT
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Môn học/Modul
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.HK }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Học kỳ
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.TC }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Tín chỉ
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.TG }]}
             numberOfLines={3}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             TG (giờ)
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.HT }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Hoàn thành
           </DataTable.Title>
@@ -415,28 +416,28 @@ const TabKiemTra = ({ props }) => {
         <DataTable.Header style={[tbl.header]}>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.TT }]}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             TT
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Tên MH/MĐ
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Điều kiện kiểm tra
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Phương pháp đánh giá
           </DataTable.Title>
@@ -643,6 +644,9 @@ const tbl = StyleSheet.create({
     backgroundColor: Colors.HeaderTitle,
     alignItems: "center",
     justifyContent: "center",
+  },
+  titleText: {
+    fontWeight: 600,
   },
   row: {},
   cell: {

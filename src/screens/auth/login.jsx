@@ -130,7 +130,7 @@ export default function LoginPage({ navigation }) {
         ? await LocalAuthentication.authenticateAsync()
         : await LocalAuthentication.authenticateAsync({
             promptMessage: "Ứng dụng quản lý sinh viên",
-            cancelLabel: "cancel",
+            cancelLabel: "Hủy bỏ",
             disableDeviceFallback: true,
           });
 
