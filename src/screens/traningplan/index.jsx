@@ -67,6 +67,7 @@ export default function TrainingPlanPage() {
     let _MonHoc = await QuyTrinhServices.SinhVien.GetChuongTrinhDaoTaoSV();
     let _NgoaiHoc =
       await QuyTrinhServices.SinhVien.GetChiTietThoiGianNgoaiHoc();
+    console.log("_MonHoc", _MonHoc);
     if (_MonHoc) {
       setCtdt(_MonHoc.TenChuongTrinhDaoTao);
       let data = _MonHoc.listLoaiMon.map((x, index) => {
@@ -85,7 +86,6 @@ export default function TrainingPlanPage() {
       setIsLoading(false);
     }
     if (_NgoaiHoc) {
-      console.log("_NgoaiHoc", _NgoaiHoc);
       setListNgoaiHoc(_NgoaiHoc);
     }
   };
@@ -245,6 +245,8 @@ const mh = StyleSheet.create({
   },
 });
 
+const _PADDINGLEFT_CELL = 5;
+
 const TabMonHoc = ({ props }) => {
   return (
     <View>
@@ -260,42 +262,42 @@ const TabMonHoc = ({ props }) => {
         <DataTable.Header style={[tbl.header]}>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.TT }]}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             TT
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Môn học/Modul
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.HK }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Học kỳ
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.TC }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Tín chỉ
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.TG }]}
             numberOfLines={3}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             TG (giờ)
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.HT }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Hoàn thành
           </DataTable.Title>
@@ -352,13 +354,14 @@ const RowContainer = ({ _item, props }) => {
             >
               {x.STT}
             </DataTable.Cell>
-            <DataTable.Cell
-              style={[tbl.cell, { flex: sizeWidthColumn.Ten }]}
-              textStyle={{ paddingLeft: 5 }}
-            >
-              <Text style={{}}>{`${x.MaMonHoc}\n`}</Text>
-              <Text>{x.TenMonHoc}</Text>
-            </DataTable.Cell>
+            <View style={[tbl.cell, { flex: sizeWidthColumn.Ten }]}>
+              <Text
+                style={{ paddingLeft: _PADDINGLEFT_CELL }}
+              >{`${x.MaMonHoc}`}</Text>
+              <Text style={{ paddingLeft: _PADDINGLEFT_CELL }}>
+                {x.TenMonHoc}
+              </Text>
+            </View>
             <DataTable.Cell
               style={[
                 tbl.cell,
@@ -413,28 +416,28 @@ const TabKiemTra = ({ props }) => {
         <DataTable.Header style={[tbl.header]}>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.TT }]}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             TT
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Tên MH/MĐ
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Điều kiện kiểm tra
           </DataTable.Title>
           <DataTable.Title
             style={[tbl.title, { flex: sizeWidthColumn.Ten }]}
             numberOfLines={2}
-            textStyle={{ color: ColorTitle }}
+            textStyle={{ color: ColorTitle, ...tbl.titleText }}
           >
             Phương pháp đánh giá
           </DataTable.Title>
@@ -453,7 +456,7 @@ const TabKiemTra = ({ props }) => {
                 >
                   {item.index + 1}
                 </DataTable.Cell>
-                <DataTable.Cell
+                <View
                   style={[
                     tbl.cell,
                     { justifyContent: "center", flex: sizeWidthColumn.Ten },
@@ -461,24 +464,32 @@ const TabKiemTra = ({ props }) => {
                   numberOfLines={3}
                 >
                   {item.item.listMon.map((x) => {
-                    return <Text>- {x}</Text>;
+                    return (
+                      <Text style={{ paddingLeft: _PADDINGLEFT_CELL }}>
+                        - {x}
+                      </Text>
+                    );
                   })}
-                </DataTable.Cell>
-                <DataTable.Cell
-                  style={[tbl.cell, { flex: sizeWidthColumn.Ten }]}
-                >
-                  {item.item.DieuKienKiemTra}
-                </DataTable.Cell>
-                <DataTable.Cell
+                </View>
+                <View style={[tbl.cell, { flex: sizeWidthColumn.Ten }]}>
+                  <Text style={{ paddingLeft: _PADDINGLEFT_CELL }}>
+                    {item.item.DieuKienKiemTra}
+                  </Text>
+                </View>
+                <View
                   style={[
                     tbl.cell,
                     { justifyContent: "center", flex: sizeWidthColumn.Ten },
                   ]}
                 >
                   {item.item.listPhuongPhapDanhGia.map((x) => {
-                    return <Text>- {x}</Text>;
+                    return (
+                      <Text style={{ paddingLeft: _PADDINGLEFT_CELL }}>
+                        - {x}
+                      </Text>
+                    );
                   })}
-                </DataTable.Cell>
+                </View>
               </DataTable.Row>
             )}
             ListFooterComponent={<View style={{ height: 200 }}></View>}
@@ -633,6 +644,9 @@ const tbl = StyleSheet.create({
     backgroundColor: Colors.HeaderTitle,
     alignItems: "center",
     justifyContent: "center",
+  },
+  titleText: {
+    fontWeight: 600,
   },
   row: {},
   cell: {

@@ -48,7 +48,7 @@ const Page2 = () => {
           onPress={handleSetUrl}
           style={{
             button: s.button,
-            buttonText: s.text,
+            buttonText: { ...s.text, color: "#fff" },
           }}
         />
       </View>
@@ -90,7 +90,8 @@ const s = StyleSheet.create({
     padding: 20,
   },
   wrapper2: {
-    backgroundColor: "#4891ff",
+    backgroundColor: "#fff",
+    // backgroundColor: "#4891ff",
     flexDirection: "column",
   },
   wrapperView: {
@@ -101,7 +102,7 @@ const s = StyleSheet.create({
   },
   text: {
     fontSize: 25,
-    color: "#fff",
+    color: "#000",
     fontWeight: 700,
     textAlign: "center",
   },

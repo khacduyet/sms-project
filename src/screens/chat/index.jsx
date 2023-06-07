@@ -38,18 +38,19 @@ import { ChatService } from "../../services/chat.service";
 import { useSelector } from "react-redux";
 import { ModalGeneral } from "../../common/modal";
 
-const ListEmptyComponent = (
-  <View
-    style={{
-      alignItems: "center",
-      justifyContent: "center",
-      height: height / 2,
-    }}
-  >
-    <Text>Chưa có tin nhắn...</Text>
-  </View>
-);
-
+const ListEmptyComponent = (message) => {
+  return (
+    <View
+      style={{
+        alignItems: "center",
+        justifyContent: "center",
+        height: height / 2,
+      }}
+    >
+      <Text>{message ? message : `Chưa có tin nhắn...`}</Text>
+    </View>
+  );
+};
 export default function ChatPage() {
   const nav = useNavigation();
   const [filter, setFilter] = useState({
@@ -175,7 +176,7 @@ export default function ChatPage() {
               />
             )}
             keyExtractor={(item, index) => index}
-            ListEmptyComponent={ListEmptyComponent}
+            ListEmptyComponent={ListEmptyComponent()}
             ListFooterComponent={<View></View>}
           />
         </View>
@@ -248,7 +249,7 @@ const ModalAddChat = ({ props }) => {
           />
         )}
         keyExtractor={(item, index) => index}
-        ListEmptyComponent={ListEmptyComponent}
+        ListEmptyComponent={ListEmptyComponent(`Chưa có danh sách người dùng`)}
         ListFooterComponent={<View></View>}
         ß
       />
@@ -539,7 +540,7 @@ export const ChatPersonalPage = ({ route }) => {
                 return <MyBoxChat props={{ item: item, type: _OBJDATE }} />;
               }}
               keyExtractor={(item, index) => index}
-              ListEmptyComponent={ListEmptyComponent}
+              ListEmptyComponent={ListEmptyComponent()}
               ListFooterComponent={
                 <View style={{ width: "100%", height: 10 }}></View>
               }

@@ -87,6 +87,7 @@ export const QuyTrinhServices = {
         },
         GetChuongTrinhDaoTaoSV: async () => {
             let _header = await getHeaders();
+            console.log("_header", _header.baseURL);
             return get(qlsv + `/QuanLySinhVien/GetChuongTrinhDaoTaoSV`, _header)
         },
         GetKTKetThucKhoaHoc: async () => {
