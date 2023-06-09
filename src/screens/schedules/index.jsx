@@ -382,9 +382,7 @@ export const ItemChildSchedule = ({ data, maLop, style }) => {
             resizeMode="stretch"
           />
 
-          <Text style={[style.bodyText]} numberOfLines={1}>
-            {data.TenMonHoc}
-          </Text>
+          <Text style={[style.bodyText]}>{`${data.TenMonHoc}`}</Text>
         </View>
         <View style={[style.bodyItem]}>
           <Image
@@ -393,9 +391,7 @@ export const ItemChildSchedule = ({ data, maLop, style }) => {
             resizeMode="stretch"
           />
 
-          <Text style={[style.bodyText]} numberOfLines={1}>
-            {data.TenGiaoVien}
-          </Text>
+          <Text style={[style.bodyText]}>{data.TenGiaoVien}</Text>
         </View>
         <View style={[style.bodyItem]}>
           <Image
@@ -728,6 +724,7 @@ export const items = {
     paddingBottom: 5,
   },
   bodyText: {
-    paddingLeft: 8,
+    paddingLeft: 3,
+    flex: 1,
   },
 };

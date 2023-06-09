@@ -11,6 +11,7 @@ import {
   TextInput as MyTextInput,
   RefreshControl,
   ScrollView,
+  Platform,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
@@ -434,6 +435,8 @@ export const ChatPersonalPage = ({ route }) => {
       />
       <KeyboardAvoidingView
         // behavior="padding"
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        keyboardVerticalOffset={Platform.select({ ios: 0, android: 500 })}
         style={{
           flex: 1,
           justifyContent: "space-between",
@@ -447,6 +450,7 @@ export const ChatPersonalPage = ({ route }) => {
               left: 0,
               width: "100%",
               zIndex: 1,
+              flex: 1,
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
@@ -474,18 +478,22 @@ export const ChatPersonalPage = ({ route }) => {
         )}
         <View style={[cpp.body]}>
           {listMessage.length === 0 && (
-            <View
+            <Pressable
               style={{
                 alignItems: "center",
                 justifyContent: "center",
                 height: height / 2,
               }}
+              onPress={() => {
+                Keyboard.dismiss();
+              }}
             >
               <Text>Bắt đầu cuộc trò chuyện với 1 tin nhắn...</Text>
-            </View>
+            </Pressable>
           )}
           {listMessage.length > 0 && (
             <FlatList
+              contentContainerStyle={{ paddingBottom: 20 }}
               ref={refFlatlist}
               data={listMessage}
               // refreshing={refresh}
@@ -547,7 +555,7 @@ export const ChatPersonalPage = ({ route }) => {
             />
           )}
         </View>
-        <View style={[cpp.footer]}>
+        <View style={[cpp.footer, {}]}>
           <MyCustomTextInput
             props={{
               handleSend: ChatMessage,

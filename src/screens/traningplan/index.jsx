@@ -67,7 +67,6 @@ export default function TrainingPlanPage() {
     let _MonHoc = await QuyTrinhServices.SinhVien.GetChuongTrinhDaoTaoSV();
     let _NgoaiHoc =
       await QuyTrinhServices.SinhVien.GetChiTietThoiGianNgoaiHoc();
-    console.log("_MonHoc", _MonHoc);
     if (_MonHoc) {
       setCtdt(_MonHoc.TenChuongTrinhDaoTao);
       let data = _MonHoc.listLoaiMon.map((x, index) => {
@@ -306,6 +305,7 @@ const TabMonHoc = ({ props }) => {
         {!props.isLoading && (
           <FlatList
             // style={{ flex: 1 }}
+            contentContainerStyle={{ paddingBottom: 50 }}
             data={props.listMon}
             renderItem={(item) => <RowContainer _item={item} props={props} />}
             keyExtractor={(item) => item.index}
@@ -331,7 +331,8 @@ const RowContainer = ({ _item, props }) => {
     <>
       <DataTable.Row style={[tbl.row]}>
         <DataTable.Cell
-          style={[tbl.cell, { fontWeight: "bold", paddingLeft: 10 }]}
+          style={[tbl.cell, { paddingLeft: 10 }]}
+          textStyle={{ fontWeight: 600 }}
         >
           {romanize(_item.index + 1)}. {item.TenLoaiMon}
         </DataTable.Cell>
@@ -354,9 +355,18 @@ const RowContainer = ({ _item, props }) => {
             >
               {x.STT}
             </DataTable.Cell>
-            <View style={[tbl.cell, { flex: sizeWidthColumn.Ten }]}>
+            <View
+              style={[
+                tbl.cell,
+                {
+                  flex: sizeWidthColumn.Ten,
+                  // alignItems: "center",
+                  justifyContent: "center",
+                },
+              ]}
+            >
               <Text
-                style={{ paddingLeft: _PADDINGLEFT_CELL }}
+                style={{ paddingLeft: _PADDINGLEFT_CELL, fontWeight: 600 }}
               >{`${x.MaMonHoc}`}</Text>
               <Text style={{ paddingLeft: _PADDINGLEFT_CELL }}>
                 {x.TenMonHoc}
@@ -634,6 +644,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     margin: 5,
+    fontWeight: 600,
   },
 });
 

@@ -9,7 +9,7 @@ import { QuyTrinhServices } from "../../../services/danhmuc.service";
 import { createGuid } from "../../../common/common";
 
 const SIZE_ICON = 24;
-export default function MonHocCanhBaoComponent() {
+export default function MonHocCanhBaoComponent({ props }) {
   const nav = useNavigation();
   const [listCanhBao, setListCanhBao] = useState([]);
 
@@ -25,7 +25,7 @@ export default function MonHocCanhBaoComponent() {
 
   useEffect(() => {
     getListCanhBao();
-  }, []);
+  }, [props.refreshing.refreshing]);
 
   return listCanhBao.length ? (
     <View style={[styles.container]}>
