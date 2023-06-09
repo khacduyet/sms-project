@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import HeaderBack from "../../../common/header";
-import { Regexs, Screens, TextButton } from "../../../common/constant";
+import { Colors, Regexs, Screens, TextButton } from "../../../common/constant";
 import { Button, ToastMessage } from "../../../common/components";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useMemo, useState } from "react";
@@ -208,6 +208,7 @@ const FormItem = ({
       </View>
       <View style={[styles.inputWrap]}>
         <TextInput
+          color={Colors.Primary}
           style={[styles.input]}
           value={value[prop]}
           onChangeText={(e) => setValue(e, prop)}
