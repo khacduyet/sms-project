@@ -29,7 +29,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { TextInput } from "@react-native-material/core";
 import { Ionicons } from "@expo/vector-icons";
 import { ToastMessage } from "../../common/components";
-import { _stl } from "../../common/common";
+import { APP_NAME, _stl } from "../../common/common";
 
 export default function LoginPage({ navigation }) {
   const handleGetUrl = async () => {
@@ -129,7 +129,7 @@ export default function LoginPage({ navigation }) {
       Platform.OS === "ios"
         ? await LocalAuthentication.authenticateAsync()
         : await LocalAuthentication.authenticateAsync({
-            promptMessage: "Ứng dụng quản lý sinh viên",
+            promptMessage: APP_NAME,
             cancelLabel: "Hủy bỏ",
             disableDeviceFallback: true,
           });

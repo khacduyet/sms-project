@@ -657,7 +657,8 @@ const tbl = StyleSheet.create({
     justifyContent: "center",
   },
   titleText: {
-    fontWeight: 600,
+    fontWeight: 700,
+    fontSize: 14,
   },
   row: {},
   cell: {

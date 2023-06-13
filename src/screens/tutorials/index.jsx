@@ -29,29 +29,27 @@ const Page2 = () => {
   return (
     <View style={[s.wrapper, s.wrapper2]}>
       <View style={[s.wrapperView]}>
-        <Text style={[s.text, { fontSize: 20 }]}>
+        <Text style={[s.text, { fontSize: 20 }, s.components]}>
           Mời bạn nhập đường dẫn Server
         </Text>
-      </View>
-      <View style={[s.wrapperView]}>
         <TextInput
           // variant="standard"
-          style={[s.textInput]}
+          style={[s.textInput, s.components]}
           value={url}
           color="#000"
           onChangeText={setUrl}
         />
-      </View>
-      <View style={[s.wrapperView]}>
         <Button
           text={TextButton.Next}
           onPress={handleSetUrl}
           style={{
-            button: s.button,
+            button: { ...s.button, ...s.components },
             buttonText: { ...s.text, color: "#fff" },
           }}
         />
       </View>
+      {/* <View style={[s.wrapperView]}></View>
+      <View style={[s.wrapperView]}></View> */}
     </View>
   );
 };
@@ -96,9 +94,14 @@ const s = StyleSheet.create({
   },
   wrapperView: {
     width: "100%",
+    paddingTop: 50,
     flex: 1,
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
+  },
+  components: {
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   text: {
     fontSize: 25,
@@ -110,12 +113,12 @@ const s = StyleSheet.create({
     width: "80%",
   },
   button: {
-    width: "70%",
+    width: "80%",
     borderRadius: 50,
     height: 50,
     justifyContent: "center",
     textAlign: "center",
-    backgroundColor: Colors.Primary,
+    backgroundColor: `#037bff`,
   },
 });
 
