@@ -252,7 +252,6 @@ const ModalAddChat = ({ props }) => {
         keyExtractor={(item, index) => index}
         ListEmptyComponent={ListEmptyComponent(`Chưa có danh sách người dùng`)}
         ListFooterComponent={<View></View>}
-        ß
       />
     </View>
   );
@@ -513,7 +512,13 @@ export const ChatPersonalPage = ({ route }) => {
                 if (item.index === 0) {
                   if (item.item.IdUser !== currentUser.Id) {
                     return (
-                      <AnotherBoxChat props={{ item: item, type: _OBJDATE }} />
+                      <AnotherBoxChat
+                        props={{
+                          item: item,
+                          type: _OBJDATE,
+                          currentRoom: currentRoom,
+                        }}
+                      />
                     );
                   }
                   return <MyBoxChat props={{ item: item, type: _OBJDATE }} />;
@@ -534,6 +539,7 @@ export const ChatPersonalPage = ({ route }) => {
                           item: item,
                           isOnePerson: true,
                           type: _OBJDATE,
+                          currentRoom: currentRoom,
                         }}
                       />
                     );
@@ -541,7 +547,13 @@ export const ChatPersonalPage = ({ route }) => {
                 } else {
                   if (item.item.IdUser !== currentUser.Id) {
                     return (
-                      <AnotherBoxChat props={{ item: item, type: _OBJDATE }} />
+                      <AnotherBoxChat
+                        props={{
+                          item: item,
+                          type: _OBJDATE,
+                          currentRoom: currentRoom,
+                        }}
+                      />
                     );
                   }
                 }
@@ -646,6 +658,11 @@ const AnotherBoxChat = ({ props }) => {
             )}
           </View>
           <View style={[b.messageArea]}>
+            {props.currentRoom.isGroup && (
+              <Text style={[b.message, { color: "#807EF7" }]}>
+                {props.item.item.TenUser}
+              </Text>
+            )}
             <Text style={[b.message]}>{props.item.item.Message}</Text>
             <View style={[b.TimeWrap]}>
               <Text style={[b.messageTime]}>
@@ -704,7 +721,7 @@ const HeaderTitle = ({ props }) => {
                 {_thisRoom?.TenRoom}
               </Text>
               {_thisRoom?.isGroup && (
-                <Text style={[cpp.ht.text, { fontSize: 13, color: "blue" }]}>
+                <Text style={[cpp.ht.text, { fontSize: 13 }]}>
                   {props.currentRoom.listUser.length} thành viên
                 </Text>
               )}

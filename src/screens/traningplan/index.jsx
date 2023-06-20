@@ -22,7 +22,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { Platform } from "react-native";
 
 const sizeWidthColumn = {
-  TT: 0.7,
+  TT: 0.8,
   Ma: 1.5,
   Ten: 4,
   HK: 1,
@@ -332,7 +332,7 @@ const RowContainer = ({ _item, props }) => {
       <DataTable.Row style={[tbl.row]}>
         <DataTable.Cell
           style={[tbl.cell, { paddingLeft: 10 }]}
-          textStyle={{ fontWeight: 600 }}
+          textStyle={{ fontWeight: "bold" }}
         >
           {romanize(_item.index + 1)}. {item.TenLoaiMon}
         </DataTable.Cell>

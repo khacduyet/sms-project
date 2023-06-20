@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     width: "95%",
     backgroundColor: Colors.Primary,
     borderRadius: 15,
-    marginTop: 5,
+    marginTop: 10,
   },
   header: {
     height: "20%",

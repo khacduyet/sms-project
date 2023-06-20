@@ -237,10 +237,8 @@ const Component_Page = ({ lstData }) => {
 const height_container = 235;
 const styles = StyleSheet.create({
   container: {
-    marginTop: 15,
+    margin: 10,
     height: height_container,
-    marginLeft: 10,
-    marginRight: 10,
     marginBottom: 0,
   },
   wrapper: {},
