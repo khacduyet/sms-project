@@ -29,7 +29,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { TextInput } from "@react-native-material/core";
 import { Ionicons } from "@expo/vector-icons";
 import { ToastMessage } from "../../common/components";
-import { _stl } from "../../common/common";
+import { APP_NAME, _stl } from "../../common/common";
 
 export default function LoginPage({ navigation }) {
   const handleGetUrl = async () => {
@@ -129,7 +129,7 @@ export default function LoginPage({ navigation }) {
       Platform.OS === "ios"
         ? await LocalAuthentication.authenticateAsync()
         : await LocalAuthentication.authenticateAsync({
-            promptMessage: "Ứng dụng quản lý sinh viên",
+            promptMessage: APP_NAME,
             cancelLabel: "Hủy bỏ",
             disableDeviceFallback: true,
           });
@@ -216,10 +216,8 @@ function BodyLogin({
 }) {
   const route = useRoute();
   const nav = useNavigation();
-  // const [account, setAccount] = useState(initialAccount);
   const [submitForm, setSubmitForm] = useState(false);
   const [showPass, setShowPass] = useState(false);
-  // const [refresh, setRefresh] = useState(false);
 
   const tokenReducer = useSelector((state) => state.tokenReducer);
   const currentUser = useSelector((state) => state.currentUser);
@@ -264,45 +262,6 @@ function BodyLogin({
     });
   };
 
-  const handleLogout = () => {
-    Alert.alert("Thông báo", "Bạn có chắc muốn đổi tài khoản?", [
-      {
-        text: TextButton.Cancel,
-        onPress: () => {},
-      },
-      {
-        text: TextButton.Accept,
-        onPress: () => {
-          dispatch(logoutSubmit());
-          setAccount(initialAccount);
-          setRefresh(!refresh);
-        },
-      },
-    ]);
-  };
-
-  useEffect(() => {
-    if (route.name === Screens.Login) {
-      dispatch(getCurrentUser());
-      if (hasBiometric) {
-        navigation.navigate(Screens.Home);
-        dispatch(setLoading(false));
-        return;
-      } else {
-        if (!account.password) {
-          return;
-        }
-      }
-      if (submitForm) {
-        if (currentUser && currentUser.TenNhanVien) {
-          setAccount(initialAccount);
-          navigation.navigate(Screens.Home);
-          dispatch(setLoading(false));
-        }
-      }
-    }
-  }, [tokenReducer, currentUser?.Id, hasBiometric]);
-
   useEffect(() => {
     let userRem = {
       hasRemember: currentUser && currentUser?.Id ? true : false,
@@ -333,8 +292,30 @@ function BodyLogin({
   };
   useEffect(() => {
     getAvatar();
-  }, [currentUser.LinkAnhDaiDien]);
+  }, [currentUser]);
   //#endregion Lấy avatar
+
+  useEffect(() => {
+    if (route.name === Screens.Login) {
+      dispatch(getCurrentUser());
+      if (hasBiometric) {
+        navigation.navigate(Screens.Home);
+        dispatch(setLoading(false));
+        return;
+      } else {
+        if (!account.password) {
+          return;
+        }
+      }
+      if (submitForm) {
+        if (currentUser && currentUser.TenNhanVien) {
+          setAccount(initialAccount);
+          navigation.navigate(Screens.Home);
+          dispatch(setLoading(false));
+        }
+      }
+    }
+  }, [tokenReducer, currentUser?.Id, hasBiometric]);
 
   return (
     <View

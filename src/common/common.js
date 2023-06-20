@@ -189,3 +189,6 @@ export const _stl = {
         backgroundColor: "#fff"
     }
 }
+
+
+export const APP_NAME = `Ứng dụng quản lý sinh viên`
