@@ -71,9 +71,11 @@ const Item = ({ item }) => {
         resizeMode="stretch"
       />
       <Text style={[styles.bodyWrapText, styles.bodyText]}>
-        Đại số tuyến tính
+        {item.TenMonHoc}
       </Text>
-      <Text style={[styles.bodyWrapNote, styles.bodyText]}>2 TC</Text>
+      <Text style={[styles.bodyWrapNote, styles.bodyText]}>{`${
+        item.SoTinChi ? item.SoTinChi + "TC" : ""
+      }`}</Text>
     </View>
   );
 };

@@ -108,13 +108,14 @@ const p = StyleSheet.create({
 });
 
 export const DesistArea = ({ item }) => {
-  const arr = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
   return (
     <View style={[d.container]}>
       <View style={[d.topWrap]}>
-        <Text style={[d.topWrapText]}>Tổng số giờ nghỉ: 26</Text>
-        <Text style={[d.topWrapText]}>Có phép: 5</Text>
-        <Text style={[d.topWrapText]}>Không phép: 21</Text>
+        <Text style={[d.topWrapText]}>
+          Tổng số giờ nghỉ: {item?.TongSoGioNghi}
+        </Text>
+        <Text style={[d.topWrapText]}>Có phép: {item?.CoPhep}</Text>
+        <Text style={[d.topWrapText]}>Không phép: {item?.khongPhep}</Text>
       </View>
       {/* <Divider /> */}
       {/* <View style={[d.midWrap]}>
@@ -128,8 +129,8 @@ export const DesistArea = ({ item }) => {
       <View style={[{}]}>
         <ScrollView style={[{}]}>
           <View style={[d.midWrap]}>
-            {arr.map((_, i) => (
-              <DesistItem item={item} key={i} />
+            {item?.listChiTiet.map((_, i) => (
+              <DesistItem item={_} key={i} />
             ))}
           </View>
           <View style={{ width: "100%", height: 150 }}></View>
@@ -143,11 +144,16 @@ const DesistItem = ({ item }) => {
   return (
     <View style={[d.item]}>
       <View style={[d.headerWrap]}>
-        <Text style={[d.headerWrapText, d.text]}>25/03/2023</Text>
+        <Text style={[d.headerWrapText, d.text]}>{item?.Ngay}</Text>
       </View>
       <View style={[d.bodyWrap]}>
-        <Text style={[d.bodyWrapText, d.text]}>Số giờ nghỉ: 5 (P)</Text>
-        <Text style={[d.bodyWrapText, d.text]}>Lý do: Bận việc gia đình</Text>
+        <Text style={[d.bodyWrapText, d.text]}>
+          Số giờ nghỉ:
+          {` ${item?.CoPhep ? `${item?.CoPhep}(P)` : ``} ${
+            item?.KhongPhep ? `${item?.KhongPhep}(KP)` : ``
+          }`}
+        </Text>
+        <Text style={[d.bodyWrapText, d.text]}>Lý do: {item?.LyDo}</Text>
       </View>
     </View>
   );
