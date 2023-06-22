@@ -2,6 +2,7 @@ import {
   FlatList,
   Image,
   KeyboardAvoidingView,
+  RefreshControl,
   SafeAreaView,
   Text,
   TouchableOpacity,
@@ -18,6 +19,7 @@ import { _Modalize, DesistArea } from "../schedules/testSchedule";
 import { QuyTrinhServices } from "../../services/danhmuc.service";
 import { useSelector } from "react-redux";
 import { _stl } from "../../common/common";
+import { ActivityIndicator } from "react-native-paper";
 
 const SIZE_ICON = 24;
 
@@ -52,10 +54,13 @@ export default function AttendancePage() {
     Ky: listKy[0].value,
   });
   const currentUser = useSelector((state) => state.currentUser);
+  const [loading, setLoading] = useState(false);
 
   const [visible, setVisible] = useState(false);
+  const [thisBox, setThisBox] = useState(null);
 
-  const handleOpen = () => {
+  const handleOpen = (item) => {
+    setThisBox(item);
     setVisible(true);
   };
 
@@ -68,6 +73,7 @@ export default function AttendancePage() {
     if (res) {
       setListDiemDanh(res);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -77,6 +83,11 @@ export default function AttendancePage() {
   const getListNam = useMemo(() => {
     return LISTNAM();
   }, []);
+
+  const onRefresh = () => {
+    setLoading(true);
+    getListDiemDanh();
+  };
 
   return (
     <SafeAreaView style={[styles.container, _stl._container]}>
@@ -96,6 +107,8 @@ export default function AttendancePage() {
                       object={object}
                       setObject={setObject}
                       header={"Nam"}
+                      loading={loading}
+                      setLoading={setLoading}
                     />
                   </View>
                 </TouchableOpacity>
@@ -106,6 +119,8 @@ export default function AttendancePage() {
                       object={object}
                       setObject={setObject}
                       header={"Ky"}
+                      loading={loading}
+                      setLoading={setLoading}
                     />
                   </View>
                 </TouchableOpacity>
@@ -113,30 +128,46 @@ export default function AttendancePage() {
             </View>
           </View>
           <View style={[b.wrapper]}>
-            <FlatList
-              data={listDiemDanh}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={handleOpen}>
-                  <ItemTestSchedule item={item} style={items} />
-                </TouchableOpacity>
-              )}
-              keyExtractor={(item, index) => index}
-              ListEmptyComponent={ListEmptyComponent}
-              ListHeaderComponent={
-                <View style={{ width: "100%", height: 10 }}></View>
-              }
-              ListFooterComponent={listDiemDanh.length && ListFooterComponent}
-            />
+            {loading && (
+              <View
+                style={{
+                  height: height / 2,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <ActivityIndicator />
+              </View>
+            )}
+            {!loading && (
+              <FlatList
+                refreshControl={
+                  <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+                }
+                data={listDiemDanh}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleOpen(item)}>
+                    <ItemTestSchedule item={item} style={items} />
+                  </TouchableOpacity>
+                )}
+                keyExtractor={(item, index) => index}
+                ListEmptyComponent={ListEmptyComponent}
+                ListHeaderComponent={
+                  <View style={{ width: "100%", height: 10 }}></View>
+                }
+                ListFooterComponent={listDiemDanh.length && ListFooterComponent}
+              />
+            )}
           </View>
         </View>
         <_Modalize
-          title={`MH05 - Đại số tuyến tính`}
+          title={`${thisBox?.MaMonHoc ?? ""} - ${thisBox?.TenMonHoc}`}
           visible={visible}
           onOpen={handleOpen}
           onClose={handleClose}
           childrens={
             <View style={{ width: "100%", height: 500 }}>
-              <DesistArea />
+              <DesistArea item={thisBox} />
             </View>
           }
         />
@@ -159,12 +190,12 @@ const ItemTestSchedule = ({ item, style }) => {
             numberOfLines={1}
             style={[style.bodyText, { fontWeight: 600, color: Colors.Danger }]}
           >
-            MH04 - Thực hành cơ khí (2TC)
+            {item.MaMonHoc} - {item.TenMonHoc} ({item.TinChi}TC)
           </Text>
         </View>
         <View style={[style.headerRight]}>
           <Text numberOfLines={1} style={[style.headerRightText]}>
-            CNTT01_K43
+            {item.TenLop}
           </Text>
         </View>
       </View>
@@ -181,7 +212,7 @@ const ItemTestSchedule = ({ item, style }) => {
               resizeMode="stretch"
             />
             <Text numberOfLines={1} style={[style.headerleftTime]}>
-              Tổng số giờ quy định:
+              Tổng số giờ quy định: {item.TongSoTiet}
             </Text>
           </View>
         </View>
@@ -192,7 +223,7 @@ const ItemTestSchedule = ({ item, style }) => {
             resizeMode="stretch"
           />
           <Text numberOfLines={1} style={[style.headerleftTime]}>
-            Số giờ được nghỉ tối đa:
+            Số giờ được nghỉ tối đa: {item.TongSoGioDuocNghi}
           </Text>
         </View>
         <View style={[style.bodyItem, { flexDirection: "row" }]}>
@@ -207,7 +238,7 @@ const ItemTestSchedule = ({ item, style }) => {
               resizeMode="stretch"
             />
             <Text numberOfLines={1} style={[style.headerleftTime]}>
-              Số giờ đã nghỉ:
+              Số giờ đã nghỉ: {item.TongSoGioNghi}
             </Text>
           </View>
         </View>
