@@ -181,7 +181,7 @@ export default function ItemPhieuKy({ route }) {
               <Button
                 mode="contained"
                 onPress={ChuyenTiep}
-                style={{ width: "75%" }}
+                style={{ width: '75%', backgroundColor: "#037bff" }}
               >
                 Chuyển Tiếp
               </Button>

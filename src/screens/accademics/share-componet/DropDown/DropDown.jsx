@@ -20,7 +20,7 @@ export default function DropDown({
           search
           labelField="label"
           valueField="value"
-          placeholder="Chọn"
+          placeholder={header == 'IdDsMonhoc' ? 'Chọn môn học' : 'chọn'}
           style={styles.dropdown}
           searchPlaceholder="Search..."
           // disable={object.isDisable}

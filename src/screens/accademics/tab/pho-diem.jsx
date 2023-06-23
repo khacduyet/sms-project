@@ -129,7 +129,7 @@ export default function PhoDiem() {
           </View>
         </View>
         <View style={styles.marginBottom_16}>
-          <DropDown data={dataMonHocByKy} object={object} setObject={setObject} header={'IdDsMonhoc'} />
+          <DropDown data={dataMonHocByKy} object={object} setObject={setObject} header={'IdDsMonhoc'}  />
         </View>
         {/* ---- View điểm môn học ----- */}
         <View style={{ paddingBottom: 210 }}>

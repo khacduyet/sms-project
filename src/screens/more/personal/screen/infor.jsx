@@ -100,6 +100,14 @@ export default function Infor() {
   };
 
   return (
+    <View style={{ paddingBottom: 100 }}>
+       <DateTimePickerModal
+        date={date ? date : new Date()}
+        isVisible={isDatePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
     <ScrollView>
       <View>
         <View style={styles.items}>
@@ -120,7 +128,7 @@ export default function Infor() {
               buttonColor="red"
               color="red"
             >
-              <View style={styles.flex}>
+              <View style={styles.justifyContent_left}>
                 <View style={[styles.flex,styles.mr]}>
                   <RadioButton.Android value={0} />
                   <Text>Nam</Text>
@@ -227,27 +235,20 @@ export default function Infor() {
             }}
           />
         </View>
-        <View
-          style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}
-        >
+        
+      </View>
+      <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
           <Button
             icon="check"
             mode="contained"
             onPress={GhiLai}
-            style={{ width: "75%" }}
+            style={{ width: '75%', backgroundColor: "#037bff" }}
           >
             Xác nhận
           </Button>
         </View>
-      </View>
-      <DateTimePickerModal
-        date={date ? date : new Date()}
-        isVisible={isDatePickerVisible}
-        mode="date"
-        onConfirm={handleConfirm}
-        onCancel={hideDatePicker}
-      />
     </ScrollView>
+    </View>
   );
 }
 
@@ -283,5 +284,10 @@ const styles = StyleSheet.create({
   },
   mr: {
     marginRight:20
-  }
+  },
+  justifyContent_left: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
 });
