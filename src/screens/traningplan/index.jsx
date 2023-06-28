@@ -73,7 +73,7 @@ export default function TrainingPlanPage() {
         let _temp = x.listMonHoc.map((y, idx) => {
           return {
             ...y,
-            isHoanThanh: idx === 0 ? true : false,
+            // isHoanThanh: idx === 0 ? true : false,
           };
         });
         return {
@@ -160,8 +160,17 @@ export default function TrainingPlanPage() {
           </View>
           <View style={[styles.wrapper]}>
             <View style={[s.header]}>
-              <Text style={[s.text]}>Kế hoạch đào tạo:</Text>
-              <TextInput
+              <Text style={[s.text]}>Kế hoạch đào tạo: {ctdt}</Text>
+              {/* <Text
+                style={{
+                  fontWeight: "bold",
+                  backgroundColor: "#fff",
+                  color: "#000",
+                }}
+              >
+                {ctdt}
+              </Text> */}
+              {/* <TextInput
                 editable={false}
                 value={ctdt}
                 style={{
@@ -169,7 +178,7 @@ export default function TrainingPlanPage() {
                   backgroundColor: "#fff",
                   color: "#000",
                 }}
-              />
+              /> */}
             </View>
           </View>
           <View style={[tabs.container]}>
@@ -561,12 +570,23 @@ const ThoiGianNgoaiHoc = ({ item }) => {
                 >
                   {x.index + 1}
                 </DataTable.Cell>
-                <DataTable.Cell
+                <View
+                  style={[
+                    tbl.cell,
+                    {
+                      flex: sizeWidthColumn.Ma,
+                      justifyContent: "center",
+                    },
+                  ]}
+                >
+                  <Text style={{ paddingLeft: 5 }}>{x.item.NoiDung}</Text>
+                </View>
+                {/* <DataTable.Cell
                   style={[tbl.cell, { flex: sizeWidthColumn.Ma }]}
                   textStyle={{ paddingLeft: 5 }}
                 >
                   {x.item.NoiDung}
-                </DataTable.Cell>
+                </DataTable.Cell> */}
                 <DataTable.Cell
                   style={[
                     tbl.cell,

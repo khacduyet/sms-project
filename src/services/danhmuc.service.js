@@ -102,6 +102,10 @@ export const QuyTrinhServices = {
             let _header = await getHeaders();
             return get(qlsv + `/QuanLySinhVien/GetChiTietThoiGianNgoaiHoc`, _header)
         },
+        GetDieuKienThiSV: async (data) => {
+            let _header = await getHeaders();
+            return post(qlsv + `/QuanLySinhVien/GetDieuKienThiSV`, data, _header)
+        },
     },
     ThongTinCaNhan: {
         SetSoYeuLyLichSinhVien: async (data) => {

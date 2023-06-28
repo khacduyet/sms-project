@@ -1,5 +1,12 @@
 import * as React from "react";
-import { StyleSheet, Text, View, Pressable, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
 import { TextInput } from "@react-native-material/core";
 import { RadioButton } from "react-native-paper";
 import { Button } from "react-native-paper";
@@ -62,7 +69,7 @@ export default function Infor() {
         ...res,
         NgaySinh: new Date(res.NgaySinh),
       };
-     
+
       setSyll(res);
     }
   };
@@ -280,11 +287,10 @@ const styles = StyleSheet.create({
     borderColor: "#fff",
   },
   ml: {
-    marginLeft:20
+    marginLeft: 20,
   },
   mr: {
     marginRight:20
-  },
   justifyContent_left: {
     flexDirection: "row",
     justifyContent: "flex-start",

@@ -44,7 +44,16 @@ export default function BangTinComponent({ props }) {
           <Feather name="arrow-right-circle" size={24} color="blue" />
         </Pressable>
       </View>
-      <Swiper autoplay autoplayTimeout={5}>
+      <Swiper
+        autoplay
+        autoplayTimeout={5}
+        style={
+          {
+            // height: 240,
+          }
+        }
+        paginationStyle={{ bottom: 18 }}
+      >
         {fakeData.map((x, index) => {
           return (
             <TouchableOpacity key={x.Title}>
