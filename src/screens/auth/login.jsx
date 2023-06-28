@@ -211,8 +211,6 @@ function BodyLogin({
   setFingerPrint,
   account,
   setAccount,
-  refresh,
-  setRefresh,
 }) {
   const route = useRoute();
   const nav = useNavigation();

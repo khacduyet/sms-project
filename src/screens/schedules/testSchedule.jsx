@@ -10,13 +10,14 @@ import { Text, View } from "react-native";
 import { Colors, Screens, TextButton } from "../../common/constant";
 import HeaderBack from "../../common/header";
 import { Modalize } from "react-native-modalize";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { items } from "./index";
 import { _stl, createGuid } from "../../common/common";
 import { FontAwesome } from "@expo/vector-icons";
 import { Divider } from "react-native-paper";
 import { Backdrop } from "react-native-backdrop";
 import { ModalMonHoc } from "../../common/modal";
+import { QuyTrinhServices } from "../../services/danhmuc.service";
 
 const SIZE_ICON = 24;
 
@@ -203,7 +204,20 @@ const d = StyleSheet.create({
 
 export default function TestSchedule({ route }) {
   const [visible, setVisible] = useState(false);
+  const [listData, setListData] = useState([]);
   const { title } = route.params;
+
+  const getData = async () => {
+    let _obj = {};
+    let res = await QuyTrinhServices.SinhVien.GetDieuKienThiSV(_obj);
+    if (res) {
+      console.log("res", res);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const handleOpen = () => {
     setVisible(true);
@@ -220,7 +234,8 @@ export default function TestSchedule({ route }) {
   return (
     <SafeAreaView style={[styles.container, _stl._container]}>
       <View>
-        <HeaderBack header={`ĐIỀU KIỆN THI KẾT THÚC MÔN\n` + title} />
+        <HeaderBack header={`ĐIỀU KIỆN THI KẾT THÚC MÔN`} />
+        {/* <HeaderBack header={`ĐIỀU KIỆN THI KẾT THÚC MÔN\n` + title} /> */}
         {data.map((x, index) => {
           return <ItemTestSchedule onOpen={onOpen} item={x} key={index} />;
         })}
