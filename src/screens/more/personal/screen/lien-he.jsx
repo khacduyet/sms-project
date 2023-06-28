@@ -84,7 +84,7 @@ export default function LienHe() {
           icon="check"
           mode="contained"
           onPress={GhiLai}
-          style={{ width: "75%" }}
+          style={{ width: '75%', backgroundColor: "#037bff" }}
         >
           Xác nhận
         </Button>
