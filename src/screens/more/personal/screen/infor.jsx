@@ -108,153 +108,154 @@ export default function Infor() {
 
   return (
     <View style={{ paddingBottom: 100 }}>
-       <DateTimePickerModal
+      <DateTimePickerModal
         date={date ? date : new Date()}
         isVisible={isDatePickerVisible}
         mode="date"
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
-    <ScrollView>
-      <View>
-        <View style={styles.items}>
-          <TextInput
-            style={styles.inputtext}
-            onChangeText={(e) => setForm(e, "TenGhep")}
-            value={syll.TenGhep}
-            label={"Họ và tên"}
-            variant="standard"
-          />
-        </View>
-        <View style={styles.items}>
-          <Text style={styles.label}>Giới tính:</Text>
-          <View>
-            <RadioButton.Group
-              onValueChange={(e) => setForm(e, "GioiTinh")}
-              value={syll.GioiTinh}
-              buttonColor="red"
-              color="red"
-            >
-              <View style={styles.justifyContent_left}>
-                <View style={[styles.flex,styles.mr]}>
-                  <RadioButton.Android value={0} />
-                  <Text>Nam</Text>
+      <ScrollView>
+        <View>
+          <View style={styles.items}>
+            <TextInput
+              style={styles.inputtext}
+              onChangeText={(e) => setForm(e, "TenGhep")}
+              value={syll.TenGhep}
+              label={"Họ và tên"}
+              variant="standard"
+            />
+          </View>
+          <View style={styles.items}>
+            <Text style={styles.label}>Giới tính:</Text>
+            <View>
+              <RadioButton.Group
+                onValueChange={(e) => setForm(e, "GioiTinh")}
+                value={syll.GioiTinh}
+                buttonColor="red"
+                color="red"
+              >
+                <View style={styles.justifyContent_left}>
+                  <View style={[styles.flex, styles.mr]}>
+                    <RadioButton.Android value={0} />
+                    <Text>Nam</Text>
+                  </View>
+                  <View style={[styles.flex, styles.ml]}>
+                    <RadioButton.Android value={1} />
+                    <Text>Nữ</Text>
+                  </View>
                 </View>
-                <View style={[styles.flex,styles.ml]}>
-                  <RadioButton.Android value={1} />
-                  <Text>Nữ</Text>
-                </View>
-              </View>
-            </RadioButton.Group>
+              </RadioButton.Group>
+            </View>
+          </View>
+          <View style={styles.items}>
+            <TextInput
+              style={styles.inputtext}
+              onChangeText={(e) => setForm(e, "CCCD", "itemSYLL")}
+              value={syll.itemSYLL?.CCCD}
+              label={"CCCD"}
+              variant="standard"
+            />
+          </View>
+          <View style={styles.items}>
+            <TextInput
+              style={styles.inputtext}
+              label={"Ngày"}
+              variant="standard"
+              value={formatDateStringGMT(syll?.NgaySinh, "dd/mm/yyyy")}
+              onFocus={() => {
+                setNameProp({
+                  prop: "NgaySinh",
+                  isParent: true,
+                });
+                setDate(syll?.NgaySinh);
+                showDatePicker();
+              }}
+            />
+          </View>
+
+          <View style={styles.items}>
+            <TextInput
+              style={styles.inputtext}
+              onChangeText={(e) =>
+                setForm(e, "HoKhauThuongTruDiaChi", "itemSYLL")
+              }
+              value={syll.itemSYLL?.HoKhauThuongTruDiaChi}
+              label={"Hộ khẩu thường trú"}
+              variant="standard"
+            />
+          </View>
+          <View style={styles.items}>
+            <TextInput
+              style={styles.inputtext}
+              onChangeText={(e) => setForm(e, "DanToc", "itemSYLL")}
+              value={syll.itemSYLL?.DanToc}
+              label={"Dân tộc"}
+              variant="standard"
+            />
+          </View>
+          <View style={styles.items}>
+            <TextInput
+              onChangeText={(e) => setForm(e, "TonGiao", "itemSYLL")}
+              value={syll.itemSYLL?.TonGiao}
+              label={"Tôn giáo"}
+              variant="standard"
+            />
+          </View>
+          <View style={styles.items}>
+            <TextInput
+              style={styles.inputtext}
+              label={"Ngày vào đoàn"}
+              variant="standard"
+              value={formatDateStringGMT(
+                syll?.itemSYLL?.NgayKetNapDoan,
+                "dd/mm/yyyy"
+              )}
+              onFocus={() => {
+                setNameProp({
+                  prop: "NgayKetNapDoan",
+                  propParent: "itemSYLL",
+                  isParent: false,
+                });
+                setDate(syll?.itemSYLL?.NgayKetNapDoan);
+                showDatePicker();
+              }}
+            />
+          </View>
+          <View style={styles.items}>
+            <TextInput
+              style={styles.inputtext}
+              label={"Ngày vào đảng"}
+              variant="standard"
+              value={formatDateStringGMT(
+                syll?.itemSYLL?.NgayThamGiaDang,
+                "dd/mm/yyyy"
+              )}
+              onFocus={() => {
+                setNameProp({
+                  prop: "NgayThamGiaDang",
+                  propParent: "itemSYLL",
+                  isParent: false,
+                });
+                setDate(syll?.itemSYLL?.NgayThamGiaDang);
+                showDatePicker();
+              }}
+            />
           </View>
         </View>
-        <View style={styles.items}>
-          <TextInput
-            style={styles.inputtext}
-            onChangeText={(e) => setForm(e, "CCCD", "itemSYLL")}
-            value={syll.itemSYLL?.CCCD}
-            label={"CCCD"}
-            variant="standard"
-          />
-        </View>
-        <View style={styles.items}>
-          <TextInput
-            style={styles.inputtext}
-            label={"Ngày"}
-            variant="standard"
-            value={formatDateStringGMT(syll?.NgaySinh, "dd/mm/yyyy")}
-            onFocus={() => {
-              setNameProp({
-                prop: "NgaySinh",
-                isParent: true,
-              });
-              setDate(syll?.NgaySinh);
-              showDatePicker();
-            }}
-          />
-        </View>
-
-        <View style={styles.items}>
-          <TextInput
-            style={styles.inputtext}
-            onChangeText={(e) =>
-              setForm(e, "HoKhauThuongTruDiaChi", "itemSYLL")
-            }
-            value={syll.itemSYLL?.HoKhauThuongTruDiaChi}
-            label={"Hộ khẩu thường trú"}
-            variant="standard"
-          />
-        </View>
-        <View style={styles.items}>
-          <TextInput
-            style={styles.inputtext}
-            onChangeText={(e) => setForm(e, "DanToc", "itemSYLL")}
-            value={syll.itemSYLL?.DanToc}
-            label={"Dân tộc"}
-            variant="standard"
-          />
-        </View>
-        <View style={styles.items}>
-          <TextInput
-            onChangeText={(e) => setForm(e, "TonGiao", "itemSYLL")}
-            value={syll.itemSYLL?.TonGiao}
-            label={"Tôn giáo"}
-            variant="standard"
-          />
-        </View>
-        <View style={styles.items}>
-          <TextInput
-            style={styles.inputtext}
-            label={"Ngày vào đoàn"}
-            variant="standard"
-            value={formatDateStringGMT(
-              syll?.itemSYLL?.NgayKetNapDoan,
-              "dd/mm/yyyy"
-            )}
-            onFocus={() => {
-              setNameProp({
-                prop: "NgayKetNapDoan",
-                propParent: "itemSYLL",
-                isParent: false,
-              });
-              setDate(syll?.itemSYLL?.NgayKetNapDoan);
-              showDatePicker();
-            }}
-          />
-        </View>
-        <View style={styles.items}>
-          <TextInput
-            style={styles.inputtext}
-            label={"Ngày vào đảng"}
-            variant="standard"
-            value={formatDateStringGMT(
-              syll?.itemSYLL?.NgayThamGiaDang,
-              "dd/mm/yyyy"
-            )}
-            onFocus={() => {
-              setNameProp({
-                prop: "NgayThamGiaDang",
-                propParent: "itemSYLL",
-                isParent: false,
-              });
-              setDate(syll?.itemSYLL?.NgayThamGiaDang);
-              showDatePicker();
-            }}
-          />
-        </View>
-        
-      </View>
-      <View style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}>
+        <View
+          style={{ flex: 1, flexDirection: "row", justifyContent: "center" }}
+        >
           <Button
             icon="check"
             mode="contained"
             onPress={GhiLai}
-            style={{ width: '75%', backgroundColor: "#037bff" }}
+            style={{ width: "75%", backgroundColor: "#037bff" }}
           >
             Xác nhận
           </Button>
         </View>
-    </ScrollView>
+      </ScrollView>
     </View>
   );
 }
@@ -290,10 +291,11 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   mr: {
-    marginRight:20
-  justifyContent_left: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    marginRight: 20,
+    justifyContent_left: {
+      flexDirection: "row",
+      justifyContent: "flex-start",
+      alignItems: "center",
+    },
   },
 });
