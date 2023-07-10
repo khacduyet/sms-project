@@ -12,7 +12,7 @@ import HeaderBack from "../../common/header";
 import { Colors, Screens } from "../../common/constant";
 import { Checkbox, DataTable, TextInput } from "react-native-paper";
 import { ModalMonHoc } from "../../common/modal";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { tabs } from "../schedules";
 import { Card } from "react-native-paper";
 import { QuyTrinhServices } from "../../services/danhmuc.service";
@@ -520,6 +520,9 @@ const TabKiemTra = ({ props }) => {
 };
 
 const ThoiGianNgoaiHoc = ({ item }) => {
+  const _listData = useMemo(() => {
+    return item;
+  }, [item]);
   return (
     <View style={[{ width: "100%" }]}>
       <View>
@@ -562,7 +565,7 @@ const ThoiGianNgoaiHoc = ({ item }) => {
           </DataTable.Header>
           <FlatList
             style={{ maxHeight: 500 }}
-            data={item}
+            data={_listData}
             renderItem={(x) => (
               <DataTable.Row style={[tbl.row]}>
                 <DataTable.Cell
