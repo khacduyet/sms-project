@@ -363,8 +363,7 @@ export const ItemChildSchedule = ({ data, maLop, style }) => {
             style={{ width: SIZE_ICON, height: SIZE_ICON, ...styles.iconImage }}
             resizeMode="stretch"
           />
-
-          <Text style={[style.headerleftTime]} numberOfLines={1}>
+          <Text style={[style.headerleftTime]} numberOfLines={2}>
             {data.ThoiGian}
           </Text>
         </View>
